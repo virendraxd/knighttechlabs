@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UniCover | Knight Tech Labs</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <h1>UniCover</h1>
+        <p>University Assignment Cover Page Generator</p>
+    </header>
+    <div class="page">
+        <div class="cover-page">
+            <div class="top-section">
+                <img src="assets/unilogo.png" class="uni-logo" />
+            </div>
+
+            <div class="details-section">
+                <span class="upper">
+                    <div class="session" id="coverSession">SESSION : 2025-2026</div>
+                    <div class="title" id="coverTitle">ASSIGNMENT FILE</div>
+                    <div class="subject" id="coverSubject">SUBJECT : DESIGN THINKING</div>
+                </span>
+                <span class="bottom">
+                    <div class="left">
+                        <div class="submitted">SUBMITTED TO:</div>
+                        <div class="name" id="coverFaculty">PROF JOHN DAS</div>
+                        <div class="position" id="coverPosition">PROFESSOR</div>
+                    </div>
+                    <div class="right">
+                        <div class="submitted">SUBMITTED BY:</div>
+                        <div class="name" id="coverStudent">VIRENDRA SINGH</div>
+                        <div class="std-info">
+                            <span class="course" id="coverCourse">B TECH</span>
+                            <span class="stream" id="coverStream">(CSE)</span>
+                            <span class="coverYear">1<sup>st</sup> YEAR</span>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <form id="coverForm">
+
+            <label>Session</label>
+            <select id="session">
+                <option value="2025-2026">2025-2026</option>
+                <!-- <option value="2024-2025">2024-2025</option> -->
+            </select>
+
+            <label>Assignment Type</label>
+            <select id="title">
+                <option value="ASSIGNMENT FILE">ASSIGNMENT FILE</option>
+                <option value="PRACTICAL FILE">PRACTICAL FILE</option>
+                <option value="PROJECT REPORT">PROJECT REPORT</option>
+            </select>
+
+            <label>Subject</label>
+            <input type="text" id="subject" placeholder="DESIGN THINKING" />
+
+            <label>Faculty Name</label>
+            <input type="text" id="faculty" placeholder="PROF JOHN DAS" />
+
+            <label>Faculty Position</label>
+            <select id="position">
+                <option value="PROFESSOR">PROFESSOR</option>
+                <option value="ASSISTANT PROFESSOR">ASSISTANT PROFESSOR</option>
+                <option value="HOD">HOD</option>
+            </select>
+
+            <label>Student Name</label>
+            <input type="text" id="studentName" placeholder="VIRENDRA SINGH" />
+
+            <label>Course</label>
+            <select id="course">
+                <option value="B TECH">B TECH</option>
+                <option value="M TECH">M TECH</option>
+            </select>
+
+            <label>Stream</label>
+            <select id="stream">
+                <option value="(CSE)">(CSE)</option>
+                <option value="(IT)">(IT)</option>
+                <option value="(ECE)">(ECE)</option>
+            </select>
+
+            <label>Year</label>
+            <select id="year">
+                <option value="1st">1st YEAR</option>
+                <option value="2nd">2nd YEAR</option>
+                <option value="3rd">3rd YEAR</option>
+                <option value="4th">4th YEAR</option>
+            </select>
+
+            <button type="button" id="downloadPdf">Generate Cover Page PDF</button>
+        </form>
+
+        <div class="note">
+            <p>
+                📄 Official-style format • 🖨️ Print-ready • ⏱️ Instant download
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Powered by Knight Tech Labs</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

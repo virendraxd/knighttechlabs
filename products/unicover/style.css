@@ -1,0 +1,224 @@
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+html, body {
+  /* width: 210mm; */
+  /* height: 297mm; */
+  margin: 0;
+  padding: 0;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: #1e40af;
+  color: #fff;
+  text-align: center;
+  padding: 28px 15px;
+}
+
+.header h1 {
+  margin: 0 0 6px;
+}
+
+/* ================= FORM CONTAINER ================= */
+.container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 22px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: 500;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid #cbd5f5;
+  border-radius: 5px;
+}
+
+button {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  background: #1e40af;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e3a8a;
+}
+
+.note {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* IMPORTANT: Print settings */ 
+/* @page {
+  size: A4;
+  margin: 0;
+} */
+
+/* ================= COVER PAGE ================= */
+/* PAGE WRAPPER */
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb; /* preview only */
+}
+
+
+/* COVER PAGE */
+.cover-page {
+  width: 210mm;
+min-height: 296mm;   
+
+  position: relative;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  background: #fff;
+}
+
+
+
+/* INNER BORDER */
+.cover-page::before {
+  content: "";
+  position: absolute;
+
+  top: 12mm;
+  left: 12mm;
+  right: 12mm;
+  bottom: 12mm;
+
+  border: 3px solid #1f497d;
+  border-radius: 6px;
+
+  pointer-events: none;
+}
+
+/* ================= TOP SECTION ================= */
+.top-section {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.uni-logo {
+  margin-top: 4rem;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ================= DETAILS SECTION ================= */
+.details-section {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 48mm;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --------- CENTER TEXT --------- */
+.upper {
+  text-align: center;
+  margin-bottom: 42mm;
+}
+
+.upper .session,
+.upper .title,
+.upper .subject {
+  font-size: 16pt;
+  font-weight: 600;
+  color: #1f497d;
+  margin: 8px 0;
+}
+
+/* ================= BOTTOM SECTION ================= */
+.bottom {
+  width: 85%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bottom .left,
+.bottom .right {
+  width: 45%;
+  text-align: center;
+}
+
+.bottom .submitted {
+  font-size: 15pt;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.bottom .name {
+  font-size: 14.5pt;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.bottom .position {
+  font-size: 14pt;
+}
+
+.std-info {
+  font-size: 14pt;
+  margin-top: 4px;
+}
+
+.std-info span {
+  margin-right: 6px;
+}
+
+@media print {
+  body {
+    background: white;
+    margin: 0;
+  }
+
+  .header,
+  .container,
+  footer {
+    display: none;
+  }
+
+  .cover-page {
+    margin: 0;
+    border: none;
+  }
+}
