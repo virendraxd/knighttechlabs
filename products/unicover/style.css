@@ -12,6 +12,7 @@ html, body {
 
 /* ================= HEADER ================= */
 .header {
+  margin-top: 4.8rem;
   background: #1e40af;
   color: #fff;
   text-align: center;
@@ -76,12 +77,6 @@ footer {
   color: #64748b;
 }
 
-/* IMPORTANT: Print settings */ 
-/* @page {
-  size: A4;
-  margin: 0;
-} */
-
 /* ================= COVER PAGE ================= */
 /* PAGE WRAPPER */
 .page {
@@ -90,7 +85,6 @@ footer {
   align-items: center;
   background: #e5e7eb; /* preview only */
 }
-
 
 /* COVER PAGE */
 .cover-page {
