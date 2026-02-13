@@ -1,8 +1,23 @@
+// 🔥 Detect correct base path automatically
+function getBasePath() {
+  const path = location.pathname;
+
+  // If hosted on GitHub Pages repo
+  if (path.includes("/knighttechlabs/")) {
+    return "/knighttechlabs/";
+  }
+
+  // Localhost
+  return "/";
+}
+
+const BASE = getBasePath();
+
 async function loadComponent(id, file) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  const res = await fetch(file);
+  const res = await fetch(BASE + file);
   el.innerHTML = await res.text();
 }
 
@@ -14,23 +29,23 @@ function setNavLinks() {
   const path = location.pathname;
 
   // 🏠 Homepage
-  if (path === "/" || path.includes("index.html")) {
-    if (home) home.href = "index.html";
-    if (products) products.href = "#products";
-    if (about) about.href = "#about";
+  if (path.endsWith("/") || path.endsWith("index.html")) {
+    if (home) home.href = BASE + "index.html";
+    if (products) products.href = BASE + "index.html#products";
+    if (about) about.href = BASE + "index.html#about";
   }
 
-  // 📦 Subpages (UniCover etc.)
+  // 📦 Subpages
   else {
-    if (home) home.href = "/index.html";
-    if (products) products.href = "/index.html#products";
-    if (about) about.href = "/index.html#about";
+    if (home) home.href = BASE + "index.html";
+    if (products) products.href = BASE + "index.html#products";
+    if (about) about.href = BASE + "index.html#about";
   }
 }
 
 async function loadAll() {
-  await loadComponent("header", "/components/header.html");
-  await loadComponent("footer", "/components/footer.html");
+  await loadComponent("header", "components/header.html");
+  await loadComponent("footer", "components/footer.html");
 
   setNavLinks();
 }
