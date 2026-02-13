@@ -96,7 +96,7 @@ downloadBtn.addEventListener("click", () => {
 
   // ⭐ CASE 1 — BOTH MISSING
   if (!fieldsValid && !codeFilled) {
-    alert("⚠️ Please fill all required fields AND enter access code.");
+    showMessage("⚠️ Please fill all required fields AND enter access code.");
 
     if (firstEmptyField) {
       firstEmptyField.focus();
@@ -108,7 +108,7 @@ downloadBtn.addEventListener("click", () => {
 
   // ⭐ CASE 2 — ONLY FIELDS MISSING
   if (!fieldsValid) {
-    alert("⚠️ Please fill all required fields before downloading.");
+    showMessage("⚠️ Please fill all required fields before downloading.");
 
     if (firstEmptyField) {
       firstEmptyField.focus();
@@ -120,14 +120,14 @@ downloadBtn.addEventListener("click", () => {
 
   // ⭐ CASE 3 — CODE EMPTY
   if (!codeFilled) {
-    alert("🔐 Please enter access code.");
+    showMessage("🔐 Please enter access code.");
     accessInput.focus();
     return;
   }
 
   // ⭐ CASE 4 — CODE WRONG
   if (!codeValid) {
-    alert("❌ Invalid or expired access code.");
+    showMessage("❌ Invalid or expired access code.");
     accessInput.focus();
     return;
   }
@@ -172,6 +172,19 @@ document.querySelectorAll(".required").forEach(field => {
 });
 
 
+function showMessage(text, type = "error", duration = 3000) {
+  const box = document.getElementById("messageBox");
+
+  box.textContent = text;
+  box.className = "";              // reset classes
+  box.classList.add(type, "show");
+
+  // Auto hide
+  setTimeout(() => {
+    box.classList.remove("show");
+  }, duration);
+}
+
 function getBase() {
   // GitHub Pages domain check
   if (location.hostname.includes("github.io")) {
@@ -197,4 +210,3 @@ function fixNavForUniCover() {
   if (products) products.href = BASE + "index.html#products";
   if (about) about.href = BASE + "index.html#about";
 }
-
