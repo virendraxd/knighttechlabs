@@ -82,6 +82,15 @@ select {
   border-radius: 5px;
 }
 
+input[type="text"] {
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
 button {
   width: 100%;
   margin-top: 24px;
@@ -194,7 +203,7 @@ footer {
   margin: 8px 0;
 }
 
-/* ================= BOTTOM SECTION ================= */
+/* ================= BOTTOM SECTION  input================= */
 .bottom {
   width: 85%;
   display: flex;

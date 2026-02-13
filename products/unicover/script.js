@@ -48,16 +48,40 @@ if (course) {
 if (stream) {
   stream.onchange = () => coverStream.textContent = stream.value;
 }
-if (year) {
-  year.onchange = () => {
-    coverYear.innerHTML = year.value.toUpperCase() + "<sup> YEAR</sup>";
-  }
-};
+if (year && coverYear) {
+  year.addEventListener("change", () => {
+
+    const value = year.value; // 1st, 2nd, etc
+    const number = value.slice(0, -2);
+    const suffix = value.slice(-2);
+
+    coverYear.innerHTML = `${number}<sup>${suffix}</sup> YEAR`;
+  });
+}
 
 const downloadBtn = document.getElementById("downloadPdf");
 const coverPage = document.querySelector(".cover-page");
 
 downloadBtn.addEventListener("click", () => {
+  
+  // 🔹 Validate required fields
+  const requiredFields = document.querySelectorAll(".required");
+  let valid = true;
+
+  requiredFields.forEach(field => {
+    if (!field.value.trim()) {
+      valid = false;
+      field.style.border = "2px solid red";
+    } else {
+      field.style.border = "";
+    }
+  });
+
+  if (!valid) {
+    alert("⚠️ Please fill all required fields before downloading.");
+    return;
+  }
+
   const studentName =
     document.getElementById("coverStudent")?.innerText || "Student";
 
@@ -84,6 +108,14 @@ downloadBtn.addEventListener("click", () => {
 
   html2pdf().set(options).from(coverPage).save();
 });
+
+document.querySelectorAll(".required").forEach(field => {
+  field.addEventListener("input", () => {
+    if (field.value.trim()) field.style.border = "";
+  });
+});
+
+
 function getBase() {
   // GitHub Pages domain check
   if (location.hostname.includes("github.io")) {
