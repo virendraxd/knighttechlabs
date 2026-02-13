@@ -8,10 +8,6 @@
   --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
-/* .light-bg {
-  background: #f1f5f9;
-} */
-
 * {
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
@@ -38,10 +34,10 @@ body {
 }
 
 .unicover-section {
-  background: #1e40af;
-  color: #ffffff;
-
-  padding: 120px 15% 80px;
+    background: #1e40af;
+    color: #ffffff;
+    padding: 60px 15% 60px;
+    margin-top: 5rem;
 }
 
 .unicover-content {
