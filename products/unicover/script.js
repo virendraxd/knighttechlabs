@@ -59,35 +59,89 @@ if (year && coverYear) {
   });
 }
 
+
+
 const downloadBtn = document.getElementById("downloadPdf");
 const coverPage = document.querySelector(".cover-page");
+const accessInput = document.getElementById("accessKey");
+
+// 🔐 Generate daily code
+const today = new Date().toISOString().slice(0, 10);
+const correctKey = "KTL-" + today;
 
 downloadBtn.addEventListener("click", () => {
-  
-  // 🔹 Validate required fields
+
+  // 🔐 ACCESS CODE
+  const enteredKey = accessInput.value.trim();
+  const codeFilled = enteredKey.length > 0;
+  const codeValid = enteredKey === correctKey;
+
+  // 📝 REQUIRED FIELDS
   const requiredFields = document.querySelectorAll(".required");
-  let valid = true;
+
+  let fieldsValid = true;
+  let firstEmptyField = null;
 
   requiredFields.forEach(field => {
     if (!field.value.trim()) {
-      valid = false;
+      fieldsValid = false;
       field.style.border = "2px solid red";
+
+      if (!firstEmptyField) firstEmptyField = field;
+
     } else {
       field.style.border = "";
     }
   });
 
-  if (!valid) {
-    alert("⚠️ Please fill all required fields before downloading.");
+  // ⭐ CASE 1 — BOTH MISSING
+  if (!fieldsValid && !codeFilled) {
+    alert("⚠️ Please fill all required fields AND enter access code.");
+
+    if (firstEmptyField) {
+      firstEmptyField.focus();
+      firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
     return;
   }
+
+  // ⭐ CASE 2 — ONLY FIELDS MISSING
+  if (!fieldsValid) {
+    alert("⚠️ Please fill all required fields before downloading.");
+
+    if (firstEmptyField) {
+      firstEmptyField.focus();
+      firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    return;
+  }
+
+  // ⭐ CASE 3 — CODE EMPTY
+  if (!codeFilled) {
+    alert("🔐 Please enter access code.");
+    accessInput.focus();
+    return;
+  }
+
+  // ⭐ CASE 4 — CODE WRONG
+  if (!codeValid) {
+    alert("❌ Invalid or expired access code.");
+    accessInput.focus();
+    return;
+  }
+
+  // ⭐ ALL GOOD → GENERATE PDF
 
   const studentName =
     document.getElementById("coverStudent")?.innerText || "Student";
 
+  const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+
   const options = {
     margin: 0,
-    filename: `${studentName}_Assignment_Cover.pdf`,
+    filename: `${safeName}_Assignment_Cover.pdf`,
     image: { type: "jpeg", quality: 1 },
 
     html2canvas: {
@@ -108,6 +162,8 @@ downloadBtn.addEventListener("click", () => {
 
   html2pdf().set(options).from(coverPage).save();
 });
+
+console.log("Today's Access Code:", correctKey);
 
 document.querySelectorAll(".required").forEach(field => {
   field.addEventListener("input", () => {
@@ -141,7 +197,4 @@ function fixNavForUniCover() {
   if (products) products.href = BASE + "index.html#products";
   if (about) about.href = BASE + "index.html#about";
 }
-
-// window.addEventListener("load", fixNavForUniCover);
-
 
