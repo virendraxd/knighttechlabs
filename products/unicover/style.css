@@ -328,3 +328,33 @@ footer {
 #messageBox.info {
   background: #1976d2;
 }
+
+.log-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 320px;
+  max-height: 400px;
+  background: #f0f0f0;
+  border: 2px solid #1e40af;
+  padding: 10px;
+  overflow-y: auto;
+  font-family: monospace;
+  z-index: 9999;
+}
+
+.log-box h3 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #1e40af;
+}
+
+#copyLogBtn {
+  margin-top: 5px;
+  padding: 4px 8px;
+  background: #1e40af;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}

@@ -59,8 +59,6 @@ if (year && coverYear) {
   });
 }
 
-
-
 const downloadBtn = document.getElementById("downloadPdf");
 const coverPage = document.querySelector(".cover-page");
 const accessInput = document.getElementById("accessKey");
@@ -93,7 +91,7 @@ downloadBtn.addEventListener("click", () => {
 
   // ⭐ CASE 1 — BOTH MISSING
   if (!fieldsValid && !codeFilled) {
-    showMessage("⚠️ Please fill all required fields AND enter access code.");
+    showMessage("⚠️ Please fill all required fields and enter Access Code.");
     if (firstEmptyField) {
       firstEmptyField.focus();
       firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -125,49 +123,76 @@ downloadBtn.addEventListener("click", () => {
     return;
   }
 
-  // ⭐ ALL GOOD → RAZORPAY CHECKOUT
+  if (!coverPage) {
+    showMessage("Error: Cover page element not found!");
+    return;
+  }
 
-  const studentName = document.getElementById("coverStudent")?.innerText || "Student";
+  // ⭐ ALL GOOD → RAZORPAY CHECKOUT
+  const studentName = coverStudent?.innerText || "Student";
   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+
+  // Disable button to prevent multiple clicks
+  downloadBtn.disabled = true;
 
   // Razorpay options
   const rzpOptions = {
     key: "rzp_live_SFfynYVohQVMSU", // Replace with your Razorpay Test Key ID
-    amount: 100, // Amount in paise (₹1 = 100)
+    amount: 1000, // Amount in paise (₹10)
     currency: "INR",
     name: "UniCover by Virendraxd",
     description: "Assignment Cover Page Generator",
-    // image: "https://yourwebsite.com/logo.png", // optional
-    handler: function (response) {
-      // ✅ Payment successful → generate PDF
-      const options = {
-        margin: 0,
-        filename: `${safeName}_Assignment_Cover.pdf`,
-        image: { type: "jpeg", quality: 1 },
-
-        html2canvas: {
-          scale: 3,
-          useCORS: true,
-          scrollX: 0,
-          scrollY: 0
-        },
-
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          orientation: "portrait"
-        },
-
-        pagebreak: { mode: "avoid-all" }
-      };
-
-      html2pdf().set(options).from(coverPage).save();
+    prefill: {
+      name: student.value || studentName,
+      email: "student@example.com",
+      contact: "9999999999"
     },
-    prefill: { name: "", email: "", contact: "" },
-    theme: { color: "#3399cc" }
+    theme: { color: "#3399cc" },
+    handler: function (response) {
+      try {
+        logBox.style.display = "block";
+
+        addLog("✅ Payment Successful!");
+        addLog("Payment ID: " + response.razorpay_payment_id);
+        addLog("Order ID: " + response.razorpay_order_id);
+        addLog("Signature: " + response.razorpay_signature);
+        addLog("📥 Starting PDF download...");
+
+        console.log("Payment successful", response);
+
+        // ✅ Generate PDF after successful payment
+        const options = {
+          margin: 0,
+          filename: `${safeName}_Assignment_Cover.pdf`,
+          image: { type: "jpeg", quality: 1 },
+          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          pagebreak: { mode: "avoid-all" }
+        };
+
+        html2pdf().set(options).from(coverPage).save().finally(() => {
+          addLog("✅ PDF Download Completed!");
+          downloadBtn.disabled = false;
+        });
+      } catch (err) {
+        console.error("PDF generation failed:", err);
+        logBox.style.display = "block";
+        addLog("❌ PDF generation failed. Check console.");
+        downloadBtn.disabled = false;
+      }
+    }
   };
 
   const rzp1 = new Razorpay(rzpOptions);
+
+  // Payment failed handler
+  rzp1.on('payment.failed', function (response) {
+    console.error("Payment failed:", response.error);
+    showMessage("Payment failed! Try again.");
+    downloadBtn.disabled = false;
+  });
+
+  // Open Razorpay popup
   rzp1.open();
 });
 
@@ -178,20 +203,6 @@ document.querySelectorAll(".required").forEach(field => {
     if (field.value.trim()) field.style.border = "";
   });
 });
-
-
-function showMessage(text, type = "error", duration = 3000) {
-  const box = document.getElementById("messageBox");
-
-  box.textContent = text;
-  box.className = "";              // reset classes
-  box.classList.add(type, "show");
-
-  // Auto hide
-  setTimeout(() => {
-    box.classList.remove("show");
-  }, duration);
-}
 
 function getBase() {
   // GitHub Pages domain check
@@ -218,3 +229,34 @@ function fixNavForUniCover() {
   if (products) products.href = BASE + "index.html#products";
   if (about) about.href = BASE + "index.html#about";
 }
+
+function showMessage(text, type = "error", duration = 3000) {
+  const box = document.getElementById("messageBox");
+
+  box.textContent = text;
+  box.className = "";              // reset classes
+  box.classList.add(type, "show");
+
+  // Auto hide
+  setTimeout(() => {
+    box.classList.remove("show");
+  }, duration);
+}
+
+const logBox = document.getElementById("logBox");
+const logContent = document.getElementById("logContent");
+const copyLogBtn = document.getElementById("copyLogBtn");
+
+// Add a line to log
+function addLog(message) {
+  const timestamp = new Date().toLocaleTimeString();
+  logContent.textContent += `[${timestamp}] ${message}\n`;
+  logContent.scrollTop = logContent.scrollHeight; // auto scroll to bottom
+}
+
+// Copy log to clipboard
+copyLogBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(logContent.textContent)
+    .then(() => alert("Log copied to clipboard ✅"))
+    .catch(() => alert("Failed to copy log ❌"));
+});
