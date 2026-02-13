@@ -27,24 +27,6 @@ h4 {
   font-family: 'Poppins', sans-serif;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-
-.btn-contact {
-  padding: 0.6rem 1.2rem;
-  border: 1px solid var(--navy);
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.btn-contact:hover {
-  background: var(--navy);
-  color: var(--white);
-}
-
 /* HERO */
 .hero {
   padding: 10rem 10% 6rem;
@@ -104,9 +86,7 @@ a {
 }
 
 /* SECTIONS */
-.section-padding {
-  padding: 5rem 15%;
-}
+
 
 .light-bg {
   background: #f1f5f9;
