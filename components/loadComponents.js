@@ -20,5 +20,5 @@ function fixHeaderLinks() {
   document.querySelector('[data-link="about"]').href = base + "index.html#about";
 }
 
-loadComponent("header", "../../components/header.html");
-loadComponent("footer", "../../components/footer.html");
+loadComponent("header", "/knighttechlabs/components/header.html");
+loadComponent("footer", "/knighttechlabs/components/footer.html");
