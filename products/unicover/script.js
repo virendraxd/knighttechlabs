@@ -84,7 +84,32 @@ downloadBtn.addEventListener("click", () => {
 
   html2pdf().set(options).from(coverPage).save();
 });
+function getBase() {
+  // GitHub Pages domain check
+  if (location.hostname.includes("github.io")) {
+    return "/knighttechlabs/"; // repo name
+  }
 
+  // Localhost
+  return "/";
+}
 
+function fixNavForUniCover() {
+  const path = location.pathname;
+
+  if (!path.includes("/products/unicover")) return;
+
+  const home = document.querySelector('[data-link="home"]');
+  const products = document.querySelector('[data-link="products"]');
+  const about = document.querySelector('[data-link="about"]');
+
+  const BASE = getBase();
+
+  if (home) home.href = BASE + "index.html";
+  if (products) products.href = BASE + "index.html#products";
+  if (about) about.href = BASE + "index.html#about";
+}
+
+// window.addEventListener("load", fixNavForUniCover);
 
 

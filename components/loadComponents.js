@@ -21,6 +21,12 @@ async function loadComponent(id, file) {
 async function loadAll() {
   await loadComponent("header", "components/header.html");
   await loadComponent("footer", "components/footer.html");
+
+  // ⭐ Run AFTER header exists
+  if (typeof fixNavForUniCover === "function") {
+    fixNavForUniCover();
+  }
 }
 
 loadAll();
+
