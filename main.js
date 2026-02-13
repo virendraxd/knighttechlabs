@@ -6,3 +6,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       .scrollIntoView({ behavior: "smooth" });
   });
 });
+
+function initPage() {
+  console.log("Page initialized after components loaded");
+}
