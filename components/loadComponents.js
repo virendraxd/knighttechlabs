@@ -1,8 +1,20 @@
+function getBasePath() {
+  const isGitHub = location.hostname.includes("github.io");
+
+  if (isGitHub) {
+    return "/knighttechlabs/"; // your repo name
+  }
+
+  return "/"; // localhost
+}
+
+const BASE = getBasePath();
+
 async function loadComponent(id, file) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  const res = await fetch("/knighttechlabs/" + file);
+  const res = await fetch(BASE + file);
   el.innerHTML = await res.text();
 }
 
