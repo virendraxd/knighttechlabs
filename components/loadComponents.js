@@ -21,7 +21,7 @@ function fixHeaderLinks() {
   const products = document.querySelector('[data-link="products"]');
   const about = document.querySelector('[data-link="about"]');
 
-  if (home) home.href = base + "index.html";
+  if (home) home.href = base + "knighttechlabs/index.html";
   if (products) products.href = base + "index.html#products";
   if (about) about.href = base + "index.html#about";
 }
