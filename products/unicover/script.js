@@ -78,7 +78,6 @@ downloadBtn.addEventListener("click", () => {
 
   // 📝 REQUIRED FIELDS
   const requiredFields = document.querySelectorAll(".required");
-
   let fieldsValid = true;
   let firstEmptyField = null;
 
@@ -86,9 +85,7 @@ downloadBtn.addEventListener("click", () => {
     if (!field.value.trim()) {
       fieldsValid = false;
       field.style.border = "2px solid red";
-
       if (!firstEmptyField) firstEmptyField = field;
-
     } else {
       field.style.border = "";
     }
@@ -97,24 +94,20 @@ downloadBtn.addEventListener("click", () => {
   // ⭐ CASE 1 — BOTH MISSING
   if (!fieldsValid && !codeFilled) {
     showMessage("⚠️ Please fill all required fields AND enter access code.");
-
     if (firstEmptyField) {
       firstEmptyField.focus();
       firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-
     return;
   }
 
   // ⭐ CASE 2 — ONLY FIELDS MISSING
   if (!fieldsValid) {
     showMessage("⚠️ Please fill all required fields before downloading.");
-
     if (firstEmptyField) {
       firstEmptyField.focus();
       firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-
     return;
   }
 
@@ -132,35 +125,50 @@ downloadBtn.addEventListener("click", () => {
     return;
   }
 
-  // ⭐ ALL GOOD → GENERATE PDF
+  // ⭐ ALL GOOD → RAZORPAY CHECKOUT
 
-  const studentName =
-    document.getElementById("coverStudent")?.innerText || "Student";
-
+  const studentName = document.getElementById("coverStudent")?.innerText || "Student";
   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
 
-  const options = {
-    margin: 0,
-    filename: `${safeName}_Assignment_Cover.pdf`,
-    image: { type: "jpeg", quality: 1 },
+  // Razorpay options
+  const rzpOptions = {
+    key: "rzp_live_SFfynYVohQVMSU", // Replace with your Razorpay Test Key ID
+    amount: 100, // Amount in paise (₹1 = 100)
+    currency: "INR",
+    name: "UniCover by Virendraxd",
+    description: "Assignment Cover Page Generator",
+    // image: "https://yourwebsite.com/logo.png", // optional
+    handler: function (response) {
+      // ✅ Payment successful → generate PDF
+      const options = {
+        margin: 0,
+        filename: `${safeName}_Assignment_Cover.pdf`,
+        image: { type: "jpeg", quality: 1 },
 
-    html2canvas: {
-      scale: 3,
-      useCORS: true,
-      scrollX: 0,
-      scrollY: 0
+        html2canvas: {
+          scale: 3,
+          useCORS: true,
+          scrollX: 0,
+          scrollY: 0
+        },
+
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation: "portrait"
+        },
+
+        pagebreak: { mode: "avoid-all" }
+      };
+
+      html2pdf().set(options).from(coverPage).save();
     },
-
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation: "portrait"
-    },
-
-    pagebreak: { mode: "avoid-all" }
+    prefill: { name: "", email: "", contact: "" },
+    theme: { color: "#3399cc" }
   };
 
-  html2pdf().set(options).from(coverPage).save();
+  const rzp1 = new Razorpay(rzpOptions);
+  rzp1.open();
 });
 
 console.log("Today's Access Code:", correctKey);
