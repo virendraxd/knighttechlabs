@@ -1,26 +1,64 @@
+:root {
+  --navy: #0F172A;
+  --cyan: #06B6D4;
+  --purple: #7C3AED;
+  --slate: #64748B;
+  --bg: #F8FAFC;
+  --white: #FFFFFF;
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* .light-bg {
+  background: #f1f5f9;
+} */
+
 * {
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
 
-html, body {
-  /* width: 210mm; */
-  /* height: 297mm; */
+html,
+body {
   margin: 0;
   padding: 0;
 }
 
-/* ================= HEADER ================= */
-.header {
-  margin-top: 4.8rem;
-  background: #1e40af;
-  color: #fff;
-  text-align: center;
-  padding: 28px 15px;
+.page-offset {
+  padding-top: 120px;
 }
 
-.header h1 {
-  margin: 0 0 6px;
+.product-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #e0e7ff;
+}
+
+.unicover-section {
+  background: #1e40af;
+  color: #ffffff;
+
+  padding: 120px 15% 80px;
+}
+
+.unicover-content {
+  max-width: 900px;
+}
+
+.unicover-section h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.unicover-section p {
+  font-size: 1.1rem;
+  color: #dbeafe;
+  max-width: 520px;
+  line-height: 1.6;
 }
 
 /* ================= FORM CONTAINER ================= */
@@ -30,7 +68,7 @@ html, body {
   padding: 22px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 
 label {
@@ -39,7 +77,8 @@ label {
   font-weight: 500;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   margin-top: 6px;
@@ -83,13 +122,13 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #e5e7eb; /* preview only */
+  background: #e5e7eb;
 }
 
 /* COVER PAGE */
 .cover-page {
   width: 210mm;
-min-height: 296mm;   
+  min-height: 296mm;
 
   position: relative;
   box-sizing: border-box;
@@ -102,8 +141,6 @@ min-height: 296mm;
   overflow: hidden;
   background: #fff;
 }
-
-
 
 /* INNER BORDER */
 .cover-page::before {
@@ -215,4 +252,16 @@ min-height: 296mm;
     margin: 0;
     border: none;
   }
+}
+
+.about {
+  background: var(--white);
+}
+
+.section-title h2 {
+  font-size: 2rem;
+}
+
+.section-title p {
+  color: var(--slate);
 }

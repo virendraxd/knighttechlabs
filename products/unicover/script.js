@@ -58,31 +58,31 @@ const downloadBtn = document.getElementById("downloadPdf");
 const coverPage = document.querySelector(".cover-page");
 
 downloadBtn.addEventListener("click", () => {
-
   const studentName =
     document.getElementById("coverStudent")?.innerText || "Student";
 
   const options = {
-    margin: [0, 0, 0, 0],
+    margin: 0,
     filename: `${studentName}_Assignment_Cover.pdf`,
     image: { type: "jpeg", quality: 1 },
+
     html2canvas: {
       scale: 3,
       useCORS: true,
-      scrollY: 0,
-      
-      windowWidth: 794,   // 210mm @ 96dpi
-      windowHeight: 1123  // 297mm @ 96dpi
+      scrollX: 0,
+      scrollY: 0
     },
 
     jsPDF: {
       unit: "mm",
-      format: [210, 297],   // 👈 EXACT SIZE
+      format: "a4",
       orientation: "portrait"
     },
-    pagebreak: { mode: ["avoid-all"] }
+
+    pagebreak: { mode: "avoid-all" }
   };
 
   html2pdf().set(options).from(coverPage).save();
 });
+
 
