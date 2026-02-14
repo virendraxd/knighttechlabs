@@ -8,16 +8,7 @@
   --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
-* {
-  box-sizing: border-box;
-  font-family: "Inter", sans-serif;
-}
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
 
 .page-offset {
   padding-top: 120px;
@@ -34,10 +25,10 @@ body {
 }
 
 .unicover-section {
-    background: #1e40af;
-    color: #ffffff;
-    padding: 60px 15% 60px;
-    margin-top: 5rem;
+  background: #1e40af;
+  color: #ffffff;
+  padding: 60px 15% 60px;
+  margin-top: 5rem;
 }
 
 .unicover-content {
@@ -114,20 +105,13 @@ button:hover {
   color: #475569;
 }
 
-footer {
-  text-align: center;
-  padding: 16px;
-  font-size: 0.85rem;
-  color: #64748b;
-}
-
 /* ================= COVER PAGE ================= */
 /* PAGE WRAPPER */
 .page {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #e5e7eb;
+  background: #f1f5f9;
 }
 
 /* COVER PAGE */
@@ -248,8 +232,8 @@ footer {
   }
 
   .header,
-  .container,
-  footer {
+  .container
+   {
     display: none;
   }
 
@@ -285,10 +269,11 @@ footer {
 
 #messageBox {
   position: fixed;
-  top: -100px;           /* hidden above screen */
+  top: -100px;
+  /* hidden above screen */
   left: 50%;
   transform: translateX(-50%);
-  
+
   min-width: 300px;
   max-width: 90%;
   padding: 14px 20px;
@@ -298,7 +283,7 @@ footer {
   font-weight: 600;
 
   border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 
   z-index: 9999;
   text-align: center;

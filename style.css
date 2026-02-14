@@ -8,24 +8,7 @@
   --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--navy);
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-family: 'Poppins', sans-serif;
-}
 
 /* HERO */
 .hero {
