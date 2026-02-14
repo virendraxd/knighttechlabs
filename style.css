@@ -1,15 +1,3 @@
-:root {
-  --navy: #0F172A;
-  --cyan: #06B6D4;
-  --purple: #7C3AED;
-  --slate: #64748B;
-  --bg: #F8FAFC;
-  --white: #FFFFFF;
-  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-}
-
-
-
 /* HERO */
 .hero {
   padding: 10rem 10% 6rem;
@@ -131,12 +119,7 @@
   font-size: 0.9rem;
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
-  }
-
   .hero h1 {
     font-size: 2.2rem;
   }
