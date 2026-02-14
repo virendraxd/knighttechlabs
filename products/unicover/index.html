@@ -47,139 +47,144 @@
         <button id="copyLogBtn">Copy Details</button>
     </div>
 
-    <main class="container">
-        <form id="coverForm">
+    <main class="unicover-layout">
+        <!-- LEFT SIDE: FORM -->
+        <div class="form-area">
+            <form id="coverForm">
+                <label>Session</label>
+                <select id="session" class="required">
+                    <option value="" disabled selected>Select Session</option>
 
-            <label>Session</label>
-            <select id="session" class="required">
-                <option value="" disabled selected>Select Session</option>
+                    <!-- <option value="2024-2025">2024–2025</option> -->
+                    <option value="2025-2026">2025–2026</option>
+                    <option value="2026-2027">2026–2027</option>
+                    <!-- <option value="2027-2028">2027–2028</option> -->
+                </select>
 
-                <!-- <option value="2024-2025">2024–2025</option> -->
-                <option value="2025-2026">2025–2026</option>
-                <option value="2026-2027">2026–2027</option>
-                <!-- <option value="2027-2028">2027–2028</option> -->
-            </select>
+                <label>Assignment Title</label>
+                <select id="title" class="required">
+                    <option value="" disabled selected>Select Assignment Title</option>
 
-            <label>Assignment Title</label>
-            <select id="title" class="required">
-                <option value="" disabled selected>Select Assignment Title</option>
+                    <option value="ASSIGNMENT FILE">ASSIGNMENT FILE</option>
+                    <option value="PRACTICAL FILE">PRACTICAL FILE</option>
+                    <option value="PROJECT REPORT">PROJECT REPORT</option>
+                </select>
 
-                <option value="ASSIGNMENT FILE">ASSIGNMENT FILE</option>
-                <option value="PRACTICAL FILE">PRACTICAL FILE</option>
-                <option value="PROJECT REPORT">PROJECT REPORT</option>
-            </select>
-
-            <label>Subject</label>
-            <textarea id="subject" rows="2" class="required" placeholder="Enter subject"></textarea>
+                <label>Subject</label>
+                <textarea id="subject" rows="2" class="required" placeholder="Enter subject"></textarea>
 
 
-            <label>Faculty Name</label>
-            <input type="text" id="faculty" class="required" placeholder="PROF JOHN DAS" />
+                <label>Faculty Name</label>
+                <input type="text" id="faculty" class="required" placeholder="PROF JOHN DAS" />
 
-            <label>Faculty Position</label>
-            <select id="position" class="required">
-                <option value="" disabled selected>Select Position</option>
+                <label>Faculty Position</label>
+                <select id="position" class="required">
+                    <option value="" disabled selected>Select Position</option>
 
-                <option value="HOD">HOD</option>
-                <option value="MENTOR">MENTOR</option>
-                <option value="PROFESSOR">PROFESSOR</option>
-                <option value="ASSOCIATE PROFESSOR">ASSOCIATE PROFESSOR</option>
-                <option value="ASSISTANT PROFESSOR">ASSISTANT PROFESSOR</option>
-            </select>
+                    <option value="HOD">HOD</option>
+                    <option value="MENTOR">MENTOR</option>
+                    <option value="PROFESSOR">PROFESSOR</option>
+                    <option value="ASSOCIATE PROFESSOR">ASSOCIATE PROFESSOR</option>
+                    <option value="ASSISTANT PROFESSOR">ASSISTANT PROFESSOR</option>
+                </select>
 
-            <label>Student Name</label>
-            <input type="text" id="studentName" class="required" placeholder="VIRENDRA SINGH" />
+                <label>Student Name</label>
+                <input type="text" id="studentName" class="required" placeholder="VIRENDRA SINGH" />
 
-            <label>Course</label>
-            <select id="course" class="required">
-                <option value="" disabled selected>Select Course</option>
+                <label>Course</label>
+                <select id="course" class="required">
+                    <option value="" disabled selected>Select Course</option>
 
-                <option value="B.Tech">B.Tech</option>
-                <option value="B.E.">B.E.</option>
-                <option value="B.Sc">B.Sc</option>
-                <option value="B.Com">B.Com</option>
-                <option value="B.A.">B.A.</option>
-                <option value="BCA">BCA</option>
-                <option value="M.Tech">M.Tech</option>
-                <option value="M.E.">M.E.</option>
-                <option value="M.Sc">M.Sc</option>
-                <option value="M.Com">M.Com</option>
-                <option value="M.A.">M.A.</option>
-                <option value="MCA">MCA</option>
-                <option value="Diploma">Diploma</option>
-            </select>
+                    <option value="B.Tech">B.Tech</option>
+                    <option value="B.E.">B.E.</option>
+                    <option value="B.Sc">B.Sc</option>
+                    <option value="B.Com">B.Com</option>
+                    <option value="B.A.">B.A.</option>
+                    <option value="BCA">BCA</option>
+                    <option value="M.Tech">M.Tech</option>
+                    <option value="M.E.">M.E.</option>
+                    <option value="M.Sc">M.Sc</option>
+                    <option value="M.Com">M.Com</option>
+                    <option value="M.A.">M.A.</option>
+                    <option value="MCA">MCA</option>
+                    <option value="Diploma">Diploma</option>
+                </select>
 
-            <label>Stream</label>
-            <select id="stream" class="required">
-                <option value="" disabled selected>Select Stream</option>
+                <label>Stream</label>
+                <select id="stream" class="required">
+                    <option value="" disabled selected>Select Stream</option>
 
-                <option value="(CSE)">Computer Science Engineering (CSE)</option>
-                <option value="(IT)">Information Technology (IT)</option>
-                <option value="(ECE)">Electronics & Communication Engineering (ECE)</option>
-                <option value="(EE)">Electrical Engineering (EE)</option>
-                <option value="(ME)">Mechanical Engineering (ME)</option>
-                <option value="(CE)">Civil Engineering (CE)</option>
-                <option value="(AI-DS)">Artificial Intelligence & Data Science (AI-DS)</option>
-                <option value="(AI-ML)">AI & Machine Learning (AI-ML)</option>
-            </select>
+                    <option value="(CSE)">Computer Science Engineering (CSE)</option>
+                    <option value="(IT)">Information Technology (IT)</option>
+                    <option value="(ECE)">Electronics & Communication Engineering (ECE)</option>
+                    <option value="(EE)">Electrical Engineering (EE)</option>
+                    <option value="(ME)">Mechanical Engineering (ME)</option>
+                    <option value="(CE)">Civil Engineering (CE)</option>
+                    <option value="(AI-DS)">Artificial Intelligence & Data Science (AI-DS)</option>
+                    <option value="(AI-ML)">AI & Machine Learning (AI-ML)</option>
+                </select>
 
-            <label>Year</label>
-            <select id="year" class="required">
-                <option value="" disabled selected>Select Year</option>
+                <label>Year</label>
+                <select id="year" class="required">
+                    <option value="" disabled selected>Select Year</option>
 
-                <option value="1st">1st YEAR</option>
-                <option value="2nd">2nd YEAR</option>
-                <option value="3rd">3rd YEAR</option>
-                <option value="4th">4th YEAR</option>
-            </select>
+                    <option value="1st">1st YEAR</option>
+                    <option value="2nd">2nd YEAR</option>
+                    <option value="3rd">3rd YEAR</option>
+                    <option value="4th">4th YEAR</option>
+                </select>
 
-            <input type="text" id="accessKey" placeholder="Enter Access Code" />
+                <input type="text" id="accessKey" placeholder="Enter Access Code" />
 
-            <button type="button" id="downloadPdf">
-                Generate & Download Cover Page <br>
-                UniCover by Virendraxd <br>
-                <span>₹10</span>
-            </button>
-        </form>
+                <button type="button" id="downloadPdf">
+                    Pay & Download Cover Page <br>
+                    UniCover by Virendraxd <br>
+                    <span>₹10</span>
+                </button>
+            </form>
 
-        <div class="note">
-            <p>
-                📄 Official-style format • 🖨️ Print-ready • ⏱️ Instant download
-            </p>
+            <div class="note">
+                <p>
+                    📄 Official-style format • 🖨️ Print-ready • ⏱️ Instant download
+                </p>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: PREVIEW -->
+        <div class="page">
+            <div class="cover-page">
+                <div class="top-section">
+                    <img src="assets/unilogo.png" class="uni-logo" />
+                </div>
+
+                <div class="details-section">
+                    <span class="upper">
+                        <div class="session" id="coverSession">SESSION : 2025-2026</div>
+                        <div class="title" id="coverTitle">ASSIGNMENT FILE</div>
+                        <div class="subject" id="coverSubject">SUBJECT : DESIGN THINKING</div>
+                    </span>
+                    <span class="bottom">
+                        <div class="left">
+                            <div class="submitted">SUBMITTED TO:</div>
+                            <div class="name" id="coverFaculty">PROF JOHN DAS</div>
+                            <div class="position" id="coverPosition">PROFESSOR</div>
+                        </div>
+                        <div class="right">
+                            <div class="submitted">SUBMITTED BY:</div>
+                            <div class="name" id="coverStudent">VIRENDRA SINGH</div>
+                            <div class="std-info">
+                                <span class="course" id="coverCourse">B TECH</span>
+                                <span class="stream" id="coverStream">(CSE)</span>
+                                <span class="year" id="coverYear">1<sup>st</sup> YEAR</span>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
         </div>
     </main>
 
-    <div class="page">
-        <div class="cover-page">
-            <div class="top-section">
-                <img src="assets/unilogo.png" class="uni-logo" />
-            </div>
 
-            <div class="details-section">
-                <span class="upper">
-                    <div class="session" id="coverSession">SESSION : 2025-2026</div>
-                    <div class="title" id="coverTitle">ASSIGNMENT FILE</div>
-                    <div class="subject" id="coverSubject">SUBJECT : DESIGN THINKING</div>
-                </span>
-                <span class="bottom">
-                    <div class="left">
-                        <div class="submitted">SUBMITTED TO:</div>
-                        <div class="name" id="coverFaculty">PROF JOHN DAS</div>
-                        <div class="position" id="coverPosition">PROFESSOR</div>
-                    </div>
-                    <div class="right">
-                        <div class="submitted">SUBMITTED BY:</div>
-                        <div class="name" id="coverStudent">VIRENDRA SINGH</div>
-                        <div class="std-info">
-                            <span class="course" id="coverCourse">B TECH</span>
-                            <span class="stream" id="coverStream">(CSE)</span>
-                            <span class="year" id="coverYear">1<sup>st</sup> YEAR</span>
-                        </div>
-                    </div>
-                </span>
-            </div>
-        </div>
-    </div>
 
     <!-- ABOUT -->
     <section id="about" class="section-padding">
