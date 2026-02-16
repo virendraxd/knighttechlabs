@@ -63,18 +63,6 @@
 }
 
 /* SECTIONS */
-.light-bg {
-  background: #f1f5f9;
-}
-
-.section-title h2 {
-  font-size: 2rem;
-}
-
-.section-title p {
-  color: var(--slate);
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
