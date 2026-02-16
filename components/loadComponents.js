@@ -1,12 +1,14 @@
 function getBasePath() {
-  const isGitHub = location.hostname.includes("github.io");
+  const path = location.pathname;
 
-  if (isGitHub) {
+  // If inside /knighttechlabs/
+  if (path.startsWith("/knighttechlabs/")) {
     return "/knighttechlabs/"; // repo name
   }
 
   return "/"; // localhost
 }
+
 
 const BASE = getBasePath();
 
