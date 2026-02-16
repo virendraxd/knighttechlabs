@@ -2,7 +2,7 @@ function getBasePath() {
   const isGitHub = location.hostname.includes("github.io");
 
   if (isGitHub) {
-    return "/knighttechlabs/"; // your repo name
+    return "/knighttechlabs/"; // repo name
   }
 
   return "/"; // localhost
@@ -22,7 +22,8 @@ async function loadAll() {
   await loadComponent("header", "components/header.html");
   await loadComponent("footer", "components/footer.html");
 
-  // ⭐ Run AFTER header exists
+  applyDataLinks(); // ⭐ APPLY TO BOTH HEADER + FOOTER
+
   if (typeof fixNavForUniCover === "function") {
     fixNavForUniCover();
   }
@@ -30,3 +31,28 @@ async function loadAll() {
 
 loadAll();
 
+function applyDataLinks() {
+  const links = document.querySelectorAll("[data-link]");
+
+  links.forEach(link => {
+    const type = link.dataset.link;
+
+    switch (type) {
+      case "home":
+        link.href = BASE + "index.html";
+        break;
+
+      case "products":
+        link.href = BASE + "#products";
+        break;
+
+      case "about":
+        link.href = BASE + "#about";
+        break;
+
+      case "unicover":
+        link.href = BASE + "products/unicover/index.html";
+        break;
+    }
+  });
+}

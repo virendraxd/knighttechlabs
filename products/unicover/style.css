@@ -44,13 +44,6 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-  /* display: grid;
-  grid-template-columns: 1fr;   Mobile default
-  gap: 40px;
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
-  background: #f1f5f9; */
 }
 
 .unicover-layout {
