@@ -17,7 +17,7 @@
 html,
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
+  background: #f1f5f9;
   color: var(--navy);
 }
 
@@ -78,6 +78,50 @@ a {
   color: inherit;
 }
 
+p {
+  color: var(--slate);
+}
+
+.page-content {
+  max-width: calc(100vw - 15%);
+  margin: 140px auto 60px;
+  padding: 60px 24px;
+  line-height: 1.7;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.page-content h1 {
+  font-size: 42px;
+  margin-bottom: 16px;
+}
+
+.page-content h2 {
+  font-size: 26px;
+  margin-top: 42px;
+  margin-bottom: 12px;
+}
+
+.page-content p {
+  font-size: 18px;
+  color: #555;
+}
+
+.page-content ul {
+  margin-left: 20px;
+  color: #555;
+}
+
+.page-content a {
+  color: #0b5cff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.page-content a:hover {
+  text-decoration: underline;
+}
+
 .btn-about {
   display: inline-block;
   margin-top: 12px;
@@ -92,28 +136,11 @@ a {
 
 .btn-about:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-}
-
-/* .btn-contact {
-  padding: 0.6rem 1.2rem;
-  border: 1px solid var(--navy);
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.btn-contact:hover {
-  background: var(--navy);
-  color: var(--white);
-} */
-
-
-.nav-margin {
-  margin-top: 80px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .light-bg {
-  background: #f1f5f9;
+  background: var(--bg);
 }
 
 .section-title h2 {
@@ -126,6 +153,11 @@ a {
 
 .section-padding {
   padding: 5rem 15%;
+}
+
+.email {
+  overflow-wrap: break-word;
+  word-break: break-word; 
 }
 
 /* FOOTER */
