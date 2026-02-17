@@ -25,6 +25,7 @@ async function loadAll() {
   await loadComponent("footer", "components/footer.html");
 
   applyDataLinks(); // ⭐ APPLY TO BOTH HEADER + FOOTER
+  initMobileMenu(); // ⭐ INIT MOBILE MENU (AFTER HEADER LOAD)
 
   if (typeof fixNavForUniCover === "function") {
     fixNavForUniCover();
@@ -70,3 +71,27 @@ function applyDataLinks() {
     }
   });
 }
+
+function initMobileMenu() {
+  const menuBtn = document.getElementById("menu-btn");
+  const sidePanel = document.getElementById("side-panel");
+
+  if (!menuBtn || !sidePanel) return; // safety check
+
+  // Open panel
+  menuBtn.onclick = () => {
+    sidePanel.classList.add("active");
+  };
+
+  // Close when clicking outside
+  document.addEventListener("click", e => {
+    if (
+      sidePanel.classList.contains("active") &&
+      !sidePanel.contains(e.target) &&
+      !menuBtn.contains(e.target)
+    ) {
+      sidePanel.classList.remove("active");
+    }
+  });
+}
+
