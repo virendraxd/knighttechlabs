@@ -93,5 +93,21 @@ function initMobileMenu() {
       sidePanel.classList.remove("active");
     }
   });
+
+  // Close when a link inside panel is clicked
+  const links = sidePanel.querySelectorAll("a");
+
+  links.forEach(link => {
+    link.addEventListener("click", () => {
+      sidePanel.classList.remove("active");
+    });
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      sidePanel.classList.remove("active");
+    }
+  });
+
 }
 
