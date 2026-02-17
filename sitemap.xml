@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <!-- Home -->
+    <url>
+        <loc>https://virendraxd.github.io/knighttechlabs/</loc>
+    </url>
+
+    <!-- Unicover -->
+    <url>
+        <loc>https://virendraxd.github.io/knighttechlabs/products/unicover/</loc>
+    </url>
+
+    <!-- About -->
+    <url>
+        <loc>https://virendraxd.github.io/knighttechlabs/pages/about.html</loc>
+    </url>
+
+    <!-- Legal pages -->
+    <url>
+        <loc>https://virendraxd.github.io/knighttechlabs/pages/privacy_policy.html</loc>
+    </url>
+
+    <url>
+        <loc>https://virendraxd.github.io/knighttechlabs/pages/terms.html</loc>
+    </url>
+
+</urlset>
