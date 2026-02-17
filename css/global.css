@@ -16,6 +16,7 @@
 
 html,
 body {
+  scroll-behavior: smooth;
   font-family: 'Inter', sans-serif;
   background: #f1f5f9;
   color: var(--navy);
@@ -85,7 +86,7 @@ p {
 .page-content {
   max-width: calc(100vw - 15%);
   margin: 140px auto 60px;
-  padding: 60px 24px;
+  padding: 80px 48px;
   line-height: 1.7;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -230,3 +231,4 @@ p {
     display: none;
   }
 }
+

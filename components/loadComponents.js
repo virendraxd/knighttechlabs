@@ -48,12 +48,24 @@ function applyDataLinks() {
         link.href = BASE + "#products";
         break;
 
-      case "about":
-        link.href = BASE + "#about";
-        break;
-
       case "unicover":
         link.href = BASE + "products/unicover/index.html";
+        break;
+
+      case "about-section":
+        link.href = "#about-section";
+        break;
+
+      case "about":
+        link.href = "https://virendraxd.github.io/knighttechlabs/pages/about.html";
+        break;
+
+      case "privacy":
+        link.href = BASE + "pages/privacy_policy.html";
+        break;
+
+      case "terms":
+        link.href = BASE + "pages/terms.html";
         break;
     }
   });
