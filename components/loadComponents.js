@@ -53,11 +53,11 @@ function applyDataLinks() {
         break;
 
       case "about-section":
-        link.href = "#about-section";
+        link.href = "#about-section"; // not use BASE here
         break;
 
       case "about":
-        link.href = "https://virendraxd.github.io/knighttechlabs/pages/about.html";
+        link.href = BASE + "pages/about.html";
         break;
 
       case "privacy":
