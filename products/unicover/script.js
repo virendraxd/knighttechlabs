@@ -137,7 +137,7 @@ downloadBtn.addEventListener("click", () => {
 
   // Razorpay options
   const rzpOptions = {
-    key: "rzp_test_SFgEB7bF5j3Txj",
+    key: "rzp_live_SFfynYVohQVMSU",
     amount: 1000, // Amount in paise (₹10)
     currency: "INR",
     name: "UniCover by Virendraxd",
