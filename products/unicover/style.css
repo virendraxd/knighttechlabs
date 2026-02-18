@@ -362,9 +362,14 @@ textarea {
 }
 
 @media (max-width: 768px) {
-  .real-cover {
-    display: none;
-  }
+.real-cover {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
 
   .cover-preview {
     display: block;

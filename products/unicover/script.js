@@ -175,11 +175,26 @@ downloadBtn.addEventListener("click", () => {
           pagebreak: { mode: "avoid-all" }
         };
 
+        // ⭐ Temporarily activate real cover for PDF
+        coverPage.style.position = "static";
+        coverPage.style.left = "0";
+        coverPage.style.opacity = "1";
+        coverPage.style.pointerEvents = "auto";
+
+        await new Promise(resolve => setTimeout(resolve, 100)); // small render delay
+
         html2pdf().set(options).from(coverPage).save().finally(() => {
+
+          // ⭐ Hide it again after PDF
+          coverPage.style.position = "fixed";
+          coverPage.style.left = "-9999px";
+          coverPage.style.opacity = "0";
+          coverPage.style.pointerEvents = "none";
+
           addLog("✅ PDF Download Completed!");
           downloadBtn.disabled = false;
-
         });
+
       } catch (err) {
         console.error("PDF generation failed:", err);
         logBox.style.display = "block";
