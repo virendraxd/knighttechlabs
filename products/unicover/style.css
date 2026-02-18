@@ -81,7 +81,7 @@ textarea {
   resize: vertical;
 }
 
-button {
+.btn-download {
   width: 100%;
   margin-top: 24px;
   padding: 12px;
@@ -93,11 +93,11 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.btn-download:hover {
   background: #1e3a8a;
 }
 
-button span {
+.btn-download span {
   color: gray;
   font-size: 2rem;
   background-color: white;
