@@ -137,7 +137,7 @@ downloadBtn.addEventListener("click", () => {
 
   // Razorpay options
   const rzpOptions = {
-    key: "rzp_live_SFfynYVohQVMSU", // Replace with your Razorpay Test Key ID
+    key: "rzp_test_SFgEB7bF5j3Txj",
     amount: 1000, // Amount in paise (₹10)
     currency: "INR",
     name: "UniCover by Virendraxd",
@@ -148,7 +148,7 @@ downloadBtn.addEventListener("click", () => {
       contact: "9999999999"
     },
     theme: { color: "#3399cc" },
-    handler: function (response) {
+    handler: async function (response) {
       try {
         logBox.style.display = "block";
 
@@ -156,6 +156,11 @@ downloadBtn.addEventListener("click", () => {
         addLog("Payment ID: " + response.razorpay_payment_id);
         addLog("Order ID: " + response.razorpay_order_id);
         addLog("Signature: " + response.razorpay_signature);
+
+        // ⭐ SAVE DATA TO FIREBASE HERE
+        await saveCoverData(response);
+
+        addLog("💾 Order saved to database");
         addLog("📥 Starting PDF download...");
 
         console.log("Payment successful", response);
@@ -173,6 +178,7 @@ downloadBtn.addEventListener("click", () => {
         html2pdf().set(options).from(coverPage).save().finally(() => {
           addLog("✅ PDF Download Completed!");
           downloadBtn.disabled = false;
+
         });
       } catch (err) {
         console.error("PDF generation failed:", err);
