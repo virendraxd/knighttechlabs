@@ -62,17 +62,13 @@ if (year && coverYear) {
 const downloadBtn = document.getElementById("downloadPdf");
 const coverPage = document.querySelector(".cover-page");
 const accessInput = document.getElementById("accessKey");
+const accessGroup = document.querySelector(".input-group");
 
-// 🔐 Generate daily code
-const today = new Date().toISOString().slice(0, 10);
-const correctKey = "KTL-" + today;
+if (!SETTINGS.REQUIRE_ACCESS_CODE && accessGroup) {
+  accessGroup.classList.add("hidden");
+}
 
 downloadBtn.addEventListener("click", () => {
-
-  // 🔐 ACCESS CODE
-  const enteredKey = accessInput.value.trim();
-  const codeFilled = enteredKey.length > 0;
-  const codeValid = enteredKey === correctKey;
 
   // 📝 REQUIRED FIELDS
   const requiredFields = document.querySelectorAll(".required");
@@ -88,17 +84,7 @@ downloadBtn.addEventListener("click", () => {
       field.style.border = "";
     }
   });
-
-  // ⭐ CASE 1 — BOTH MISSING
-  if (!fieldsValid && !codeFilled) {
-    showMessage("⚠️ Please fill all required fields and enter Access Code.");
-    if (firstEmptyField) {
-      firstEmptyField.focus();
-      firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-    return;
-  }
-
+  
   // ⭐ CASE 2 — ONLY FIELDS MISSING
   if (!fieldsValid) {
     showMessage("⚠️ Please fill all required fields before downloading.");
@@ -109,18 +95,21 @@ downloadBtn.addEventListener("click", () => {
     return;
   }
 
-  // ⭐ CASE 3 — CODE EMPTY
-  if (!codeFilled) {
-    showMessage("🔐 Please enter access code.");
-    accessInput.focus();
-    return;
-  }
+  const enteredKey = accessInput ? accessInput.value.trim() : "";
 
-  // ⭐ CASE 4 — CODE WRONG
-  if (!codeValid) {
-    showMessage("❌ Invalid or expired access code.");
-    accessInput.focus();
-    return;
+  // ⭐ Only check if enabled
+  if (SETTINGS.REQUIRE_ACCESS_CODE) {
+    if (!enteredKey) {
+      showMessage("🔐 Please enter access code.");
+      accessInput.focus();
+      return;
+    }
+
+    if (enteredKey !== SETTINGS.ACCESS_CODE) {
+      showMessage("❌ Invalid or expired access code.");
+      accessInput.focus();
+      return;
+    }
   }
 
   if (!coverPage) {
@@ -128,9 +117,19 @@ downloadBtn.addEventListener("click", () => {
     return;
   }
 
+  if (!appliedPrice || appliedPrice < 0) {
+    showMessage("Invalid price.");
+    return;
+  }
+
   // ⭐ ALL GOOD → RAZORPAY CHECKOUT
   const studentName = coverStudent?.innerText || "Student";
   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+
+  const discountInput = document.getElementById("discountCode");
+  const enteredCode = discountInput ? discountInput.value.trim() : "";
+
+  console.log("Final price (paise):", appliedPrice);
 
   // Disable button to prevent multiple clicks
   downloadBtn.disabled = true;
@@ -138,10 +137,10 @@ downloadBtn.addEventListener("click", () => {
   // Razorpay options
   const rzpOptions = {
     key: "rzp_live_SFfynYVohQVMSU",
-    amount: 1000, // Amount in paise (₹10)
+    amount: appliedPrice, // calculated final price in paise
     currency: "INR",
     name: "UniCover by Virendraxd",
-    description: "Assignment Cover Page Generator",
+    description: "UniCover - Cover Page Generator",
     prefill: {
       name: student.value || studentName,
       email: "student@example.com",
@@ -155,12 +154,12 @@ downloadBtn.addEventListener("click", () => {
         addLog("✅ Payment Successful!");
         addLog("Payment ID: " + response.razorpay_payment_id);
         addLog("Order ID: " + response.razorpay_order_id);
-        addLog("Signature: " + response.razorpay_signature);
+        // addLog("Signature: " + response.razorpay_signature);
 
         // ⭐ SAVE DATA TO FIREBASE HERE
         await saveCoverData(response);
 
-        addLog("💾 Order saved to database");
+        // addLog("💾 Order saved to database");
         addLog("📥 Starting PDF download...");
 
         console.log("Payment successful", response);
@@ -213,11 +212,9 @@ downloadBtn.addEventListener("click", () => {
     downloadBtn.disabled = false;
   });
 
-  // Open Razorpay popup
-  rzp1.open();
+  saveFormData(); // save to local storage for autofill
+  rzp1.open();    // Open Razorpay popup
 });
-
-console.log("Today's Access Code:", correctKey);
 
 document.querySelectorAll(".required").forEach(field => {
   field.addEventListener("input", () => {
@@ -280,4 +277,136 @@ copyLogBtn.addEventListener("click", () => {
   navigator.clipboard.writeText(logContent.textContent)
     .then(() => alert("Log copied to clipboard ✅"))
     .catch(() => alert("Failed to copy log ❌"));
+});
+
+function calculateFinalPrice(basePrice, code) {
+  if (!SETTINGS.ENABLE_DISCOUNT) return basePrice;
+  if (!code) return basePrice;
+
+  const coupon = SETTINGS.DISCOUNT_CODES[code.toUpperCase()];
+
+  if (!coupon) return basePrice;
+
+  let finalPrice = basePrice;
+
+  if (coupon.type === "percent") {
+    finalPrice = basePrice - (basePrice * coupon.value / 100);
+  }
+
+  if (coupon.type === "flat") {
+    finalPrice = basePrice - coupon.value;
+  }
+
+  // Prevent negative price
+  return Math.max(finalPrice, 0);
+}
+
+function saveFormData() {
+  const data = {
+    session: session?.value,
+    title: title?.value,
+    subject: subject?.value,
+    faculty: faculty?.value,
+    position: position?.value,
+    student: student?.value,
+    course: course?.value,
+    stream: stream?.value,
+    year: year?.value
+  };
+
+  localStorage.setItem("unicover_last_data", JSON.stringify(data));
+}
+
+function autofillForm() {
+  const saved = localStorage.getItem("unicover_last_data");
+  if (!saved) {
+    showMessage("No saved details found");
+    return;
+  }
+
+  const data = JSON.parse(saved);
+
+  if (session) session.value = data.session || "";
+  if (title) title.value = data.title || "";
+  if (subject) subject.value = data.subject || "";
+  if (faculty) faculty.value = data.faculty || "";
+  if (position) position.value = data.position || "";
+  if (student) student.value = data.student || "";
+  if (course) course.value = data.course || "";
+  if (stream) stream.value = data.stream || "";
+  if (year) year.value = data.year || "";
+
+  // 🔥 Trigger cover updates
+  session?.onchange?.();
+  title?.onchange?.();
+  subject?.oninput?.();
+  faculty?.oninput?.();
+  position?.onchange?.();
+  student?.oninput?.();
+  course?.onchange?.();
+  stream?.onchange?.();
+  year?.dispatchEvent(new Event("change"));
+
+  showMessage("Details autofilled ✅", "success");
+}
+
+const autofillBtn = document.getElementById("autofillBtn");
+
+autofillBtn?.addEventListener("click", autofillForm);
+
+// =================- discount here
+const discountInput = document.getElementById("discountCode");
+const applyDiscountBtn = document.getElementById("applyDiscount");
+const priceBadge = document.querySelector(".price-badge");
+
+let appliedPrice = SETTINGS.PRICE; // default price
+let appliedCode = null;
+
+applyDiscountBtn.addEventListener("click", () => {
+
+  const code = discountInput.value.trim().toUpperCase();
+
+  if (!code) {
+    showMessage("Enter a discount code.");
+    return;
+  }
+
+  if (!SETTINGS.ENABLE_DISCOUNT) {
+    showMessage("Discounts are disabled.");
+    return;
+  }
+
+  const coupon = SETTINGS.DISCOUNT_CODES[code];
+
+  if (!coupon) {
+    showMessage("❌ Invalid discount code", "error");
+    return;
+  }
+
+  let newPrice = SETTINGS.PRICE;
+
+  if (coupon.type === "percent") {
+    newPrice = SETTINGS.PRICE - (SETTINGS.PRICE * coupon.value / 100);
+  }
+
+  if (coupon.type === "flat") {
+    newPrice = SETTINGS.PRICE - coupon.value;
+  }
+
+  newPrice = Math.max(newPrice, 0);
+
+  appliedPrice = newPrice;
+  appliedCode = code;
+
+  priceBadge.textContent = "₹" + (appliedPrice / 100);
+
+  showMessage("✅ Discount applied!", "success");
+});
+
+discountInput.addEventListener("input", () => {
+  if (!discountInput.value.trim()) {
+    appliedPrice = SETTINGS.PRICE;
+    appliedCode = null;
+    priceBadge.textContent = `₹${SETTINGS.PRICE / 100}`;
+  }
 });

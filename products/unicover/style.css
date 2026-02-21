@@ -13,7 +13,7 @@
 }
 
 .unicover-section {
-  background: #1e40af;
+  background: linear-gradient(135deg, #2e4bb7, #1c2f7a);
   color: #ffffff;
   padding: 60px 15% 60px;
   margin-top: 5rem;
@@ -218,7 +218,7 @@ textarea {
   margin: 8px 0;
 }
 
-/* ================= BOTTOM SECTION  input================= */
+/* ================= BOTTOM SECTION ================= */
 .bottom {
   width: 85%;
   display: flex;
@@ -344,6 +344,150 @@ textarea {
   font-size: 12px;
 }
 
+.btn-autofill {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  background: #eee;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.btn-autofill:hover {
+  background: #ddd;
+}
+
+.payment-box {
+  margin-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* LABELS */
+.input-group {
+  margin-bottom: 14px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ACCESS CODE STYLE */
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  background: #f5f6f8;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.input-with-icon span {
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.input-with-icon input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* DISCOUNT ROW */
+.discount-row {
+  display: flex;
+  gap: 8px;
+}
+
+.discount-row input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+}
+
+.discount-row button {
+  background: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.discount-row button:hover {
+  background: #43a047;
+}
+
+/* PAY BUTTON */
+.pay-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #2e4bb7, #1c2f7a);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+/* MAIN ROW */
+.pay-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pay-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* PRICE BADGE */
+.price-badge {
+  background: white;
+  color: #1c2f7a;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+/* SUBTEXT */
+.pay-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.discount-note {
+  font-size: 13px;
+  color: #16a34a;
+  margin-top: 6px;
+  opacity: 0.9;
+}
+
 @media print {
   body {
     background: white;
@@ -362,13 +506,13 @@ textarea {
 }
 
 @media (max-width: 768px) {
-.real-cover {
-  position: fixed;
-  left: -9999px;
-  top: 0;
-  opacity: 0;
-  pointer-events: none;
-}
+  .real-cover {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
 
 
   .cover-preview {

@@ -51,6 +51,9 @@
         <!-- LEFT SIDE: FORM -->
         <div class="form-area">
             <form id="coverForm">
+                <button type="button" id="autofillBtn" class="btn-autofill">
+                    Autofill Last Details
+                </button>
                 <label>Session</label>
                 <select id="session" class="required">
                     <option value="" disabled selected>Select Session</option>
@@ -134,13 +137,37 @@
                     <option value="4th">4th YEAR</option>
                 </select>
 
-                <input type="text" id="accessKey" placeholder="Enter Access Code" />
+                <div class="payment-box">
+                    <!-- ACCESS CODE -->
+                    <div class="input-group" id="accessGroup">
+                        <label>Access Code</label>
+                        <div class="input-with-icon">
+                            <span>🔐</span>
+                            <input type="text" id="accessKey" placeholder="Enter access code" />
+                        </div>
+                    </div>
 
-                <button type="button" id="downloadPdf" class="btn-download">
-                    Pay & Download Cover Page <br>
-                    UniCover by Virendraxd <br>
-                    <span>₹10</span>
-                </button>
+                    <!-- DISCOUNT -->
+                    <div class="input-group">
+                        <label>Discount Code</label>
+                        <div class="discount-row">
+                            <input type="text" id="discountCode" placeholder="Enter coupon code" />
+                            <button type="button" id="applyDiscount">Apply</button>
+                        </div>
+                        <div class="discount-note">
+                            🎁 Limited offer — Use code <b>SAVE5</b> and pay only ₹5
+                        </div>
+                    </div>
+
+                    <!-- PAY BUTTON -->
+                    <button type="button" id="downloadPdf" class="pay-btn">
+                        <div class="pay-main">
+                            <span class="pay-title">Pay & Download Cover</span>
+                            <span class="price-badge">₹10</span>
+                        </div>
+                        <div class="pay-sub">UniCover by Virendraxd</div>
+                    </button>
+                </div>
             </form>
 
             <div class="note">
@@ -212,6 +239,7 @@
     <script src="../../components/loadComponents.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="../../firebase.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 
