@@ -5,18 +5,36 @@
 .product-badge {
   display: inline-block;
   margin-bottom: 12px;
-  padding: 4px 12px;
+  padding: 6px 14px;
   font-size: 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.15);
-  color: #e0e7ff;
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--cyan);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .unicover-section {
-  background: linear-gradient(135deg, #2e4bb7, #1c2f7a);
+  background: linear-gradient(135deg, var(--navy) 0%, #1a2d4a 100%);
   color: #ffffff;
-  padding: 60px 15% 60px;
+  padding: 80px 15% 80px;
   margin-top: 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.unicover-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .unicover-content {
@@ -24,26 +42,28 @@
 }
 
 .unicover-section h1 {
-  font-size: 2.6rem;
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
 }
 
 .unicover-section p {
   font-size: 1.1rem;
-  color: #dbeafe;
+  color: rgba(255, 255, 255, 0.9);
   max-width: 520px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 /* ================= FORM CONTAINER ================= */
 .container {
   max-width: 480px;
   margin: 40px auto;
-  padding: 22px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  padding: 32px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .unicover-layout {
@@ -59,17 +79,30 @@
 
 label {
   display: block;
-  margin-top: 14px;
-  font-weight: 500;
+  margin-top: 16px;
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 0.95rem;
 }
 
 input,
 select {
   width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border: 1px solid #cbd5f5;
-  border-radius: 5px;
+  padding: 12px 14px;
+  margin-top: 8px;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: var(--white);
+  color: var(--navy);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
 input[type="text"] {
@@ -79,22 +112,59 @@ input[type="text"] {
 textarea {
   width: 100%;
   resize: vertical;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+  color: var(--navy);
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
 .btn-download {
   width: 100%;
-  margin-top: 24px;
-  padding: 12px;
-  background: #1e40af;
+  margin-top: 28px;
+  padding: 14px 20px;
+  background: var(--gradient-primary);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 15px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+  transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-download::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
 }
 
 .btn-download:hover {
-  background: #1e3a8a;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(6, 182, 212, 0.4);
+}
+
+.btn-download:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .btn-download span {
@@ -108,17 +178,18 @@ textarea {
   text-align: center;
   margin-top: 20px;
   font-size: 0.9rem;
-  color: #475569;
+  color: var(--slate);
 }
 
 /* ================= COVER PAGE ================= */
 /* PAGE WRAPPER */
 .form-area,
 .page {
-  background: white;
+  background: var(--white);
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 /* COVER PAGE */
@@ -148,8 +219,8 @@ textarea {
   right: 12mm;
   bottom: 12mm;
 
-  border: 3px solid #1f497d;
-  border-radius: 6px;
+  border: 3px solid var(--navy);
+  border-radius: 8px;
 
   pointer-events: none;
 }
@@ -213,9 +284,10 @@ textarea {
 .upper .title,
 .upper .subject {
   font-size: 16pt;
-  font-weight: 600;
-  color: #1f497d;
+  font-weight: 700;
+  color: var(--navy);
   margin: 8px 0;
+  letter-spacing: -0.5px;
 }
 
 /* ================= BOTTOM SECTION ================= */
@@ -233,23 +305,28 @@ textarea {
 
 .bottom .submitted {
   font-size: 15pt;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 14px;
+  color: var(--navy);
 }
 
 .bottom .name {
   font-size: 14.5pt;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 4px;
+  color: var(--navy);
+  letter-spacing: -0.3px;
 }
 
 .bottom .position {
   font-size: 14pt;
+  color: var(--slate);
 }
 
 .std-info {
   font-size: 14pt;
   margin-top: 4px;
+  color: var(--slate);
 }
 
 .std-info span {
@@ -261,11 +338,18 @@ textarea {
 }
 
 .section-title h2 {
-  font-size: 2rem;
+  font-size: 2.5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
 }
 
 .section-title p {
   color: var(--slate);
+  font-size: 1.05rem;
+  max-width: 600px;
 }
 
 #messageBox {
@@ -277,19 +361,21 @@ textarea {
 
   min-width: 300px;
   max-width: 90%;
-  padding: 14px 20px;
+  padding: 16px 24px;
 
-  background: #333;
+  background: var(--navy);
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95rem;
 
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 
   z-index: 9999;
   text-align: center;
+  letter-spacing: 0.3px;
 
-  transition: top 0.4s ease;
+  transition: top 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* Show state */
@@ -299,19 +385,19 @@ textarea {
 
 /* Types */
 #messageBox.error {
-  background: #d32f2f;
+  background: linear-gradient(135deg, #dc2626, #991b1b);
 }
 
 #messageBox.success {
-  background: #2e7d32;
+  background: linear-gradient(135deg, #16a34a, #15803d);
 }
 
 #messageBox.warning {
-  background: #f57c00;
+  background: linear-gradient(135deg, #ea580c, #c2410c);
 }
 
 #messageBox.info {
-  background: #1976d2;
+  background: var(--gradient-primary);
 }
 
 .log-box {
@@ -320,76 +406,102 @@ textarea {
   right: 20px;
   width: 320px;
   max-height: 400px;
-  background: #f0f0f0;
-  border: 2px solid #1e40af;
-  padding: 10px;
+  background: var(--white);
+  border: 1.5px solid var(--cyan);
+  padding: 14px;
   overflow-y: auto;
-  font-family: monospace;
+  font-family: 'Monaco', 'Courier New', monospace;
   z-index: 9999;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .log-box h3 {
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  color: #1e40af;
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: var(--navy);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 #copyLogBtn {
-  margin-top: 5px;
-  padding: 4px 8px;
-  background: #1e40af;
-  color: white;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: var(--cyan);
+  color: var(--navy);
   border: none;
   cursor: pointer;
   font-size: 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+#copyLogBtn:hover {
+  background: var(--purple);
+  color: white;
 }
 
 .btn-autofill {
   width: 100%;
-  margin-top: 10px;
-  padding: 8px;
-  background: #eee;
-  border: 1px solid #ccc;
+  margin-top: 12px;
+  padding: 11px 14px;
+  background: var(--bg);
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
   font-size: 13px;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--navy);
+  transition: all 0.3s ease;
 }
 
 .btn-autofill:hover {
-  background: #ddd;
+  background: rgba(6, 182, 212, 0.1);
+  border-color: var(--cyan);
 }
 
 .payment-box {
-  margin-top: 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* LABELS */
+/* LABELS scrollbar*/
 .input-group {
   margin-bottom: 14px;
 }
 
 .input-group label {
   font-size: 13px;
-  font-weight: 600;
-  color: #444;
+  font-weight: 700;
+  color: var(--navy);
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 /* ACCESS CODE STYLE */
 .input-with-icon {
   display: flex;
   align-items: center;
-  background: #f5f6f8;
-  border: 1px solid #dcdcdc;
+  background: var(--bg);
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 12px 14px;
+  transition: all 0.3s ease;
+}
+
+.input-with-icon:focus-within {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
 .input-with-icon span {
   margin-right: 8px;
-  opacity: 0.7;
+  color: var(--slate);
 }
 
 .input-with-icon input {
@@ -398,83 +510,107 @@ textarea {
   background: transparent;
   width: 100%;
   font-size: 14px;
+  color: var(--navy);
 }
 
 /* DISCOUNT ROW */
 .discount-row {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 .discount-row input {
   flex: 1;
-  padding: 10px;
+  padding: 12px 14px;
   border-radius: 8px;
-  border: 1px solid #dcdcdc;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
   font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .discount-row button {
-  background: #4caf50;
+  background: var(--cyan);
   border: none;
-  color: white;
-  padding: 10px 14px;
+  color: var(--navy);
+  padding: 12px 18px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  margin-top: 4px;
+  font-weight: 700;
+  margin-top: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
 }
 
 .discount-row button:hover {
-  background: #43a047;
+  background: var(--purple);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.3);
 }
 
 /* PAY BUTTON */
 .pay-btn {
   width: 100%;
-  background: linear-gradient(135deg, #2e4bb7, #1c2f7a);
+  background: var(--gradient-primary);
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 16px;
-  margin-top: 12px;
+  padding: 16px 20px;
+  margin-top: 16px;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.25);
+  transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+  font-weight: 700;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.pay-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
 }
 
 .pay-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(6, 182, 212, 0.35);
 }
 
-/* MAIN ROW */
-.pay-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.pay-btn:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .pay-title {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
+  color: white;
 }
 
 /* PRICE BADGE */
 .price-badge {
-  background: white;
-  color: #1c2f7a;
-  padding: 4px 10px;
+  background: var(--white);
+  color: var(--navy);
+  padding: 6px 14px;
   border-radius: 8px;
-  font-weight: 800;
-  font-size: 22px;
+  font-weight: 900;
+  font-size: 24px;
 }
 
 /* SUBTEXT */
 .pay-sub {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 12px;
-  opacity: 0.9;
+  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .hidden {
@@ -483,9 +619,10 @@ textarea {
 
 .discount-note {
   font-size: 13px;
-  color: #16a34a;
-  margin-top: 6px;
-  opacity: 0.9;
+  color: var(--cyan);
+  margin-top: 8px;
+  opacity: 0.85;
+  font-weight: 600;
 }
 
 @media print {
