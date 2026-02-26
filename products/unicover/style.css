@@ -219,7 +219,7 @@ textarea:focus {
   right: 12mm;
   bottom: 12mm;
 
-  border: 3px solid var(--navy);
+  border: 3px solid var(--cover-border-color, var(--navy));
   border-radius: 8px;
 
   pointer-events: none;
@@ -320,13 +320,11 @@ textarea:focus {
 
 .bottom .position {
   font-size: 14pt;
-  color: var(--slate);
 }
 
 .std-info {
   font-size: 14pt;
   margin-top: 4px;
-  color: var(--slate);
 }
 
 .std-info span {
@@ -623,6 +621,10 @@ textarea:focus {
   margin-top: 8px;
   opacity: 0.85;
   font-weight: 600;
+}
+
+#previewSection {
+  display: none;
 }
 
 @media print {

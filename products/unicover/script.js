@@ -60,7 +60,11 @@ if (year && coverYear) {
 }
 
 const downloadBtn = document.getElementById("downloadPdf");
-const coverPage = document.querySelector(".cover-page");
+
+// Return currently visible cover element
+function getActiveCover() {
+  return document.querySelector(".cover-page:not(.hidden)");
+}
 const accessInput = document.getElementById("accessKey");
 const accessGroup = document.querySelector(".input-group");
 
@@ -68,7 +72,9 @@ if (!SETTINGS.REQUIRE_ACCESS_CODE && accessGroup) {
   accessGroup.classList.add("hidden");
 }
 
+
 downloadBtn.addEventListener("click", () => {
+  const coverPage = getActiveCover();
 
   // 📝 REQUIRED FIELDS
   const requiredFields = document.querySelectorAll(".required");
@@ -410,3 +416,195 @@ discountInput.addEventListener("input", () => {
     priceBadge.textContent = `₹${SETTINGS.PRICE / 100}`;
   }
 });
+
+// UNIVEERSITY SELECTOR AND THEME SWITCHER
+const UNIVERSITY_CONFIG = {
+
+  vu: {
+    coverId: "cover-vu",
+    preview: "assets/vu-cover-preview.png",
+    primaryColor: "#00406E",
+    borderColor: "#00406E",
+    textColor: "#00406E",
+    borderColor: "#00406E"
+  },
+
+  au: {
+    coverId: "cover-au",
+    preview: "assets/au-cover-preview.png",
+    primaryColor: "#002D5D",
+    borderColor: "#002D5D", 
+    textColor: "#002D5D",
+    borderColor: "#002D5D"
+  }
+};
+
+function populateSelect(selectElement, items, placeholder) {
+
+  selectElement.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  defaultOption.textContent = placeholder;
+
+  selectElement.appendChild(defaultOption);
+
+  items.forEach(item => {
+    const opt = document.createElement("option");
+    opt.value = item;
+    opt.textContent = item;
+    selectElement.appendChild(opt);
+  });
+
+}
+
+const covers = document.querySelectorAll(".cover-page");
+const previewImg = document.getElementById("coverPreview");
+
+const universitySelect = document.getElementById("university");
+const previewSection = document.getElementById("previewSection");
+
+const formInputs = [session, title, subject, faculty, position, student, course, stream, year];
+
+// Initially disable all form inputs until university is selected
+function disableFormInputs() {
+  formInputs.forEach(input => {
+    if (input) {
+      input.disabled = true;
+      // Find and style the associated label
+      const label = input.previousElementSibling;
+      if (label && label.tagName === "LABEL") {
+        label.style.opacity = "0.5";
+        label.style.color = "#999";
+      }
+    }
+  });
+}
+
+// Enable all form inputs
+function enableFormInputs() {
+  formInputs.forEach(input => {
+    if (input) {
+      input.disabled = false;
+      // Find and restore the associated label
+      const label = input.previousElementSibling;
+      if (label && label.tagName === "LABEL") {
+        label.style.opacity = "1";
+        label.style.color = "";
+      }
+    }
+  });
+}
+
+// Disable form inputs on page load
+disableFormInputs();
+
+// Apply university theme colors
+function applyTheme(themeColors) {
+  // Apply to form labels
+  document.querySelectorAll("form label").forEach(label => {
+    label.style.color = themeColors.textColor;
+  });
+
+  // Apply to form inputs and selects
+  document.querySelectorAll("input, select, textarea").forEach(input => {
+    input.style.borderColor = themeColors.borderColor;
+  });
+
+  // Apply to buttons
+  document.querySelectorAll("button").forEach(btn => {
+    if (btn.id !== "copyLogBtn" && btn.id !== "applyDiscount") {
+      btn.style.borderColor = themeColors.borderColor;
+    }
+  });
+
+  // Apply to cover page
+  const visibleCover = document.querySelector(".cover-page:not(.hidden)");
+  if (visibleCover) {
+    visibleCover.style.borderColor = themeColors.borderColor;
+    visibleCover.style.setProperty("--primary-color", themeColors.primaryColor);
+    visibleCover.style.setProperty("--cover-border-color", themeColors.borderColor);
+
+    // Apply colors to cover details elements
+    const detailsElements = visibleCover.querySelectorAll(
+      ".session, .title, .subject" //, .submitted, .name, .position, .course, .stream, .year"
+    );
+    detailsElements.forEach(el => {
+      el.style.color = themeColors.textColor;
+    });
+  }
+}
+
+// Reset theme to default
+function resetTheme() {
+  // Reset labels
+  document.querySelectorAll("form label").forEach(label => {
+    label.style.color = "";
+  });
+
+  // Reset inputs
+  document.querySelectorAll("input, select, textarea").forEach(input => {
+    input.style.borderColor = "";
+  });
+
+  // Reset buttons
+  document.querySelectorAll("button").forEach(btn => {
+    btn.style.borderColor = "";
+  });
+
+  // Reset preview section
+  if (previewSection) {
+    previewSection.style.borderColor = "";
+  }
+
+  // Reset cover
+  document.querySelectorAll(".cover-page").forEach(cover => {
+    cover.style.borderColor = "";
+    cover.style.removeProperty("--primary-color");
+
+    // Reset colors for cover details elements
+    const detailsElements = cover.querySelectorAll(
+      ".session, .title, .subject, .submitted"  // , .name, .position, .course, .stream, .year"
+    );
+    detailsElements.forEach(el => {
+      el.style.color = "";
+    });
+  });
+}
+
+universitySelect.addEventListener("change", () => {
+
+  const selectedUni = universitySelect.value;
+
+  // ⭐ If nothing selected → disable inputs and hide preview
+  if (!selectedUni) {
+    disableFormInputs();
+    previewSection.style.display = "none";
+    resetTheme();
+    return;
+  }
+
+  // ⭐ Show preview and enable inputs when university selected
+  enableFormInputs();
+  previewSection.style.display = "block";
+
+  const uni = UNIVERSITY_CONFIG[selectedUni];
+  if (!uni) return;
+
+  // Switch covers
+  document.querySelectorAll(".cover-page")
+    .forEach(c => c.classList.add("hidden"));
+
+  document.getElementById(uni.coverId)
+    .classList.remove("hidden");
+
+  // Change preview image
+  document.getElementById("coverPreview").src = uni.preview;
+
+  // Apply theme colors
+  applyTheme(uni);
+
+});
+

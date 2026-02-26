@@ -54,6 +54,15 @@
                 <button type="button" id="autofillBtn" class="btn-autofill">
                     Autofill Last Details
                 </button>
+
+                <!-- UNIVERSITY SELECTOR -->
+                <label>University</label>
+                <select id="university" class="required">
+                    <option value="" disabled selected>Select University</option>
+                    <option value="vu">Vikrant University</option>
+                    <option value="au">Amity University</option>
+                </select>
+
                 <label>Session</label>
                 <select id="session" class="required">
                     <option value="" disabled selected>Select Session</option>
@@ -74,11 +83,11 @@
                 </select>
 
                 <label>Subject</label>
-                <textarea id="subject" rows="2" class="required" placeholder="Enter subject"></textarea>
+                <textarea id="subject" rows="2" class="required" placeholder="Enter Subject"></textarea>
 
 
                 <label>Faculty Name</label>
-                <input type="text" id="faculty" class="required" placeholder="PROF JOHN DAS" />
+                <input type="text" id="faculty" class="required" placeholder="Enter Faculty Name" />
 
                 <label>Faculty Position</label>
                 <select id="position" class="required">
@@ -92,7 +101,7 @@
                 </select>
 
                 <label>Student Name</label>
-                <input type="text" id="studentName" class="required" placeholder="VIRENDRA SINGH" />
+                <input type="text" id="studentName" class="required" placeholder="Enter Student Name" />
 
                 <label>Course</label>
                 <select id="course" class="required">
@@ -178,17 +187,47 @@
         </div>
 
         <!-- RIGHT SIDE: PREVIEW -->
-        <div class="page">
+        <div class="page" id="previewSection">
             <p class="preview-note">
                 Cover preview — actual generated cover may vary
             </p>
 
-            <!-- REAL COVER (Desktop) -->
-            <div class="cover-page real-cover">
+            <!-- UNIVERSITY 1 COVER | REAL COVER (Desktop) -->
+            <div id="cover-vu" class="cover-page real-cover">
                 <div class="top-section">
-                    <img src="assets/unilogo.png" class="uni-logo" />
+                    <img src="assets/vulogo.png" class="uni-logo" />
                 </div>
 
+                <div class="details-section">
+                    <span class="upper">
+                        <div class="session" id="coverSession">SESSION : 2025-2026</div>
+                        <div class="title" id="coverTitle">ASSIGNMENT FILE</div>
+                        <div class="subject" id="coverSubject">SUBJECT : ENGINEERING MATHEMATICS</div>
+                    </span>
+                    <span class="bottom">
+                        <div class="left">
+                            <div class="submitted">SUBMITTED TO:</div>
+                            <div class="name" id="coverFaculty">PROF JOHN DAS</div>
+                            <div class="position" id="coverPosition">PROFESSOR</div>
+                        </div>
+                        <div class="right">
+                            <div class="submitted">SUBMITTED BY:</div>
+                            <div class="name" id="coverStudent">VIRENDRA SINGH</div>
+                            <div class="std-info">
+                                <span class="course" id="coverCourse">B TECH</span>
+                                <span class="stream" id="coverStream">(CSE)</span>
+                                <span class="year" id="coverYear">1<sup>st</sup> YEAR</span>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+
+            <!-- UNIVERSITY 2 COVER -->
+            <div id="cover-au" class="cover-page real-cover hidden">
+                <div class="top-section">
+                    <img src="assets/aulogo.png" class="uni-logo" />
+                </div>
                 <div class="details-section">
                     <span class="upper">
                         <div class="session" id="coverSession">SESSION : 2025-2026</div>
@@ -215,7 +254,7 @@
             </div>
 
             <!-- IMAGE PREVIEW (Mobile) -->
-            <img src="assets/vu-cover-preview.png" class="cover-preview" alt="Cover Preview" />
+            <img id="coverPreview" src="assets/vu-cover-preview.png" class="cover-preview" alt="Cover Preview" />
         </div>
     </main>
 
