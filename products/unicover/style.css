@@ -5,8 +5,8 @@
 .product-badge {
   display: inline-block;
   margin-bottom: 12px;
-  padding: 6px 14px;
-  font-size: 12px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.65rem;
   border-radius: 999px;
   background: rgba(6, 182, 212, 0.15);
   color: var(--cyan);
@@ -652,7 +652,6 @@ textarea:focus {
     opacity: 0;
     pointer-events: none;
   }
-
 
   .cover-preview {
     display: block;
