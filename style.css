@@ -52,6 +52,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -244,22 +245,39 @@
   .hero {
     padding: 10rem 8% 6rem;
   }
-  
+
   .hero h1 {
     font-size: 2.2rem;
   }
-  
+
   .hero p {
     font-size: 1rem;
   }
-  
+
   .cta-group {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .btn-primary {
     width: 100%;
     max-width: 300px;
+  }
+}
+
+
+@media (max-width: 376px) {
+  .hero {
+    padding: 8rem 3% 4rem;
+  }
+
+  .badge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.65rem;
+  }
+
+  .card {
+    padding: 1rem;
+    width: 90vw;
   }
 }

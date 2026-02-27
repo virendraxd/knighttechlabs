@@ -410,6 +410,16 @@ p {
   color: var(--slate);
 }
 
+@media (max-width: 376px) {
+  nav {
+    padding: 1.5rem 8%;
+  }
+
+  .section-padding {
+    padding: 5rem 5%;
+  }
+}
+
 @media (max-width: 540px) {
   .nav-links {
     display: none;
