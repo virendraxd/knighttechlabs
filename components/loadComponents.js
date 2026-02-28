@@ -26,6 +26,7 @@ async function loadAll() {
 
   applyDataLinks(); // ⭐ APPLY TO BOTH HEADER + FOOTER
   initMobileMenu(); // ⭐ INIT MOBILE MENU (AFTER HEADER LOAD)
+  initThemeToggle();
 
   if (typeof fixNavForUniCover === "function") {
     fixNavForUniCover();
