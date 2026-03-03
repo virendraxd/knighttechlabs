@@ -17,11 +17,13 @@
   --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
   --gradient-primary: linear-gradient(135deg, #06B6D4, #7C3AED);
   --gradient-subtle: linear-gradient(180deg, rgba(6, 182, 212, 0.08) 0%, transparent 100%);
-
+  
   --footer-start: #0f1f36;
   --footer-end: #1a2d4a;
-
+  
   --very-light-stroke: 1.5px solid rgba(0, 0, 0, 0.1);
+  
+  --vu-color: #00406E;
 }
 
 /* DARK THEME btn-abou*/

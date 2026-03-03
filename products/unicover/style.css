@@ -286,7 +286,7 @@ textarea:focus {
 .upper .subject {
   font-size: 16pt;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--vu-color);
   margin: 8px 0;
   letter-spacing: -0.5px;
 }
@@ -308,24 +308,26 @@ textarea:focus {
   font-size: 15pt;
   font-weight: 700;
   margin-bottom: 14px;
-  color: var(--navy);
+  color: var(--vu-color);
 }
 
 .bottom .name {
   font-size: 14.5pt;
   font-weight: 800;
   margin-bottom: 4px;
-  color: var(--navy);
+  color: var(--vu-color);
   letter-spacing: -0.3px;
 }
 
 .bottom .position {
   font-size: 14pt;
+  color: var(--vu-color);
 }
 
 .std-info {
   font-size: 14pt;
   margin-top: 4px;
+  color: var(--vu-color);
 }
 
 .std-info span {
