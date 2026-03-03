@@ -14,18 +14,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.saveCoverData = async function(payment) {
+window.saveCoverData = async function (payment) {
+  try {
+  const getValue = (id) => document.getElementById(id)?.value || "";
+
   const data = {
-    session: document.getElementById("session").value,
-    title: document.getElementById("title").value,
-    subject: document.getElementById("subject").value,
-    faculty: document.getElementById("faculty").value,
-    position: document.getElementById("position").value,
-    studentName: document.getElementById("studentName").value,
-    course: document.getElementById("course").value,
-    stream: document.getElementById("stream").value,
-    year: document.getElementById("year").value,
-    accessKey: document.getElementById("accessKey").value || "None",
+    session: getValue("session"),
+    title: getValue("title"),
+    subject: getValue("subject"),
+    faculty: getValue("faculty"),
+    position: getValue("position"),
+    studentName: getValue("studentName"),
+    course: getValue("course"),
+    stream: getValue("stream"),
+    year: getValue("year"),
+    accessKey: getValue("accessKey") || "None",
 
     paymentId: payment?.razorpay_payment_id || "N/A",
     orderId: payment?.razorpay_order_id || "N/A",
@@ -34,7 +37,10 @@ window.saveCoverData = async function(payment) {
     createdAt: new Date()
   };
 
-  await addDoc(collection(db, "unicoverOrders"), data);
+    await addDoc(collection(db, "unicoverOrders"), data);
 
-  console.log("Data saved successfully");
-};
+    console.log("Data saved successfully");
+  } catch (error) {
+    console.error("Firebase error:", error);
+  }
+}

@@ -148,7 +148,9 @@ downloadBtn.addEventListener("click", async () => {
     if (!SETTINGS.PAYMENT_ENABLED) {
 
       console.log("Payment disabled — direct download mode");
-
+ 
+      await saveCoverData({ razorpay_payment_id: "FREE_MODE" });
+      
       const options = {
         margin: 0,
         filename: `${safeName}_Assignment_Cover.pdf`,
@@ -203,7 +205,7 @@ downloadBtn.addEventListener("click", async () => {
         name: student.value || studentName,
         email: "student@example.com",
         contact: "9999999999"
-      },
+      }, 
       theme: { color: "#3399cc" },
       handler: async function (response) {
         try {
