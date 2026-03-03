@@ -1,4 +1,4 @@
-// INPUTS
+// INPUTS 
 const session = document.getElementById("session");
 const title = document.getElementById("title");
 const subject = document.getElementById("subject");
@@ -72,123 +72,168 @@ if (!SETTINGS.REQUIRE_ACCESS_CODE && accessGroup) {
   accessGroup.classList.add("hidden");
 }
 
+applySettingsUI();
 
-downloadBtn.addEventListener("click", () => {
-  const coverPage = getActiveCover();
+let isGenerating = false;
 
-  // 📝 REQUIRED FIELDS
-  const requiredFields = document.querySelectorAll(".required");
-  let fieldsValid = true;
-  let firstEmptyField = null;
+downloadBtn.addEventListener("click", async () => {
 
-  requiredFields.forEach(field => {
-    if (!field.value.trim()) {
-      fieldsValid = false;
-      field.style.border = "2px solid red";
-      if (!firstEmptyField) firstEmptyField = field;
-    } else {
-      field.style.border = "";
-    }
-  });
-  
-  // ⭐ CASE 2 — ONLY FIELDS MISSING
-  if (!fieldsValid) {
-    showMessage("⚠️ Please fill all required fields before downloading.");
-    if (firstEmptyField) {
-      firstEmptyField.focus();
-      firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-    return;
-  }
+  if (isGenerating) return;   // 🚫 Prevent spam
 
-  const enteredKey = accessInput ? accessInput.value.trim() : "";
-
-  // ⭐ Only check if enabled
-  if (SETTINGS.REQUIRE_ACCESS_CODE) {
-    if (!enteredKey) {
-      showMessage("🔐 Please enter access code.");
-      accessInput.focus();
-      return;
-    }
-
-    if (enteredKey !== SETTINGS.ACCESS_CODE) {
-      showMessage("❌ Invalid or expired access code.");
-      accessInput.focus();
-      return;
-    }
-  }
-
-  if (!coverPage) {
-    showMessage("Error: Cover page element not found!");
-    return;
-  }
-
-  if (!appliedPrice || appliedPrice < 0) {
-    showMessage("Invalid price.");
-    return;
-  }
-
-  // ⭐ ALL GOOD → RAZORPAY CHECKOUT
-  const studentName = coverStudent?.innerText || "Student";
-  const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
-
-  const discountInput = document.getElementById("discountCode");
-  const enteredCode = discountInput ? discountInput.value.trim() : "";
-
-  console.log("Final price (paise):", appliedPrice);
-
-  // Disable button to prevent multiple clicks
+  isGenerating = true;
   downloadBtn.disabled = true;
 
-  // Razorpay options
-  const rzpOptions = {
-    key: "rzp_live_SFfynYVohQVMSU",
-    amount: appliedPrice, // calculated final price in paise
-    currency: "INR",
-    name: "UniCover by Virendraxd",
-    description: "UniCover - Cover Page Generator",
-    prefill: {
-      name: student.value || studentName,
-      email: "student@example.com",
-      contact: "9999999999"
-    },
-    theme: { color: "#3399cc" },
-    handler: async function (response) {
-      try {
-        logBox.style.display = "block";
+  try {
+    const coverPage = getActiveCover();
 
-        addLog("✅ Payment Successful!");
-        addLog("Payment ID: " + response.razorpay_payment_id);
-        addLog("Order ID: " + response.razorpay_order_id);
-        // addLog("Signature: " + response.razorpay_signature);
+    // 📝 REQUIRED FIELDS
+    const requiredFields = document.querySelectorAll(".required");
+    let fieldsValid = true;
+    let firstEmptyField = null;
 
-        // ⭐ SAVE DATA TO FIREBASE HERE
-        await saveCoverData(response);
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        fieldsValid = false;
+        field.style.border = "2px solid red";
+        if (!firstEmptyField) firstEmptyField = field;
+      } else {
+        field.style.border = "";
+      }
+    });
 
-        // addLog("💾 Order saved to database");
-        addLog("📥 Starting PDF download...");
+    // ⭐ CASE 2 — ONLY FIELDS MISSING
+    if (!fieldsValid) {
+      showMessage("⚠️ Please fill all required fields before downloading.");
+      if (firstEmptyField) {
+        firstEmptyField.focus();
+        firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
 
-        console.log("Payment successful", response);
+    const enteredKey = accessInput ? accessInput.value.trim() : "";
 
-        // ✅ Generate PDF after successful payment
-        const options = {
-          margin: 0,
-          filename: `${safeName}_Assignment_Cover.pdf`,
-          image: { type: "jpeg", quality: 1 },
-          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: { mode: "avoid-all" }
-        };
+    // ⭐ Only check if enabled
+    if (SETTINGS.REQUIRE_ACCESS_CODE) {
+      if (!enteredKey) {
+        showMessage("🔐 Please enter access code.");
+        accessInput.focus();
+        return;
+      }
 
-        // ⭐ Temporarily activate real cover for PDF
-        coverPage.style.position = "static";
-        coverPage.style.left = "0";
-        coverPage.style.opacity = "1";
-        coverPage.style.pointerEvents = "auto";
+      if (enteredKey !== SETTINGS.ACCESS_CODE) {
+        showMessage("❌ Invalid or expired access code.");
+        accessInput.focus();
+        return;
+      }
+    }
 
-        await new Promise(resolve => setTimeout(resolve, 100)); // small render delay
+    if (!coverPage) {
+      showMessage("Error: Cover page element not found!");
+      return;
+    }
 
-        html2pdf().set(options).from(coverPage).save().finally(() => {
+    if (!appliedPrice || appliedPrice < 0) {
+      showMessage("Invalid price.");
+      return;
+    }
+
+    // ⭐ ALL GOOD → RAZORPAY CHECKOUT
+    const studentName = coverStudent?.innerText || "Student";
+    const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+
+    console.log("Final price (paise):", appliedPrice);
+
+    // ⭐ FREE MODE (Payment Disabled) 
+    if (!SETTINGS.PAYMENT_ENABLED) {
+
+      console.log("Payment disabled — direct download mode");
+
+      const options = {
+        margin: 0,
+        filename: `${safeName}_Assignment_Cover.pdf`,
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: "avoid-all" }
+      };
+
+      // Show actual cover for PDF rendering
+      coverPage.style.position = "static";
+      coverPage.style.left = "0";
+      coverPage.style.opacity = "1";
+      coverPage.style.pointerEvents = "auto";
+
+      logBox.style.display = "block";
+
+      // Delays to simulate stages and show logs
+      const delay = ms => new Promise(r => setTimeout(r, ms));
+
+      addLog("📥 Preparing your cover...");
+      await delay(800);
+
+      addLog("🔄 Rendering high-quality PDF...");
+      await delay(1200);
+
+      addLog("⬇️ Download starting...");
+      await delay(700);
+
+      await html2pdf().set(options).from(coverPage).save();
+
+      await delay(400);
+      addLog("✅ Download completed successfully!");
+
+      // Hide again after PDF
+      coverPage.style.position = "fixed";
+      coverPage.style.left = "-9999px";
+      coverPage.style.opacity = "0";
+      coverPage.style.pointerEvents = "none";
+
+      return; // ⭐ STOP here — don't open Razorpay
+    }
+
+    // ⭐ PAID MODE (Razorpay)
+    const rzpOptions = {
+      key: "rzp_live_SFfynYVohQVMSU",
+      amount: appliedPrice, // calculated final price in paise
+      currency: "INR",
+      name: "UniCover by Virendraxd",
+      description: "UniCover - Cover Page Generator",
+      prefill: {
+        name: student.value || studentName,
+        email: "student@example.com",
+        contact: "9999999999"
+      },
+      theme: { color: "#3399cc" },
+      handler: async function (response) {
+        try {
+          logBox.style.display = "block";
+
+          addLog("✅ Payment Successful!");
+          addLog("Payment ID: " + response.razorpay_payment_id);
+          addLog("Order ID: " + response.razorpay_order_id);
+
+          // ⭐ SAVE DATA TO FIREBASE HERE
+          await saveCoverData(response);
+
+          const options = {
+            margin: 0,
+            filename: `${safeName}_Assignment_Cover.pdf`,
+            image: { type: "jpeg", quality: 1 },
+            html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+            pagebreak: { mode: "avoid-all" }
+          };
+
+          // ⭐ Temporarily activate real cover for PDF
+          coverPage.style.position = "static";
+          coverPage.style.left = "0";
+          coverPage.style.opacity = "1";
+          coverPage.style.pointerEvents = "auto";
+
+          await new Promise(resolve => setTimeout(resolve, 100)); // small render delay
+
+          html2pdf().set(options).from(coverPage).save();
 
           // ⭐ Hide it again after PDF
           coverPage.style.position = "fixed";
@@ -197,30 +242,67 @@ downloadBtn.addEventListener("click", () => {
           coverPage.style.pointerEvents = "none";
 
           addLog("✅ PDF Download Completed!");
-          downloadBtn.disabled = false;
-        });
 
-      } catch (err) {
-        console.error("PDF generation failed:", err);
-        logBox.style.display = "block";
-        addLog("❌ PDF generation failed. Check console.");
-        downloadBtn.disabled = false;
+        } catch (err) {
+          console.error("PDF generation failed:", err);
+          addLog("❌ PDF generation failed. Check console.");
+        }
       }
-    }
+    };
+
+    const rzp1 = new Razorpay(rzpOptions);
+
+    // Payment failed handler
+    rzp1.on('payment.failed', function (response) {
+      console.error("Payment failed:", response.error);
+      showMessage("Payment failed! Try again.");
+    });
+
+    saveFormData(); // save to local storage for autofill
+    rzp1.open();    // Open Razorpay popup
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    // 🔓 Always unlock button safely
+    isGenerating = false;
+    downloadBtn.disabled = false;
+  }
+});
+
+async function generatePDFDirectly() {
+
+  const coverPage = getActiveCover();
+  if (!coverPage) {
+    showMessage("Error: Cover page element not found!");
+    return;
+  }
+
+  const studentName = coverStudent?.innerText || "Student";
+  const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+
+  const options = {
+    margin: 0,
+    filename: `${safeName}_Assignment_Cover.pdf`,
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 3, useCORS: true },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
   };
 
-  const rzp1 = new Razorpay(rzpOptions);
+  coverPage.style.position = "static";
+  coverPage.style.left = "0";
+  coverPage.style.opacity = "1";
+  coverPage.style.pointerEvents = "auto";
 
-  // Payment failed handler
-  rzp1.on('payment.failed', function (response) {
-    console.error("Payment failed:", response.error);
-    showMessage("Payment failed! Try again.");
-    downloadBtn.disabled = false;
-  });
+  await new Promise(resolve => setTimeout(resolve, 100));
 
-  saveFormData(); // save to local storage for autofill
-  rzp1.open();    // Open Razorpay popup
-});
+  await html2pdf().set(options).from(coverPage).save();
+
+  coverPage.style.position = "fixed";
+  coverPage.style.left = "-9999px";
+  coverPage.style.opacity = "0";
+  coverPage.style.pointerEvents = "none";
+}
 
 document.querySelectorAll(".required").forEach(field => {
   field.addEventListener("input", () => {
@@ -360,7 +442,7 @@ const autofillBtn = document.getElementById("autofillBtn");
 
 autofillBtn?.addEventListener("click", autofillForm);
 
-// =================- discount here
+// =================-- discount here --=================
 const discountInput = document.getElementById("discountCode");
 const applyDiscountBtn = document.getElementById("applyDiscount");
 const priceBadge = document.querySelector(".price-badge");
@@ -368,54 +450,58 @@ const priceBadge = document.querySelector(".price-badge");
 let appliedPrice = SETTINGS.PRICE; // default price
 let appliedCode = null;
 
-applyDiscountBtn.addEventListener("click", () => {
+if (SETTINGS.ENABLE_DISCOUNT && applyDiscountBtn && discountInput) {
 
-  const code = discountInput.value.trim().toUpperCase();
+  applyDiscountBtn.addEventListener("click", () => {
 
-  if (!code) {
-    showMessage("Enter a discount code.");
-    return;
-  }
+    const code = discountInput.value.trim().toUpperCase();
 
-  if (!SETTINGS.ENABLE_DISCOUNT) {
-    showMessage("Discounts are disabled.");
-    return;
-  }
+    if (!code) {
+      showMessage("Enter a discount code.");
+      return;
+    }
 
-  const coupon = SETTINGS.DISCOUNT_CODES[code];
+    const coupon = SETTINGS.DISCOUNT_CODES[code];
 
-  if (!coupon) {
-    showMessage("❌ Invalid discount code", "error");
-    return;
-  }
+    if (!coupon) {
+      showMessage("❌ Invalid discount code", "error");
+      return;
+    }
 
-  let newPrice = SETTINGS.PRICE;
+    let newPrice = SETTINGS.PRICE;
 
-  if (coupon.type === "percent") {
-    newPrice = SETTINGS.PRICE - (SETTINGS.PRICE * coupon.value / 100);
-  }
+    if (coupon.type === "percent") {
+      newPrice = SETTINGS.PRICE - (SETTINGS.PRICE * coupon.value / 100);
+    }
 
-  if (coupon.type === "flat") {
-    newPrice = SETTINGS.PRICE - coupon.value;
-  }
+    if (coupon.type === "flat") {
+      newPrice = SETTINGS.PRICE - coupon.value;
+    }
 
-  newPrice = Math.max(newPrice, 0);
+    newPrice = Math.max(newPrice, 0);
 
-  appliedPrice = newPrice;
-  appliedCode = code;
+    appliedPrice = newPrice;
+    appliedCode = code;
 
-  priceBadge.textContent = "₹" + (appliedPrice / 100);
+    const priceBadge = document.querySelector(".price-badge");
+    if (priceBadge) {
+      priceBadge.textContent = "₹" + (appliedPrice / 100);
+    }
 
-  showMessage("✅ Discount applied!", "success");
-});
+    showMessage("✅ Discount applied!", "success");
+  });
+}
 
-discountInput.addEventListener("input", () => {
-  if (!discountInput.value.trim()) {
-    appliedPrice = SETTINGS.PRICE;
-    appliedCode = null;
-    priceBadge.textContent = `₹${SETTINGS.PRICE / 100}`;
-  }
-});
+if (SETTINGS.ENABLE_DISCOUNT && discountInput && priceBadge) {
+
+  discountInput.addEventListener("input", () => {
+    if (!discountInput.value.trim()) {
+      appliedPrice = SETTINGS.PRICE;
+      appliedCode = null;
+      priceBadge.textContent = `₹${SETTINGS.PRICE / 100}`;
+    }
+  });
+}
 
 // UNIVEERSITY SELECTOR AND THEME SWITCHER
 const UNIVERSITY_CONFIG = {
@@ -433,7 +519,7 @@ const UNIVERSITY_CONFIG = {
     coverId: "cover-au",
     preview: "assets/au-cover-preview.png",
     primaryColor: "#002D5D",
-    borderColor: "#002D5D", 
+    borderColor: "#002D5D",
     textColor: "#002D5D",
     borderColor: "#002D5D"
   }
@@ -605,6 +691,5 @@ universitySelect.addEventListener("change", () => {
 
   // Apply theme colors
   applyTheme(uni);
-
 });
 

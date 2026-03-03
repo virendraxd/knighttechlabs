@@ -467,7 +467,7 @@ textarea:focus {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* LABELS scrollbar*/
+/* LABELS */
 .input-group {
   margin-bottom: 14px;
 }
@@ -624,6 +624,7 @@ textarea:focus {
   font-weight: 600;
 }
 
+.pay-secondary,
 #previewSection {
   display: none;
 }

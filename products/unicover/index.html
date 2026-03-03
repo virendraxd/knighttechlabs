@@ -167,7 +167,7 @@
                     <option value="4th">4th YEAR</option>
                 </select>
 
-                <div class="payment-box">
+                <div class="payment-box" id="paymentBox">
                     <!-- ACCESS CODE -->
                     <div class="input-group" id="accessGroup">
                         <label>Access Code</label>
@@ -178,7 +178,7 @@
                     </div>
 
                     <!-- DISCOUNT -->
-                    <div class="input-group">
+                    <div class="input-group" id="discountSection">
                         <label>Discount Code</label>
                         <div class="discount-row">
                             <input type="text" id="discountCode" placeholder="Enter coupon code" />
@@ -191,9 +191,12 @@
 
                     <!-- PAY BUTTON -->
                     <button type="button" id="downloadPdf" class="pay-btn">
-                        <div class="pay-main">
+                        <div class="pay-main" id="payMain">
                             <span class="pay-title">Pay & Download Cover</span>
                             <span class="price-badge">₹10</span>
+                        </div>
+                        <div class="pay-secondary" id="paySecondary">
+                            <div class="pay-title">Download Cover</div>
                         </div>
                         <div class="pay-sub">UniCover by Virendraxd</div>
                     </button>
@@ -301,6 +304,7 @@
     <script type="module" src="../../firebase.js"></script>
     <script src="config.js"></script>
     <script src="../../js/theme.js"></script>
+    <script src="../../main.js"></script>
     <script src="script.js"></script>
 </body>
 

@@ -1,14 +1,13 @@
 const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
 window.SETTINGS = {
-    REQUIRE_ACCESS_CODE: false, // Toggle here
-    
+    REQUIRE_ACCESS_CODE: false,
     ACCESS_CODE: "KTL" + today,
     
+    PAYMENT_ENABLED: false,
     PRICE: 1000, // Base price in paise (₹10)
     
-    ENABLE_DISCOUNT: true,
-    
+    ENABLE_DISCOUNT: false, // Disabled if PAYMENT_ENABLED is false
     DISCOUNT_CODES: {
         // "KTLOFF": { type: "percent", value: 10 },   // 10% off
         "SAVE5": { type: "flat", value: 500 },     // ₹5 off (500 paise)
@@ -16,4 +15,4 @@ window.SETTINGS = {
     }
 };
 
-console.log("Today's Access Code:", ACCESS_CODE);
+console.log("Today's Access Code:", SETTINGS.ACCESS_CODE);
