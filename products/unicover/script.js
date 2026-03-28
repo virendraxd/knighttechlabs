@@ -76,6 +76,17 @@ applySettingsUI();
 
 let isGenerating = false;
 
+// DOWNLOAD LIMIT LOGIC
+function getOrCreateUserId() {
+  let userId = localStorage.getItem("unicover_user_id");
+  if (!userId) {
+    // Generate simple UUID
+    userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    localStorage.setItem("unicover_user_id", userId);
+  }
+  return userId;
+}
+
 downloadBtn.addEventListener("click", async () => {
 
   if (isGenerating) return;   // 🚫 Prevent spam
@@ -109,6 +120,20 @@ downloadBtn.addEventListener("click", async () => {
         firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
       }
       return;
+    }
+
+    // ⭐ WAIT, CHECK DOWNLOAD LIMIT FIRST
+    if (window.checkDownloadLimit) {
+      downloadBtn.querySelector(".pay-title").textContent = "Checking Limit...";
+      const userId = getOrCreateUserId();
+      const canDownload = await window.checkDownloadLimit(userId);
+      
+      downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover"; 
+      
+      if (!canDownload) {
+        showMessage("Free limit reached, upgrade to premium.", "error", 5000);
+        return; 
+      }
     }
 
     const enteredKey = accessInput ? accessInput.value.trim() : "";
@@ -149,7 +174,9 @@ downloadBtn.addEventListener("click", async () => {
 
       console.log("Payment disabled — direct download mode");
  
-      await saveCoverData({ razorpay_payment_id: "FREE_MODE" });
+      if (SETTINGS.SAVE_TO_DB) {
+        await saveCoverData({ razorpay_payment_id: "FREE_MODE" });
+      }
       
       const options = {
         margin: 0,
@@ -181,6 +208,12 @@ downloadBtn.addEventListener("click", async () => {
       await delay(700);
 
       await html2pdf().set(options).from(coverPage).save();
+
+      // ⭐ Increment limit count here
+      if (window.incrementDownloadCount) {
+        const userId = getOrCreateUserId();
+        await window.incrementDownloadCount(userId);
+      }
 
       await delay(400);
       addLog("✅ Download completed successfully!");
@@ -216,7 +249,9 @@ downloadBtn.addEventListener("click", async () => {
           addLog("Order ID: " + response.razorpay_order_id);
 
           // ⭐ SAVE DATA TO FIREBASE HERE
-          await saveCoverData(response);
+          if (SETTINGS.SAVE_TO_DB) {
+            await saveCoverData(response);
+          }
 
           const options = {
             margin: 0,
@@ -236,6 +271,12 @@ downloadBtn.addEventListener("click", async () => {
           await new Promise(resolve => setTimeout(resolve, 100)); // small render delay
 
           html2pdf().set(options).from(coverPage).save();
+
+          // ⭐ Increment limit count here too
+          if (window.incrementDownloadCount) {
+            const userId = getOrCreateUserId();
+            await window.incrementDownloadCount(userId);
+          }
 
           // ⭐ Hide it again after PDF
           coverPage.style.position = "fixed";

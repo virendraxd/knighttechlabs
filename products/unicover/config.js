@@ -12,7 +12,9 @@ window.SETTINGS = {
         // "KTLOFF": { type: "percent", value: 10 },   // 10% off
         "SAVE5": { type: "flat", value: 500 },     // ₹5 off (500 paise)
         // "FORFREE": { type: "percent", value: 100 }    // Free
-    }
+    },
+
+    SAVE_TO_DB: true // Set to false to disable saving cover generation data to Database
 };
 
 console.log("Today's Access Code:", SETTINGS.ACCESS_CODE);
