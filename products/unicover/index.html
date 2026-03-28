@@ -266,6 +266,7 @@
 
             <!-- UNIVERSITY 1 COVER | REAL COVER (Desktop) -->
             <div id="cover-vu" class="cover-page real-cover">
+                <span class="watermark-overlay">Created with UniCover (Free)</span>
                 <div class="top-section">
                     <img src="assets/vulogo.png" class="uni-logo" />
                 </div>
@@ -297,6 +298,7 @@
 
             <!-- UNIVERSITY 2 COVER -->
             <div id="cover-au" class="cover-page real-cover hidden">
+                <span class="watermark-overlay">Created with UniCover (Free)</span>
                 <div class="top-section">
                     <img src="assets/aulogo.png" class="uni-logo" />
                 </div>
@@ -346,6 +348,33 @@
 
     <!-- FOOTER -->
     <div id="footer"></div>
+
+    <!-- FREEMIUM MODAL -->
+    <div id="freemiumModal" class="freemium-modal-overlay">
+        <div class="freemium-modal">
+            <h2>Free Limit Reached!</h2>
+            <p>You've downloaded your 3 free cover pages. Please choose how you'd like to proceed.</p>
+            
+            <div class="freemium-options">
+                <button id="fmBtnFree" class="fm-btn fm-btn-free">
+                    Download with Watermark
+                    <span class="fm-subtext">Free forever (Contains \"Created with UniCover\" watermark)</span>
+                </button>
+                
+                <button id="fmBtnSingle" class="fm-btn fm-btn-single">
+                    Single Clean Download — ₹5
+                    <span class="fm-subtext">No watermark, valid for one download only</span>
+                </button>
+                
+                <button id="fmBtnUnlimited" class="fm-btn fm-btn-unlimited">
+                    Unlock Unlimited Clean — ₹29
+                    <span class="fm-subtext">No watermark forever, requires simple Google Login</span>
+                </button>
+            </div>
+            
+            <button id="fmBtnClose" class="modal-close">Close</button>
+        </div>
+    </div>
 
     <script src="../../components/loadComponents.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

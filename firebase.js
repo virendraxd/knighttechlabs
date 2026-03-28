@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_ZqX0oq1ZaW5TGKB04gmQk7EqPTMjWL8",
@@ -13,6 +14,61 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+window.isPremiumUser = false;
+window.currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    window.currentUser = user;
+    try {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists() && userDoc.data().isPremium) {
+        window.isPremiumUser = true;
+        console.log("Welcome back, Premium User:", user.email);
+      } else {
+        window.isPremiumUser = false;
+      }
+    } catch (e) {
+      console.error("Failed fetching premium status", e);
+    }
+  } else {
+    window.currentUser = null;
+    window.isPremiumUser = false;
+  }
+});
+
+window.triggerLoginOnly = async function() {
+  if (!window.currentUser) {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      window.currentUser = result.user;
+      return true;
+    } catch (err) {
+      console.error("Auth error:", err);
+      return false; 
+    }
+  }
+  return true;
+}
+
+window.markPremiumInDB = async function() {
+  if (!window.currentUser) return false;
+
+  // Update Firestore user document
+  try {
+    const userDocRef = doc(db, "users", window.currentUser.uid);
+    await setDoc(userDocRef, { isPremium: true, email: window.currentUser.email }, { merge: true });
+    window.isPremiumUser = true;
+    return true;
+  } catch(err) {
+    console.error("Database update error:", err);
+    return false;
+  }
+}
 
 window.saveCoverData = async function (payment) {
   try {

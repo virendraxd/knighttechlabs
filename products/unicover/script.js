@@ -87,230 +87,229 @@ function getOrCreateUserId() {
   return userId;
 }
 
-downloadBtn.addEventListener("click", async () => {
+// CENTRAL PDF GENERATION ENGINE
+async function executePDFGeneration(isWatermarked = false, shouldIncrement = false) {
+  const coverPage = getActiveCover();
+  const studentName = coverStudent?.innerText || "Student";
+  const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+  
+  // Handle Watermark
+  const watermark = coverPage.querySelector(".watermark-overlay");
+  if (isWatermarked && watermark) watermark.classList.add("active");
 
+  logBox.style.display = "block";
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  const options = {
+    margin: 0,
+    filename: `${safeName}_Assignment_Cover${isWatermarked ? '_Watermarked' : ''}.pdf`,
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    pagebreak: { mode: "avoid-all" }
+  };
+
+  coverPage.style.position = "static";
+  coverPage.style.left = "0";
+  coverPage.style.opacity = "1";
+  coverPage.style.pointerEvents = "auto";
+
+  addLog("📥 Preparing your cover...");
+  await delay(800);
+  addLog("🔄 Rendering high-quality PDF...");
+  await delay(1200);
+  addLog("⬇️ Download starting...");
+  await delay(700);
+
+  await html2pdf().set(options).from(coverPage).save();
+
+  if (shouldIncrement && window.incrementDownloadCount) {
+    const userId = getOrCreateUserId();
+    await window.incrementDownloadCount(userId);
+  }
+
+  await delay(400);
+  addLog("✅ Download completed successfully!");
+
+  coverPage.style.position = "fixed";
+  coverPage.style.left = "-9999px";
+  coverPage.style.opacity = "0";
+  coverPage.style.pointerEvents = "none";
+  
+  if (watermark) watermark.classList.remove("active");
+}
+
+function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
+  saveFormData();
+  const studentName = coverStudent?.innerText || "Student";
+  const rzpOptions = {
+    key: "rzp_live_SFfynYVohQVMSU", // Sandbox/Live Key 
+    amount: amountInPaise, 
+    currency: "INR",
+    name: "UniCover by Virendraxd",
+    description: description,
+    prefill: {
+      name: studentName,
+      email: "student@example.com",
+      contact: "9999999999"
+    }, 
+    theme: { color: "#3399cc" },
+    handler: async function (response) {
+      logBox.style.display = "block";
+      addLog("✅ Payment Successful!");
+      addLog("Payment ID: " + response.razorpay_payment_id);
+      
+      if (SETTINGS.SAVE_TO_DB && window.saveCoverData) {
+        await window.saveCoverData(response);
+      }
+      await onSuccessCallback();
+    }
+  };
+
+  const rzp = new Razorpay(rzpOptions);
+  rzp.on('payment.failed', function (res) {
+    console.error("Payment failed", res.error);
+    showMessage("Payment failed! Please try again.", "error");
+  });
+  rzp.open();
+}
+
+// ==========================================
+// FREEMIUM MODAL EVENTS
+// ==========================================
+const freemiumModal = document.getElementById("freemiumModal");
+
+document.getElementById("fmBtnClose")?.addEventListener("click", () => {
+  freemiumModal.classList.remove("show");
+  downloadBtn.disabled = false;
+});
+
+// Option 1: Free Watermark
+document.getElementById("fmBtnFree")?.addEventListener("click", async () => {
+  freemiumModal.classList.remove("show");
+  if (isGenerating) return;
+  isGenerating = true;
+  await executePDFGeneration(true, false); // Watermarked, NO increment
+  isGenerating = false;
+  downloadBtn.disabled = false;
+});
+
+// Option 2: Single Clean
+document.getElementById("fmBtnSingle")?.addEventListener("click", () => {
+  freemiumModal.classList.remove("show");
+  triggerRazorpayPayment(500, "Single Clean Download", async () => {
+      if (isGenerating) return;
+      isGenerating = true;
+      await executePDFGeneration(false, false); // Clean, NO increment
+      isGenerating = false;
+      downloadBtn.disabled = false;
+  });
+});
+
+// Option 3: Unlimited Clean + Auth
+document.getElementById("fmBtnUnlimited")?.addEventListener("click", async () => {
+  freemiumModal.classList.remove("show");
+
+  // 1. Force Login FIRST securely within the click event
+  const loggedIn = await window.triggerLoginOnly();
+  if (!loggedIn) {
+     showMessage("Google Sign-In required to unlock Premium. 🔐", "warning", 4000);
+     downloadBtn.disabled = false;
+     return;
+  }
+
+  // 2. Open Razorpay after successful login
+  triggerRazorpayPayment(2900, "Unlimited Clean PDF Access", async () => {
+      isGenerating = true;
+      
+      const upgraded = await window.markPremiumInDB();
+      if (upgraded) {
+          showMessage("Premium Unlocked Successfully! 🎉", "success", 5000);
+      } else {
+          showMessage("Payment success but auth failed. Contact Support.", "warning", 8000);
+      }
+      
+      await executePDFGeneration(false, false); // Clean
+      isGenerating = false;
+      downloadBtn.disabled = false;
+  });
+});
+
+// MAIN DOWNLOAD ENTRY POINT
+downloadBtn.addEventListener("click", async () => {
   if (isGenerating) return;   // 🚫 Prevent spam
 
-  isGenerating = true;
-  downloadBtn.disabled = true;
+  const coverPage = getActiveCover();
+  
+  // 📝 REQUIRED FIELDS
+  const requiredFields = document.querySelectorAll(".required");
+  let fieldsValid = true;
+  let firstEmptyField = null;
 
-  try {
-    const coverPage = getActiveCover();
-
-    // 📝 REQUIRED FIELDS
-    const requiredFields = document.querySelectorAll(".required");
-    let fieldsValid = true;
-    let firstEmptyField = null;
-
-    requiredFields.forEach(field => {
-      if (!field.value.trim()) {
-        fieldsValid = false;
-        field.style.border = "2px solid red";
-        if (!firstEmptyField) firstEmptyField = field;
-      } else {
-        field.style.border = "";
-      }
-    });
-
-    // ⭐ CASE 2 — ONLY FIELDS MISSING
-    if (!fieldsValid) {
-      showMessage("⚠️ Please fill all required fields before downloading.");
-      if (firstEmptyField) {
-        firstEmptyField.focus();
-        firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-      return;
+  requiredFields.forEach(field => {
+    if (!field.value.trim()) {
+      fieldsValid = false;
+      field.style.border = "2px solid red";
+      if (!firstEmptyField) firstEmptyField = field;
+    } else {
+      field.style.border = "";
     }
+  });
 
-    // ⭐ WAIT, CHECK DOWNLOAD LIMIT FIRST
-    if (window.checkDownloadLimit) {
-      downloadBtn.querySelector(".pay-title").textContent = "Checking Limit...";
-      const userId = getOrCreateUserId();
-      const canDownload = await window.checkDownloadLimit(userId);
-      
-      downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover"; 
-      
-      if (!canDownload) {
-        showMessage("Free limit reached, upgrade to premium.", "error", 5000);
-        return; 
-      }
+  if (!fieldsValid) {
+    showMessage("⚠️ Please fill all required fields before downloading.");
+    if (firstEmptyField) {
+      firstEmptyField.focus();
+      firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
     }
+    return;
+  }
 
-    const enteredKey = accessInput ? accessInput.value.trim() : "";
-
-    // ⭐ Only check if enabled
-    if (SETTINGS.REQUIRE_ACCESS_CODE) {
-      if (!enteredKey) {
-        showMessage("🔐 Please enter access code.");
-        accessInput.focus();
-        return;
-      }
-
-      if (enteredKey !== SETTINGS.ACCESS_CODE) {
-        showMessage("❌ Invalid or expired access code.");
-        accessInput.focus();
-        return;
-      }
-    }
-
-    if (!coverPage) {
-      showMessage("Error: Cover page element not found!");
-      return;
-    }
-
-    if (!appliedPrice || appliedPrice < 0) {
-      showMessage("Invalid price.");
-      return;
-    }
-
-    // ⭐ ALL GOOD → RAZORPAY CHECKOUT
-    const studentName = coverStudent?.innerText || "Student";
-    const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
-
-    console.log("Final price (paise):", appliedPrice);
-
-    // ⭐ FREE MODE (Payment Disabled) 
-    if (!SETTINGS.PAYMENT_ENABLED) {
-
-      console.log("Payment disabled — direct download mode");
- 
-      if (SETTINGS.SAVE_TO_DB) {
-        await saveCoverData({ razorpay_payment_id: "FREE_MODE" });
-      }
-      
-      const options = {
-        margin: 0,
-        filename: `${safeName}_Assignment_Cover.pdf`,
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: "avoid-all" }
-      };
-
-      // Show actual cover for PDF rendering
-      coverPage.style.position = "static";
-      coverPage.style.left = "0";
-      coverPage.style.opacity = "1";
-      coverPage.style.pointerEvents = "auto";
-
-      logBox.style.display = "block";
-
-      // Delays to simulate stages and show logs
-      const delay = ms => new Promise(r => setTimeout(r, ms));
-
-      addLog("📥 Preparing your cover...");
-      await delay(800);
-
-      addLog("🔄 Rendering high-quality PDF...");
-      await delay(1200);
-
-      addLog("⬇️ Download starting...");
-      await delay(700);
-
-      await html2pdf().set(options).from(coverPage).save();
-
-      // ⭐ Increment limit count here
-      if (window.incrementDownloadCount) {
-        const userId = getOrCreateUserId();
-        await window.incrementDownloadCount(userId);
-      }
-
-      await delay(400);
-      addLog("✅ Download completed successfully!");
-
-      // Hide again after PDF
-      coverPage.style.position = "fixed";
-      coverPage.style.left = "-9999px";
-      coverPage.style.opacity = "0";
-      coverPage.style.pointerEvents = "none";
-
-      return; // ⭐ STOP here — don't open Razorpay
-    }
-
-    // ⭐ PAID MODE (Razorpay)
-    const rzpOptions = {
-      key: "rzp_live_SFfynYVohQVMSU",
-      amount: appliedPrice, // calculated final price in paise
-      currency: "INR",
-      name: "UniCover by Virendraxd",
-      description: "UniCover - Cover Page Generator",
-      prefill: {
-        name: student.value || studentName,
-        email: "student@example.com",
-        contact: "9999999999"
-      }, 
-      theme: { color: "#3399cc" },
-      handler: async function (response) {
-        try {
-          logBox.style.display = "block";
-
-          addLog("✅ Payment Successful!");
-          addLog("Payment ID: " + response.razorpay_payment_id);
-          addLog("Order ID: " + response.razorpay_order_id);
-
-          // ⭐ SAVE DATA TO FIREBASE HERE
-          if (SETTINGS.SAVE_TO_DB) {
-            await saveCoverData(response);
-          }
-
-          const options = {
-            margin: 0,
-            filename: `${safeName}_Assignment_Cover.pdf`,
-            image: { type: "jpeg", quality: 1 },
-            html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
-            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-            pagebreak: { mode: "avoid-all" }
-          };
-
-          // ⭐ Temporarily activate real cover for PDF
-          coverPage.style.position = "static";
-          coverPage.style.left = "0";
-          coverPage.style.opacity = "1";
-          coverPage.style.pointerEvents = "auto";
-
-          await new Promise(resolve => setTimeout(resolve, 100)); // small render delay
-
-          html2pdf().set(options).from(coverPage).save();
-
-          // ⭐ Increment limit count here too
-          if (window.incrementDownloadCount) {
-            const userId = getOrCreateUserId();
-            await window.incrementDownloadCount(userId);
-          }
-
-          // ⭐ Hide it again after PDF
-          coverPage.style.position = "fixed";
-          coverPage.style.left = "-9999px";
-          coverPage.style.opacity = "0";
-          coverPage.style.pointerEvents = "none";
-
-          addLog("✅ PDF Download Completed!");
-
-        } catch (err) {
-          console.error("PDF generation failed:", err);
-          addLog("❌ PDF generation failed. Check console.");
-        }
-      }
-    };
-
-    const rzp1 = new Razorpay(rzpOptions);
-
-    // Payment failed handler
-    rzp1.on('payment.failed', function (response) {
-      console.error("Payment failed:", response.error);
-      showMessage("Payment failed! Try again.");
-    });
-
-    saveFormData(); // save to local storage for autofill
-    rzp1.open();    // Open Razorpay popup
-
-  } catch (error) {
-    console.error(error);
-  } finally {
-    // 🔓 Always unlock button safely
+  // ⭐ PREMIUM CHECK (Instant clean execution)
+  if (window.isPremiumUser) {
+    isGenerating = true;
+    downloadBtn.disabled = true;
+    showMessage("Generating Premium Clean PDF...", "success", 2000);
+    saveFormData();
+    await executePDFGeneration(false, false);
     isGenerating = false;
     downloadBtn.disabled = false;
+    return;
   }
+
+  // ⭐ FREE LIMIT WAIT CHECK
+  isGenerating = true;
+  downloadBtn.disabled = true;
+  
+  if (window.checkDownloadLimit) {
+    downloadBtn.querySelector(".pay-title").textContent = "Checking Limit...";
+    const userId = getOrCreateUserId();
+    const canDownload = await window.checkDownloadLimit(userId);
+    
+    downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover"; 
+    
+    if (canDownload) {
+      // Still under limit -> free clean download
+      if (SETTINGS.SAVE_TO_DB && window.saveCoverData) {
+        await window.saveCoverData({ razorpay_payment_id: "FREE_MODE" });
+      }
+      saveFormData();
+      await executePDFGeneration(false, true); // clean, increment
+      isGenerating = false;
+      downloadBtn.disabled = false;
+      return; 
+    } else {
+      // FREEMIUM MODAL LAUNCH
+      isGenerating = false;
+      freemiumModal.classList.add("show");
+      return;
+    }
+  }
+
+  // Fallback if limit checker fails
+  await executePDFGeneration(false, false);
+  isGenerating = false;
+  downloadBtn.disabled = false;
 });
 
 async function generatePDFDirectly() {
