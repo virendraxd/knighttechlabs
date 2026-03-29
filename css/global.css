@@ -203,7 +203,7 @@ nav {
 
 .nav-user-icon {
   font-size: 16px;
-  background: var(--gradient-primary);
+  border: 2px solid var(--cyan);
   color: white;
   border-radius: 50%;
   width: 36px;
@@ -245,6 +245,14 @@ nav {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+.odd {
+  background-color: #C4B5FD;
+}
+
+.even {
+  background-color: #FDBA74;
 }
 
 .dropdown-header {

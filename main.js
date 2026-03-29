@@ -85,10 +85,22 @@ window.updateAuthUI = async function () {
       }
     }
   }
+
+  const navAvatar = document.getElementById("navAvatar");
+  let nameLenght = nameObj.innerHTML.trim();
+
+  if (nameLenght.length % 2 == 0) {
+    console.log("Even")
+    navAvatar.classList.add("even")
+  }
+  else {
+    console.log("Odd")
+    navAvatar.classList.add("odd")
+  }
 };
 
 // GLOBAL TOAST NOTIFICATION
-window.showGlobalToast = function(msg, type = "info", duration = 3000) {
+window.showGlobalToast = function (msg, type = "info", duration = 3000) {
   let container = document.getElementById("toastContainer");
   if (!container) {
     container = document.createElement("div");
@@ -159,3 +171,4 @@ window.addEventListener('componentsLoaded', () => {
     window.updateAuthUI();
   }
 });
+
