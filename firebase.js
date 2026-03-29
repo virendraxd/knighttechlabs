@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_ZqX0oq1ZaW5TGKB04gmQk7EqPTMjWL8",
@@ -20,17 +20,22 @@ const provider = new GoogleAuthProvider();
 window.isPremiumUser = false;
 window.currentUser = null;
 
+window.authResolved = false;
+
 onAuthStateChanged(auth, async (user) => {
+  window.authResolved = true;
   if (user) {
     window.currentUser = user;
+    localStorage.setItem("ktl_user_email", user.email);
     try {
       const userDocRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists() && userDoc.data().isPremium) {
         window.isPremiumUser = true;
-        console.log("Welcome back, Premium User:", user.email);
+        localStorage.setItem("ktl_user_premium", "true");
       } else {
         window.isPremiumUser = false;
+        localStorage.removeItem("ktl_user_premium");
       }
     } catch (e) {
       console.error("Failed fetching premium status", e);
@@ -38,8 +43,21 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     window.currentUser = null;
     window.isPremiumUser = false;
+    localStorage.removeItem("ktl_user_email");
+    localStorage.removeItem("ktl_user_premium");
   }
+  
+  if (window.updateAuthUI) window.updateAuthUI();
 });
+
+window.logoutUser = async function() {
+  await signOut(auth);
+  window.currentUser = null;
+  window.isPremiumUser = false;
+  localStorage.removeItem("ktl_user_email");
+  localStorage.removeItem("ktl_user_premium");
+  if (window.updateAuthUI) window.updateAuthUI();
+};
 
 window.triggerLoginOnly = async function() {
   if (!window.currentUser) {

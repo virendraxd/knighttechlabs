@@ -92,7 +92,7 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   const coverPage = getActiveCover();
   const studentName = coverStudent?.innerText || "Student";
   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
-  
+
   // Handle Watermark
   const watermark = coverPage.querySelector(".watermark-overlay");
   if (isWatermarked && watermark) watermark.classList.add("active");
@@ -135,7 +135,7 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   coverPage.style.left = "-9999px";
   coverPage.style.opacity = "0";
   coverPage.style.pointerEvents = "none";
-  
+
   if (watermark) watermark.classList.remove("active");
 }
 
@@ -144,7 +144,7 @@ function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
   const studentName = coverStudent?.innerText || "Student";
   const rzpOptions = {
     key: "rzp_live_SFfynYVohQVMSU", // Sandbox/Live Key 
-    amount: amountInPaise, 
+    amount: amountInPaise,
     currency: "INR",
     name: "UniCover by Virendraxd",
     description: description,
@@ -152,13 +152,13 @@ function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
       name: studentName,
       email: "student@example.com",
       contact: "9999999999"
-    }, 
+    },
     theme: { color: "#3399cc" },
     handler: async function (response) {
       logBox.style.display = "block";
       addLog("✅ Payment Successful!");
       addLog("Payment ID: " + response.razorpay_payment_id);
-      
+
       if (SETTINGS.SAVE_TO_DB && window.saveCoverData) {
         await window.saveCoverData(response);
       }
@@ -169,7 +169,7 @@ function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
   const rzp = new Razorpay(rzpOptions);
   rzp.on('payment.failed', function (res) {
     console.error("Payment failed", res.error);
-    showMessage("Payment failed! Please try again.", "error");
+    showGlobalToast("Payment failed! Please try again.", "error");
   });
   rzp.open();
 }
@@ -198,11 +198,11 @@ document.getElementById("fmBtnFree")?.addEventListener("click", async () => {
 document.getElementById("fmBtnSingle")?.addEventListener("click", () => {
   freemiumModal.classList.remove("show");
   triggerRazorpayPayment(500, "Single Clean Download", async () => {
-      if (isGenerating) return;
-      isGenerating = true;
-      await executePDFGeneration(false, false); // Clean, NO increment
-      isGenerating = false;
-      downloadBtn.disabled = false;
+    if (isGenerating) return;
+    isGenerating = true;
+    await executePDFGeneration(false, false); // Clean, NO increment
+    isGenerating = false;
+    downloadBtn.disabled = false;
   });
 });
 
@@ -213,25 +213,25 @@ document.getElementById("fmBtnUnlimited")?.addEventListener("click", async () =>
   // 1. Force Login FIRST securely within the click event
   const loggedIn = await window.triggerLoginOnly();
   if (!loggedIn) {
-     showMessage("Google Sign-In required to unlock Premium. 🔐", "warning", 4000);
-     downloadBtn.disabled = false;
-     return;
+    showGlobalToast("Google Sign-In required to unlock Premium. 🔐", "warning", 4000);
+    downloadBtn.disabled = false;
+    return;
   }
 
   // 2. Open Razorpay after successful login
   triggerRazorpayPayment(2900, "Unlimited Clean PDF Access", async () => {
-      isGenerating = true;
-      
-      const upgraded = await window.markPremiumInDB();
-      if (upgraded) {
-          showMessage("Premium Unlocked Successfully! 🎉", "success", 5000);
-      } else {
-          showMessage("Payment success but auth failed. Contact Support.", "warning", 8000);
-      }
-      
-      await executePDFGeneration(false, false); // Clean
-      isGenerating = false;
-      downloadBtn.disabled = false;
+    isGenerating = true;
+
+    const upgraded = await window.markPremiumInDB();
+    if (upgraded) {
+      showGlobalToast("Premium Unlocked Successfully! 🎉", "success", 5000);
+    } else {
+      showGlobalToast("Payment success but auth failed. Contact Support.", "warning", 8000);
+    }
+
+    await executePDFGeneration(false, false); // Clean
+    isGenerating = false;
+    downloadBtn.disabled = false;
   });
 });
 
@@ -240,7 +240,7 @@ downloadBtn.addEventListener("click", async () => {
   if (isGenerating) return;   // 🚫 Prevent spam
 
   const coverPage = getActiveCover();
-  
+
   // 📝 REQUIRED FIELDS
   const requiredFields = document.querySelectorAll(".required");
   let fieldsValid = true;
@@ -257,7 +257,7 @@ downloadBtn.addEventListener("click", async () => {
   });
 
   if (!fieldsValid) {
-    showMessage("⚠️ Please fill all required fields before downloading.");
+    showGlobalToast("⚠️ Please fill all required fields before downloading.");
     if (firstEmptyField) {
       firstEmptyField.focus();
       firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -269,7 +269,7 @@ downloadBtn.addEventListener("click", async () => {
   if (window.isPremiumUser) {
     isGenerating = true;
     downloadBtn.disabled = true;
-    showMessage("Generating Premium Clean PDF...", "success", 2000);
+    showGlobalToast("Generating Premium Clean PDF...", "success", 2000);
     saveFormData();
     await executePDFGeneration(false, false);
     isGenerating = false;
@@ -280,14 +280,14 @@ downloadBtn.addEventListener("click", async () => {
   // ⭐ FREE LIMIT WAIT CHECK
   isGenerating = true;
   downloadBtn.disabled = true;
-  
+
   if (window.checkDownloadLimit) {
     downloadBtn.querySelector(".pay-title").textContent = "Checking Limit...";
     const userId = getOrCreateUserId();
     const canDownload = await window.checkDownloadLimit(userId);
-    
-    downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover"; 
-    
+
+    downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover";
+
     if (canDownload) {
       // Still under limit -> free clean download
       if (SETTINGS.SAVE_TO_DB && window.saveCoverData) {
@@ -297,7 +297,7 @@ downloadBtn.addEventListener("click", async () => {
       await executePDFGeneration(false, true); // clean, increment
       isGenerating = false;
       downloadBtn.disabled = false;
-      return; 
+      return;
     } else {
       // FREEMIUM MODAL LAUNCH
       isGenerating = false;
@@ -316,7 +316,7 @@ async function generatePDFDirectly() {
 
   const coverPage = getActiveCover();
   if (!coverPage) {
-    showMessage("Error: Cover page element not found!");
+    showGlobalToast("Error: Cover page element not found!");
     return;
   }
 
@@ -378,19 +378,6 @@ function fixNavForUniCover() {
   if (about) about.href = BASE + "index.html#about";
 }
 
-function showMessage(text, type = "error", duration = 3000) {
-  const box = document.getElementById("messageBox");
-
-  box.textContent = text;
-  box.className = "";              // reset classes
-  box.classList.add(type, "show");
-
-  // Auto hide
-  setTimeout(() => {
-    box.classList.remove("show");
-  }, duration);
-}
-
 const logBox = document.getElementById("logBox");
 const logContent = document.getElementById("logContent");
 const copyLogBtn = document.getElementById("copyLogBtn");
@@ -450,7 +437,7 @@ function saveFormData() {
 function autofillForm() {
   const saved = localStorage.getItem("unicover_last_data");
   if (!saved) {
-    showMessage("No saved details found");
+    showGlobalToast("No saved details found");
     return;
   }
 
@@ -477,7 +464,7 @@ function autofillForm() {
   stream?.onchange?.();
   year?.dispatchEvent(new Event("change"));
 
-  showMessage("Details autofilled ✅", "success");
+  showGlobalToast("Details autofilled ✅", "success");
 }
 
 const autofillBtn = document.getElementById("autofillBtn");
@@ -499,14 +486,14 @@ if (SETTINGS.ENABLE_DISCOUNT && applyDiscountBtn && discountInput) {
     const code = discountInput.value.trim().toUpperCase();
 
     if (!code) {
-      showMessage("Enter a discount code.");
+      showGlobalToast("Enter a discount code.");
       return;
     }
 
     const coupon = SETTINGS.DISCOUNT_CODES[code];
 
     if (!coupon) {
-      showMessage("❌ Invalid discount code", "error");
+      showGlobalToast("❌ Invalid discount code", "error");
       return;
     }
 
@@ -530,7 +517,7 @@ if (SETTINGS.ENABLE_DISCOUNT && applyDiscountBtn && discountInput) {
       priceBadge.textContent = "₹" + (appliedPrice / 100);
     }
 
-    showMessage("✅ Discount applied!", "success");
+    showGlobalToast("✅ Discount applied!", "success");
   });
 }
 

@@ -31,6 +31,14 @@ async function loadAll() {
   if (typeof fixNavForUniCover === "function") {
     fixNavForUniCover();
   }
+
+  // ✨ Ensure Auth UI in nav gets refreshed immediately upon load
+  if (typeof window.updateAuthUI === "function") {
+    window.updateAuthUI();
+  }
+  
+  // Dispatch custom event in case external scripts need to re-bind
+  window.dispatchEvent(new Event('componentsLoaded'));
 }
 
 loadAll();
