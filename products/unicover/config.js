@@ -17,4 +17,6 @@ window.SETTINGS = {
     SAVE_TO_DB: true // Set to false to disable saving cover generation data to Database
 };
 
-console.log("Today's Access Code:", SETTINGS.ACCESS_CODE);
+if (SETTINGS.REQUIRE_ACCESS_CODE) {
+    console.log("Today's Access Code:", SETTINGS.ACCESS_CODE);
+}

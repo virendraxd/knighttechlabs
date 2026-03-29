@@ -27,6 +27,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     window.currentUser = user;
     localStorage.setItem("ktl_user_email", user.email);
+    localStorage.setItem("ktl_user_name", user.displayName || "User");
     try {
       const userDocRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userDocRef);
@@ -44,6 +45,7 @@ onAuthStateChanged(auth, async (user) => {
     window.currentUser = null;
     window.isPremiumUser = false;
     localStorage.removeItem("ktl_user_email");
+    localStorage.removeItem("ktl_user_name");
     localStorage.removeItem("ktl_user_premium");
   }
   
@@ -55,6 +57,7 @@ window.logoutUser = async function() {
   window.currentUser = null;
   window.isPremiumUser = false;
   localStorage.removeItem("ktl_user_email");
+  localStorage.removeItem("ktl_user_name");
   localStorage.removeItem("ktl_user_premium");
   if (window.updateAuthUI) window.updateAuthUI();
 };
@@ -108,6 +111,9 @@ window.saveCoverData = async function (payment) {
       orderId: payment?.razorpay_order_id || "N/A",
       signature: payment?.razorpay_signature || "N/A",
 
+      userEmail: window.currentUser?.email || "No Email",
+      userId: localStorage.getItem("unicover_user_id") || "Unknown Device",
+
       createdAt: new Date()
     };
 
@@ -120,6 +126,20 @@ window.saveCoverData = async function (payment) {
 }
 
 // DOWNLOAD LIMIT TRACKER
+window.getDownloadUsage = async function (userId) {
+  try {
+    const userRef = doc(db, "downloadLimits", userId);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      return userSnap.data().count || 0;
+    }
+    return 0;
+  } catch (error) {
+    console.error("Error fetching usage:", error);
+    return 0;
+  }
+};
+
 window.checkDownloadLimit = async function (userId) {
   try {
     const userRef = doc(db, "downloadLimits", userId);

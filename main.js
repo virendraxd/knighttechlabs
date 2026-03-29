@@ -35,17 +35,18 @@ function applySettingsUI() {
 }
 
 // AUTHENTICATION UI (NAVBAR)
-window.updateAuthUI = function () {
+window.updateAuthUI = async function () {
   const loginBtn = document.getElementById("navLoginBtn");
   const profileBox = document.getElementById("navProfileBox");
+  const nameObj = document.getElementById("navAccountName");
   const emailObj = document.getElementById("navAccountEmail");
   const badgeObj = document.getElementById("navAccountBadge");
+  const usageText = document.getElementById("navUsageText");
 
-  // Read local cache to render instantly
+  // Read local cache for immediate render
   const cachedEmail = localStorage.getItem("ktl_user_email");
+  const cachedName = localStorage.getItem("ktl_user_name") || "User";
   const cachedPremium = localStorage.getItem("ktl_user_premium") === "true";
-  
-  // Decide login status based on either Firebase (if resolved) or Local Cache (if initial load)
   const isLogged = window.currentUser || cachedEmail;
 
   if (!isLogged) {
@@ -54,22 +55,34 @@ window.updateAuthUI = function () {
     return;
   }
 
-  // Optimistically show user profile
+  // Display profile avatar box
   loginBtn?.classList.add("hidden");
   profileBox?.classList.remove("hidden");
 
-  if (emailObj) {
-    emailObj.textContent = window.currentUser ? window.currentUser.email : cachedEmail;
+  // Populating Dropdown Details
+  if (nameObj) nameObj.textContent = window.currentUser ? (window.currentUser.displayName || "User") : cachedName;
+  if (emailObj) emailObj.textContent = window.currentUser ? window.currentUser.email : cachedEmail;
+
+  const isPremium = window.currentUser ? window.isPremiumUser : cachedPremium;
+  if (badgeObj) {
+    badgeObj.textContent = isPremium ? "Premium" : "Free";
+    badgeObj.className = "nav-account-badge " + (isPremium ? "nav-premium" : "nav-standard");
   }
 
-  if (badgeObj) {
-    const isPremium = window.currentUser ? window.isPremiumUser : cachedPremium;
+  // Populating Usage Details (Remaining Downloads)
+  if (usageText) {
     if (isPremium) {
-      badgeObj.textContent = "Premium";
-      badgeObj.className = "nav-account-badge nav-premium";
+      usageText.textContent = "Unlimited Clean Downloads ✨";
     } else {
-      badgeObj.textContent = "Free";
-      badgeObj.className = "nav-account-badge nav-standard";
+      // Get the locally stored User ID for usage tracking (shared with unicover)
+      let uId = localStorage.getItem("unicover_user_id");
+      if (uId && window.getDownloadUsage) {
+        const count = await window.getDownloadUsage(uId);
+        const left = Math.max(0, 3 - count);
+        usageText.textContent = `${left} free download${left !== 1 ? 's' : ''} left`;
+      } else {
+        usageText.textContent = "3 free downloads left";
+      }
     }
   }
 };
@@ -101,9 +114,22 @@ window.showGlobalToast = function(msg, type = "info", duration = 3000) {
 };
 
 document.body.addEventListener("click", async (e) => {
-
   const loginBtn = e.target.closest("#navLoginBtn");
   const logoutBtn = e.target.closest("#navLogoutBtn");
+  const avatarBtn = e.target.closest("#navAvatar");
+  const dropdown = document.getElementById("navProfileDropdown");
+
+  // Handle Avatar Toggle
+  if (avatarBtn) {
+    dropdown?.classList.toggle("show");
+    e.stopPropagation(); // Avoid closing immediately
+    return;
+  }
+
+  // Close dropdown if clicked outside
+  if (dropdown?.classList.contains("show") && !e.target.closest("#navProfileBox")) {
+    dropdown.classList.remove("show");
+  }
 
   if (loginBtn) {
     if (window.triggerLoginOnly) {
@@ -113,8 +139,6 @@ document.body.addEventListener("click", async (e) => {
 
       if (loggedIn) {
         window.showGlobalToast("Signed in successfully! 🎉", "success", 4000);
-        // Refresh page for secure UX after brief delay to show toast
-        setTimeout(() => window.location.reload(), 1200);
       } else {
         window.showGlobalToast("Sign in canceled or failed.", "error", 4000);
       }
@@ -124,10 +148,7 @@ document.body.addEventListener("click", async (e) => {
   if (logoutBtn) {
     if (window.logoutUser) {
       await window.logoutUser();
-      window.showGlobalToast("Logged out securely. Refreshing...", "info");
-      
-      // Refresh page for secure UX
-      setTimeout(() => window.location.reload(), 1200);
+      window.showGlobalToast("Logged out securely.", "info");
     }
   }
 });

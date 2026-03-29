@@ -18,10 +18,22 @@
         </button>
 
         <div id="navProfileBox" class="nav-profile-box hidden">
-          <span class="nav-user-icon">👤</span>
-          <span id="navAccountEmail" class="nav-account-email"></span>
-          <span id="navAccountBadge" class="nav-account-badge nav-standard">Free</span>
-          <button id="navLogoutBtn" class="nav-logout-text">Logout</button>
+          <!-- The clickable avatar -->
+          <div id="navAvatar" class="nav-user-icon">👤</div>
+          
+          <div id="navProfileDropdown" class="nav-dropdown">
+            <div class="dropdown-header">
+              <span id="navAccountName" class="dropdown-name">Loading...</span>
+              <span id="navAccountEmail" class="dropdown-email">Loading...</span>
+              <span id="navAccountBadge" class="nav-account-badge nav-standard">Free</span>
+            </div>
+            <div class="dropdown-body">
+              <div id="navUsageText" class="dropdown-usage">Loading limits...</div>
+            </div>
+            <div class="dropdown-footer">
+              <button id="navLogoutBtn" class="dropdown-logout-btn">Logout</button>
+            </div>
+          </div>
         </div>
       </div>
 
