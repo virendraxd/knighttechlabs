@@ -20,7 +20,7 @@
   background: linear-gradient(135deg, var(--footer-start) 0%, var(--footer-end) 100%);
   color: #ffffff;
   padding: 80px 15% 80px;
-  margin-top: 5rem;
+  margin-top: 3rem;
   position: relative;
   overflow: hidden;
 }

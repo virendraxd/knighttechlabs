@@ -69,32 +69,39 @@ window.updateAuthUI = async function () {
     badgeObj.className = "nav-account-badge " + (isPremium ? "nav-premium" : "nav-standard");
   }
 
-  // Populating Usage Details (Remaining Downloads)
+  // Populating Usage Details (ONLY on UniCover page)
+  const isUniCoverPage = window.location.pathname.includes("/products/unicover/");
+  const usageContainer = usageText?.closest(".dropdown-body");
+
   if (usageText) {
-    if (isPremium) {
-      usageText.textContent = "Unlimited Clean Downloads ✨";
-    } else {
-      // Get the locally stored User ID for usage tracking (shared with unicover)
-      let uId = localStorage.getItem("unicover_user_id");
-      if (uId && window.getDownloadUsage) {
-        const count = await window.getDownloadUsage(uId);
-        const left = Math.max(0, 3 - count);
-        usageText.textContent = `${left} free download${left !== 1 ? 's' : ''} left`;
+    if (isUniCoverPage) {
+      if (usageContainer) usageContainer.style.display = "block";
+      if (isPremium) {
+        usageText.textContent = "Unlimited Clean Downloads ✨";
       } else {
-        usageText.textContent = "3 free downloads left";
+        let uId = localStorage.getItem("unicover_user_id");
+        if (uId && window.getDownloadUsage) {
+          const count = await window.getDownloadUsage(uId);
+          const left = Math.max(0, 3 - count);
+          usageText.textContent = `${left} free download${left !== 1 ? 's' : ''} left`;
+        } else {
+          usageText.textContent = "3 free downloads left";
+        }
       }
+    } else {
+      // Hide entire body div on non-product pages to avoid empty padding
+      if (usageContainer) usageContainer.style.display = "none";
     }
   }
 
+  // Avatar Color
   const navAvatar = document.getElementById("navAvatar");
   let nameLenght = nameObj.innerHTML.trim();
 
   if (nameLenght.length % 2 == 0) {
-    console.log("Even")
     navAvatar.classList.add("even")
   }
   else {
-    console.log("Odd")
     navAvatar.classList.add("odd")
   }
 };
