@@ -874,3 +874,35 @@ textarea:focus {
 .modal-close:hover {
   color: var(--navy);
 }
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 40px 0;
+}
+
+.stat-box {
+  text-align: center;
+  padding: 20px 30px;
+  border-radius: 16px;
+  background: #111;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+}
+
+.stat-box h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.stat-box p {
+  margin: 5px 0 0;
+  opacity: 0.7;
+}
