@@ -10,9 +10,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
+  apiKey: "AIzaSyD_ZqX0oq1ZaW5TGKB04gmQk7EqPTMjWL8",
   authDomain: "knighttechlabs.firebaseapp.com",
   projectId: "knighttechlabs",
+  storageBucket: "knighttechlabs.firebasestorage.app",
+  messagingSenderId: "549938778813",
+  appId: "1:549938778813:web:15d1cd53c4d5fe3ffbddd4",
+  measurementId: "G-4Z0P8093Z5"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -72,7 +76,9 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     window.currentUser = null;
     window.isPremiumUser = false;
-    localStorage.clear();
+    localStorage.removeItem("ktl_user_email");
+    localStorage.removeItem("ktl_user_name");
+    localStorage.removeItem("ktl_user_premium");
   }
 
   if (window.updateAuthUI) window.updateAuthUI();
@@ -249,31 +255,6 @@ async function loadStats() {
     console.error(err);
   }
 };
-
-// Stats
-// const userEl = document.getElementById("userCount");
-// const downloadEl = document.getElementById("downloadCount");
-
-// if (userEl) animateValue(userEl, stats.users);
-// if (downloadEl) animateValue(downloadEl, stats.downloads);
-
-// function animateValue(el, end) {
-//   let start = 0;
-//   const duration = 1000;
-//   const stepTime = Math.max(Math.floor(duration / end), 20);
-
-//   const timer = setInterval(() => {
-//     start += Math.ceil(end / 50);
-
-//     if (start >= end) {
-//       el.textContent = format(end);
-//       clearInterval(timer);
-//     } else {
-//       el.textContent = format(start);
-//     }
-//   }, stepTime);
-// }
-
 loadStats();
 
 

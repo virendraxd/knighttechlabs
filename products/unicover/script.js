@@ -289,9 +289,19 @@ downloadBtn.addEventListener("click", async () => {
     downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover";
 
     if (canDownload) {
+      console.log("✅ Limit Check Passed. Checking save settings...");
+
       // Still under limit -> free clean download
-      if (SETTINGS.SAVE_TO_DB && window.saveCoverData) {
-        await window.saveCoverData({ razorpay_payment_id: "FREE_MODE" });
+      if (SETTINGS.SAVE_TO_DB) {
+        if (window.saveCoverData) {
+          console.log("💾 Calling saveCoverData...");
+          await window.saveCoverData({ razorpay_payment_id: "FREE_MODE" });
+        } else {
+          console.error("❌ Critical: window.saveCoverData is NOT defined!");
+          console.log("Status: firebaseLoaded=" + window.firebaseLoaded);
+        }
+      } else {
+        console.warn("⚠️ Data saving is DISABLED in config.js");
       }
       saveFormData();
       await executePDFGeneration(false, true); // clean, increment
@@ -307,6 +317,7 @@ downloadBtn.addEventListener("click", async () => {
   }
 
   // Fallback if limit checker fails
+  saveFormData();
   await executePDFGeneration(false, false);
   isGenerating = false;
   downloadBtn.disabled = false;
@@ -419,7 +430,9 @@ function calculateFinalPrice(basePrice, code) {
 }
 
 function saveFormData() {
+  const uni = document.getElementById("university");
   const data = {
+    university: uni?.value,
     session: session?.value,
     title: title?.value,
     subject: subject?.value,
@@ -442,6 +455,11 @@ function autofillForm() {
   }
 
   const data = JSON.parse(saved);
+
+  if (data.university) {
+    universitySelect.value = data.university;
+    universitySelect.dispatchEvent(new Event("change"));
+  }
 
   if (session) session.value = data.session || "";
   if (title) title.value = data.title || "";
@@ -616,6 +634,15 @@ function enableFormInputs() {
 // Disable form inputs on page load
 disableFormInputs();
 
+// AUTO-SAVE ON ANY INPUT CHANGE
+formInputs.forEach(input => {
+  if (input) {
+    const eventType = (input.tagName === "SELECT") ? "change" : "input";
+    input.addEventListener(eventType, saveFormData);
+  }
+});
+universitySelect?.addEventListener("change", saveFormData);
+
 // Apply university theme colors
 function applyTheme(themeColors) {
   // Apply to form labels
@@ -721,4 +748,22 @@ universitySelect.addEventListener("change", () => {
   // Apply theme colors
   applyTheme(uni);
 });
+
+function animateCount(el, target) {
+  let current = 0;
+  const increment = target / 50;
+
+  const update = () => {
+    current += increment;
+
+    if (current < target) {
+      el.textContent = Math.floor(current) + "+";
+      requestAnimationFrame(update);
+    } else {
+      el.textContent = target + "+";
+    }
+  };
+
+  update();
+}
 
