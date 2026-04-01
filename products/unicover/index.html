@@ -236,6 +236,11 @@
                         </div>
                     </div>
 
+                    <!-- FREE DOWNLOADS COUNTER -->
+                    <div id="freeDownloadsBar" class="free-downloads-bar" style="display:none;">
+                        <span id="freeDownloadsText">🎁 3 free downloads remaining</span>
+                    </div>
+
                     <!-- PAY BUTTON -->
                     <button type="button" id="downloadPdf" class="pay-btn">
                         <div class="pay-main" id="payMain">
@@ -359,29 +364,36 @@
     <div id="footer"></div>
 
     <!-- FREEMIUM MODAL -->
-    <div id="freemiumModal" class="freemium-modal-overlay">
+    <div id="freemiumModal" class="freemium-modal-overlay hidden">
         <div class="freemium-modal">
-            <h2>Free Limit Reached!</h2>
-            <p>You've downloaded your 3 free cover pages. Please choose how you'd like to proceed.</p>
+
+            <div class="fm-icon-header">🚫</div>
+            <h2>Free Limit Reached</h2>
+            <p>You've used all <strong>3 free downloads</strong>. Choose how you'd like to continue:</p>
+
+            <div class="freemium-divider">Your options</div>
 
             <div class="freemium-options">
                 <button id="fmBtnFree" class="fm-btn fm-btn-free">
-                    Download with Watermark
-                    <span class="fm-subtext">Free forever (Contains \"Created with UniCover\" watermark)</span>
+                    <span class="fm-btn-badge" style="background:#e2e8f0;color:#64748b;">FREE</span>
+                    💧 Download with Watermark
+                    <span class="fm-subtext">Always free · Contains a "Created with UniCover" watermark</span>
                 </button>
 
                 <button id="fmBtnSingle" class="fm-btn fm-btn-single">
-                    Single Clean Download — ₹5
-                    <span class="fm-subtext">No watermark, valid for one download only</span>
+                    <span class="fm-btn-badge">₹5</span>
+                    ✨ Single Clean Download
+                    <span class="fm-subtext">No watermark · One-time, valid for this download only</span>
                 </button>
 
                 <button id="fmBtnUnlimited" class="fm-btn fm-btn-unlimited">
-                    Unlock Unlimited Clean — ₹29
-                    <span class="fm-subtext">No watermark forever, requires simple Google Login</span>
+                    <span class="fm-btn-badge" style="background:rgba(255,255,255,0.25);color:white;">BEST ⭐</span>
+                    🚀 Unlock Unlimited Clean — ₹29
+                    <span class="fm-subtext">No watermark forever · Requires Google Sign-In</span>
                 </button>
             </div>
 
-            <button id="fmBtnClose" class="modal-close">Close</button>
+            <button id="fmBtnClose" class="modal-close">Maybe later</button>
         </div>
     </div>
 

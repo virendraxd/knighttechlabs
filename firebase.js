@@ -187,13 +187,17 @@ window.checkDownloadLimit = async function (userId) {
 
 window.incrementDownloadCount = async function (userId) {
   try {
-    if (userId) {
-      // user downloads
+    // ✅ Only update the 'users' doc if the user is actually authenticated
+    // Guest userIds are localStorage-based (not Firebase Auth UIDs), so we
+    // must NOT try to updateDoc on users/{guestId} — that doc doesn't exist.
+    if (userId && window.currentUser && window.currentUser.uid === userId) {
       await updateDoc(doc(db, "users", userId), {
         downloadsCount: increment(1)
       });
+    }
 
-      // limit tracking
+    // ✅ Always track in downloadLimits (works for both guests and auth users)
+    if (userId) {
       const ref = doc(db, "downloadLimits", userId);
       const snap = await getDoc(ref);
 
@@ -204,13 +208,13 @@ window.incrementDownloadCount = async function (userId) {
       }
     }
 
-    // global
+    // ✅ Always update global downloads stat
     await updateDoc(doc(db, "stats", "main"), {
       downloads: increment(1)
     });
 
   } catch (err) {
-    console.error("Download error:", err);
+    console.error("Download increment error:", err);
   }
 };
 

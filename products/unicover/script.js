@@ -87,6 +87,56 @@ function getOrCreateUserId() {
   return userId;
 }
 
+// ==========================================
+// FREE DOWNLOADS REMAINING INDICATOR
+// ==========================================
+const FREE_LIMIT = 3;
+
+async function updateFreeDownloadsBar() {
+  // Don't show the bar for premium users
+  if (window.isPremiumUser) return;
+
+  const bar = document.getElementById("freeDownloadsBar");
+  const text = document.getElementById("freeDownloadsText");
+  if (!bar || !text) return;
+
+  const userId = getOrCreateUserId();
+  let used = 0;
+
+  try {
+    if (window.getDownloadUsage) {
+      used = await window.getDownloadUsage(userId);
+    }
+  } catch (e) {
+    // Firestore may not be ready yet — just skip showing the bar
+    return;
+  }
+
+  const remaining = Math.max(0, FREE_LIMIT - used);
+
+  // Build dots  ● ● ○
+  const dotsHtml = Array.from({ length: FREE_LIMIT }, (_, i) =>
+    `<span class="free-dot${i < used ? ' used' : ''}"></span>`
+  ).join('');
+
+  if (remaining === 0) {
+    text.innerHTML = `🔒 Free downloads exhausted &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    bar.className = 'free-downloads-bar exhausted';
+  } else if (remaining === 1) {
+    text.innerHTML = `⚠️ ${remaining} free download left &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    bar.className = 'free-downloads-bar warning';
+  } else {
+    text.innerHTML = `🎁 ${remaining} free download${remaining !== 1 ? 's' : ''} remaining &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    bar.className = 'free-downloads-bar';
+  }
+
+  bar.style.display = 'flex';
+}
+
+// Load the bar once Firebase has had time to initialise
+setTimeout(updateFreeDownloadsBar, 1200);
+
+
 // CENTRAL PDF GENERATION ENGINE
 async function executePDFGeneration(isWatermarked = false, shouldIncrement = false) {
   const coverPage = getActiveCover();
@@ -180,13 +230,13 @@ function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
 const freemiumModal = document.getElementById("freemiumModal");
 
 document.getElementById("fmBtnClose")?.addEventListener("click", () => {
-  freemiumModal.classList.remove("show");
+  freemiumModal.classList.add("hidden");
   downloadBtn.disabled = false;
 });
 
 // Option 1: Free Watermark
 document.getElementById("fmBtnFree")?.addEventListener("click", async () => {
-  freemiumModal.classList.remove("show");
+  freemiumModal.classList.toggle("hidden");
   if (isGenerating) return;
   isGenerating = true;
   await executePDFGeneration(true, false); // Watermarked, NO increment
@@ -196,7 +246,7 @@ document.getElementById("fmBtnFree")?.addEventListener("click", async () => {
 
 // Option 2: Single Clean
 document.getElementById("fmBtnSingle")?.addEventListener("click", () => {
-  freemiumModal.classList.remove("show");
+  freemiumModal.classList.toggle("hidden");
   triggerRazorpayPayment(500, "Single Clean Download", async () => {
     if (isGenerating) return;
     isGenerating = true;
@@ -208,7 +258,7 @@ document.getElementById("fmBtnSingle")?.addEventListener("click", () => {
 
 // Option 3: Unlimited Clean + Auth
 document.getElementById("fmBtnUnlimited")?.addEventListener("click", async () => {
-  freemiumModal.classList.remove("show");
+  freemiumModal.classList.toggle("hidden");
 
   // 1. Force Login FIRST securely within the click event
   const loggedIn = await window.triggerLoginOnly();
@@ -307,11 +357,14 @@ downloadBtn.addEventListener("click", async () => {
       await executePDFGeneration(false, true); // clean, increment
       isGenerating = false;
       downloadBtn.disabled = false;
+      // Refresh the downloads remaining counter
+      updateFreeDownloadsBar();
       return;
     } else {
       // FREEMIUM MODAL LAUNCH
       isGenerating = false;
-      freemiumModal.classList.add("show");
+      updateFreeDownloadsBar(); // refresh bar to show 0 remaining
+      freemiumModal.classList.toggle("hidden");
       return;
     }
   }
