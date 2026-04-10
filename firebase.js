@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc,
-  increment, getDocs, deleteField
+  increment, getDocs, deleteField, getCountFromServer
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
@@ -222,18 +222,26 @@ window.incrementDownloadCount = async function (userId) {
 // 📊 STATS
 //
 async function getStats() {
-  const snap = await getDoc(doc(db, "stats", "main"));
-
-  if (!snap.exists()) {
-    return { users: 0, downloads: 0 };
+  // Count unique devices/users from downloadLimits collection
+  // Each document = one unique device ID, so this is the true unique-user count
+  let deviceUsers = 0;
+  try {
+    const countSnap = await getCountFromServer(collection(db, "downloadLimits"));
+    deviceUsers = countSnap.data().count;
+  } catch (e) {
+    console.warn("Could not count downloadLimits:", e);
   }
 
-  const data = snap.data();
+  // Still read downloads from stats/main
+  let downloads = 0;
+  try {
+    const snap = await getDoc(doc(db, "stats", "main"));
+    if (snap.exists()) downloads = snap.data().downloads || 0;
+  } catch (e) {
+    console.warn("Could not read stats/main:", e);
+  }
 
-  return {
-    users: data.users || 0,
-    downloads: data.downloads || 0
-  };
+  return { users: deviceUsers, downloads };
 }
 
 function format(num) {
