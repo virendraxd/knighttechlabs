@@ -243,14 +243,20 @@
 
                     <!-- PAY BUTTON -->
                     <button type="button" id="downloadPdf" class="pay-btn">
-                        <div class="pay-main" id="payMain">
-                            <span class="pay-title">Pay & Download Cover</span>
-                            <span class="price-badge">₹10</span>
+                        <div class="btn-spinner hidden" id="btnSpinner">
+                            <span class="btn-spinner-ring"></span>
+                            <span class="btn-spinner-text">Generating...</span>
                         </div>
-                        <div class="pay-secondary" id="paySecondary">
-                            <div class="pay-title">Download Cover</div>
+                        <div id="btnContent">
+                            <div class="pay-main" id="payMain">
+                                <span class="pay-title">Pay & Download Cover</span>
+                                <span class="price-badge">₹10</span>
+                            </div>
+                            <div class="pay-secondary" id="paySecondary">
+                                <div class="pay-title">Download Cover</div>
+                            </div>
+                            <div class="pay-sub">UniCover by Virendraxd</div>
                         </div>
-                        <div class="pay-sub">UniCover by Virendraxd</div>
                     </button>
                 </div>
             </form>
@@ -359,6 +365,11 @@
             <a href="../../pages/about.html" class="btn-about">Learn More →</a>
         </div>
     </section>
+
+    <!-- DOWNLOAD LOADER -->
+    <div id="downloadLoader" class="loader hidden">
+        <div class="loader-ring"></div>
+    </div>
 
     <!-- FOOTER -->
     <div id="footer"></div>

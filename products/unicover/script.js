@@ -143,6 +143,16 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   const studentName = coverStudent?.innerText || "Student";
   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
 
+  // In-button spinner elements
+  const btnSpinner = document.getElementById("btnSpinner");
+  const btnContent = document.getElementById("btnContent");
+
+  // Show spinner, hide normal button content
+  btnContent?.classList.add("hidden");
+  btnSpinner?.classList.remove("hidden");
+  downloadBtn.style.transform = "none"; // disable the hover lift while loading
+  downloadBtn.style.pointerEvents = "none";
+
   // Handle Watermark
   const watermark = coverPage.querySelector(".watermark-overlay");
   if (isWatermarked && watermark) watermark.classList.add("active");
@@ -164,29 +174,37 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   coverPage.style.opacity = "1";
   coverPage.style.pointerEvents = "auto";
 
-  addLog("📥 Preparing your cover...");
-  await delay(800);
-  addLog("🔄 Rendering high-quality PDF...");
-  await delay(1200);
-  addLog("⬇️ Download starting...");
-  await delay(700);
+  try {
+    addLog("📥 Preparing your cover...");
+    await delay(800);
+    addLog("🔄 Rendering high-quality PDF...");
+    await delay(1200);
+    addLog("⬇️ Download starting...");
+    await delay(700);
 
-  await html2pdf().set(options).from(coverPage).save();
+    await html2pdf().set(options).from(coverPage).save();
 
-  if (shouldIncrement && window.incrementDownloadCount) {
-    const userId = getOrCreateUserId();
-    await window.incrementDownloadCount(userId);
+    if (shouldIncrement && window.incrementDownloadCount) {
+      const userId = getOrCreateUserId();
+      await window.incrementDownloadCount(userId);
+    }
+
+    await delay(400);
+    addLog("✅ Download completed successfully!");
+  } finally {
+    // Always restore button — even if an error occurs mid-generation
+    btnSpinner?.classList.add("hidden");
+    btnContent?.classList.remove("hidden");
+    downloadBtn.style.transform = "";
+    downloadBtn.style.pointerEvents = "";
+
+    coverPage.style.position = "fixed";
+    coverPage.style.left = "-9999px";
+    coverPage.style.opacity = "0";
+    coverPage.style.pointerEvents = "none";
+
+    if (watermark) watermark.classList.remove("active");
   }
-
-  await delay(400);
-  addLog("✅ Download completed successfully!");
-
-  coverPage.style.position = "fixed";
-  coverPage.style.left = "-9999px";
-  coverPage.style.opacity = "0";
-  coverPage.style.pointerEvents = "none";
-
-  if (watermark) watermark.classList.remove("active");
 }
 
 function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
