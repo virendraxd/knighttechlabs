@@ -220,7 +220,7 @@ textarea:focus {
   right: 12mm;
   bottom: 12mm;
 
-  border: 3px solid var(--cover-border-color, var(--navy));
+  /* border: 3px solid var(--cover-border-color, var(--navy)); */
   border-radius: 8px;
 
   pointer-events: none;
@@ -661,109 +661,6 @@ textarea:focus {
   display: none;
 }
 
-@media print {
-  body {
-    background: white;
-    margin: 0;
-  }
-
-  .header,
-  .container {
-    display: none;
-  }
-
-  .cover-page {
-    margin: 0;
-    border: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .real-cover {
-    position: fixed;
-    left: -9999px;
-    top: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .cover-preview {
-    display: block;
-  }
-
-  .preview-note {
-    display: block;
-  }
-
-  .form-area {
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-  }
-
-  .page {
-    padding: 1px;
-    width: 794px;
-    margin: 0 auto;
-    transform: scale(calc(100vw / 820));
-    transform-origin: top center;
-  }
-
-  .cover-page {
-    width: 100%;
-  }
-}
-
-/* iPad - Pro , air , mini */
-@media (max-width: 1024px) {
-  .unicover-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-  }
-
-  .form-area {
-    max-width: 420px;
-    margin: 0 auto;
-  }
-
-  .page {
-    width: 100%;
-    max-width: 794px;
-    margin: 0 auto;
-  }
-
-  .cover-page {
-    width: 100%;
-    margin: 0 auto;
-  }
-}
-
-@media (max-width: 1400px) and (min-width: 1024px) {
-  .form-area {
-    max-width: 420px;
-    margin: 0 auto;
-  }
-
-  .page {
-    width: 100%;
-    max-width: 794px;
-    margin: 0 auto;
-  }
-
-  .cover-page {
-    width: 100%;
-    margin: 0 auto;
-  }
-}
-
-@media (min-width: 1400px) {
-  .unicover-layout {
-    grid-template-columns: 420px 1fr;
-  }
-}
-
 /* ================= FREE DOWNLOADS REMAINING BAR ================= */
 .free-downloads-bar {
   display: flex;
@@ -1054,20 +951,6 @@ textarea:focus {
   transform: translateY(-3px);
   border-color: #facc15; /* gold accent */
 }
-/* 
-.stat-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-
-  background: linear-gradient(120deg,
-      rgba(255, 255, 255, 0.2),
-      transparent 40%);
-
-  opacity: 0.3;
-  pointer-events: none;
-} */
 
 .stat-card h2 {
   font-size: 30px;
@@ -1079,4 +962,108 @@ textarea:focus {
 .stat-card p {
   margin-top: 6px;
   color: #d2c078; 
+}
+
+
+@media print {
+  body {
+    background: white;
+    margin: 0;
+  }
+
+  .header,
+  .container {
+    display: none;
+  }
+
+  .cover-page {
+    margin: 0;
+    border: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .real-cover {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .cover-preview {
+    display: block;
+  }
+
+  .preview-note {
+    display: block;
+  }
+
+  .form-area {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .page {
+    padding: 1px;
+    width: 794px;
+    margin: 0 auto;
+    transform: scale(calc(100vw / 820));
+    transform-origin: top center;
+  }
+
+  .cover-page {
+    width: 100%;
+  }
+}
+
+/* iPad - Pro , air , mini */
+@media (max-width: 1024px) {
+  .unicover-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .form-area {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 794px;
+    margin: 0 auto;
+  }
+
+  .cover-page {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 1400px) and (min-width: 1024px) {
+  .form-area {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 794px;
+    margin: 0 auto;
+  }
+
+  .cover-page {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1400px) {
+  .unicover-layout {
+    grid-template-columns: 420px 1fr;
+  }
 }
