@@ -153,9 +153,16 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   downloadBtn.style.transform = "none"; // disable the hover lift while loading
   downloadBtn.style.pointerEvents = "none";
 
-  // Handle Watermark
+  // Handle Watermark for download
   const watermark = coverPage.querySelector(".watermark-overlay");
-  if (isWatermarked && watermark) watermark.classList.add("active");
+  if (watermark) {
+    // If it's a clean download, we hide the watermark during capture
+    if (!isWatermarked) {
+      watermark.classList.add("hidden-capture");
+    } else {
+      watermark.classList.remove("hidden-capture");
+    }
+  }
 
   logBox.style.display = "block";
   const delay = ms => new Promise(r => setTimeout(r, ms));
@@ -228,7 +235,9 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     downloadBtn.style.transform = "";
     downloadBtn.style.pointerEvents = "";
 
-    if (watermark) watermark.classList.remove("active");
+    if (watermark) {
+        watermark.classList.remove("hidden-capture");
+    }
     
     // Ensure scaling is correct after generation
     scaleCoverToFit();
@@ -882,12 +891,14 @@ function scaleCoverToFit() {
     const leftOffset = (containerWidth - scaledWidth) / 2;
     cover.style.marginLeft = `${leftOffset}px`;
     
-    // Update container height to match scaled content to prevent layout gaps
-    container.style.height = `${(a4Height * scale) + 20}px`;
+    // Calculate total height needed including the note
+    const note = container.querySelector(".preview-note");
+    const noteHeight = note ? note.offsetHeight + 15 : 0; // 15 is the margin-bottom
+    
+    // Update container height to match scaled content + note
+    container.style.height = `${(a4Height * scale) + noteHeight + 20}px`;
     
     // Compensate for the layout space still taken by the unscaled element
-    // By using overflow:hidden on .page, the extra width of 794px is clipped.
-    // The negative margin-bottom helps pull up elements below the scaled cover.
     cover.style.marginBottom = `-${a4Height * (1 - scale)}px`;
   } else {
     // Desktop view - no scaling needed
