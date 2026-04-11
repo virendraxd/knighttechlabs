@@ -164,9 +164,16 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     margin: 0,
     filename: `${safeName}_Assignment_Cover${isWatermarked ? '_Watermarked' : ''}.pdf`,
     image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
+    html2canvas: { 
+      scale: 3, 
+      useCORS: true, 
+      logging: false,
+      letterRendering: true,
+      scrollX: 0, 
+      scrollY: 0 
+    },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    pagebreak: { mode: "avoid-all" }
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
 
   coverPage.style.position = "static";
@@ -176,6 +183,26 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
 
   try {
     addLog("📥 Preparing your cover...");
+    
+    // 1. Save all existing styles to restore later
+    const originalStyles = {
+        transform: coverPage.style.transform,
+        transformOrigin: coverPage.style.transformOrigin,
+        marginLeft: coverPage.style.marginLeft,
+        marginBottom: coverPage.style.marginBottom,
+        position: coverPage.style.position,
+        left: coverPage.style.left,
+        opacity: coverPage.style.opacity
+    };
+
+    // 2. FORCE pure A4 state for high-quality capture
+    coverPage.style.transform = "none";
+    coverPage.style.transformOrigin = "top left";
+    coverPage.style.marginLeft = "0";
+    coverPage.style.marginBottom = "0";
+    coverPage.style.position = "static";
+    coverPage.style.opacity = "1";
+    
     await delay(800);
     addLog("🔄 Rendering high-quality PDF...");
     await delay(1200);
@@ -189,6 +216,9 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
       await window.incrementDownloadCount(userId);
     }
 
+    // 3. Restore original preview styles
+    Object.assign(coverPage.style, originalStyles);
+
     await delay(400);
     addLog("✅ Download completed successfully!");
   } finally {
@@ -198,12 +228,10 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     downloadBtn.style.transform = "";
     downloadBtn.style.pointerEvents = "";
 
-    coverPage.style.position = "fixed";
-    coverPage.style.left = "-9999px";
-    coverPage.style.opacity = "0";
-    coverPage.style.pointerEvents = "none";
-
     if (watermark) watermark.classList.remove("active");
+    
+    // Ensure scaling is correct after generation
+    scaleCoverToFit();
   }
 }
 
@@ -810,14 +838,72 @@ universitySelect.addEventListener("change", () => {
   document.querySelectorAll(".cover-page")
     .forEach(c => c.classList.add("hidden"));
 
-  document.getElementById(uni.coverId)
-    .classList.remove("hidden");
+  const coverPage = document.getElementById(uni.coverId);
+  coverPage.classList.remove("hidden");
 
   // Change preview image
   document.getElementById("coverPreview").src = uni.preview;
 
   // Apply theme colors
   applyTheme(uni);
+  
+  // Trigger scaling after a short delay for layout to settle
+  setTimeout(scaleCoverToFit, 50);
+});
+
+/**
+ * Precisely scales the A4 cover page to fit comfortably within its container
+ */
+function scaleCoverToFit() {
+  const container = document.getElementById("previewSection");
+  const cover = getActiveCover();
+  
+  if (!container || !cover || window.getComputedStyle(container).display === 'none') {
+    return;
+  }
+
+  // A4 dimensions at 96 DPI
+  const a4Width = 794; 
+  const a4Height = 1123; 
+
+  // Get available width
+  const containerWidth = container.offsetWidth;
+  
+  // Only scale if the container is smaller than A4
+  if (containerWidth < a4Width && containerWidth > 0) {
+    const scale = containerWidth / a4Width;
+    
+    // Use top-left origin for easier offset calculation
+    cover.style.transformOrigin = "top left";
+    cover.style.transform = `scale(${scale})`;
+    
+    // Calculate how much space is left after scaling to center the cover
+    const scaledWidth = a4Width * scale;
+    const leftOffset = (containerWidth - scaledWidth) / 2;
+    cover.style.marginLeft = `${leftOffset}px`;
+    
+    // Update container height to match scaled content to prevent layout gaps
+    container.style.height = `${(a4Height * scale) + 20}px`;
+    
+    // Compensate for the layout space still taken by the unscaled element
+    // By using overflow:hidden on .page, the extra width of 794px is clipped.
+    // The negative margin-bottom helps pull up elements below the scaled cover.
+    cover.style.marginBottom = `-${a4Height * (1 - scale)}px`;
+  } else {
+    // Desktop view - no scaling needed
+    cover.style.transform = "none";
+    cover.style.transformOrigin = "top center";
+    cover.style.marginLeft = "0";
+    cover.style.marginBottom = "0";
+    container.style.height = "auto";
+  }
+}
+
+// Global scaling events
+window.addEventListener("resize", scaleCoverToFit);
+// Add to any major UI changes
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(scaleCoverToFit, 500);
 });
 
 function animateCount(el, target) {
