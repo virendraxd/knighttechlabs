@@ -92,6 +92,10 @@ nav {
   color: var(--cyan);
 }
 
+.logo-name {
+  letter-spacing: -2px;
+}
+
 .logo.white {
   color: white;
 }
