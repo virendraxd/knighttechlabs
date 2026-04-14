@@ -14,7 +14,7 @@ window.SETTINGS = {
         // "FORFREE": { type: "percent", value: 100 }    // Free
     },
 
-    SAVE_TO_DB: true // Set to false to disable saving cover generation data to Database
+    SAVE_TO_DB: false // Set to false to disable saving cover generation data to Database
 };
 
 if (SETTINGS.REQUIRE_ACCESS_CODE) {
