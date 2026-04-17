@@ -77,7 +77,8 @@ applySettingsUI();
 let isGenerating = false;
 
 // CHECK DB SAVE PERMISSIONS FOR COVER DATA
-const SHOULD_SAVE_COVER = SETTINGS.SAVE_TO_DB;
+const isLocalEnv = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname === "::1" || location.hostname === "" || location.protocol === "file:";
+const SHOULD_SAVE_COVER = SETTINGS.SAVE_TO_DB && (!isLocalEnv || SETTINGS.SAVE_TO_DB_FROM_LOCALHOST === true);
 
 
 // DOWNLOAD LIMIT LOGIC
