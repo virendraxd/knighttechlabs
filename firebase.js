@@ -28,6 +28,12 @@ window.currentUser = null;
 window.isPremiumUser = false;
 window.authResolved = false;
 
+function shouldSaveToDB() {
+  if (!window.SETTINGS) return true;
+  const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname === "::1" || location.hostname === "" || location.protocol === "file:";
+  return window.SETTINGS.SAVE_TO_DB && (!isLocal || window.SETTINGS.SAVE_TO_DB_FROM_LOCALHOST === true);
+}
+
 //
 // 🔐 AUTH HANDLING
 //
@@ -55,9 +61,11 @@ onAuthStateChanged(auth, async (user) => {
         });
 
         // increment global users
-        await updateDoc(doc(db, "stats", "main"), {
-          users: increment(1)
-        });
+        if (shouldSaveToDB()) {
+          await updateDoc(doc(db, "stats", "main"), {
+            users: increment(1)
+          });
+        }
       }
 
       const data = snap.exists() ? snap.data() : {};
@@ -209,9 +217,11 @@ window.incrementDownloadCount = async function (userId) {
     }
 
     // ✅ Always update global downloads stat
-    await updateDoc(doc(db, "stats", "main"), {
-      downloads: increment(1)
-    });
+    if (shouldSaveToDB()) {
+      await updateDoc(doc(db, "stats", "main"), {
+        downloads: increment(1)
+      });
+    }
 
   } catch (err) {
     console.error("Download increment error:", err);
