@@ -77,8 +77,7 @@ applySettingsUI();
 let isGenerating = false;
 
 // CHECK DB SAVE PERMISSIONS FOR COVER DATA
-const isLocalEnv = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname === "::1" || location.hostname === "" || location.protocol === "file:";
-const SHOULD_SAVE_COVER = SETTINGS.SAVE_TO_DB && (!isLocalEnv || SETTINGS.SAVE_TO_DB_FROM_LOCALHOST !== false);
+const SHOULD_SAVE_COVER = SETTINGS.SAVE_TO_DB;
 
 
 // DOWNLOAD LIMIT LOGIC
@@ -176,13 +175,13 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     margin: 0,
     filename: `${safeName}_Assignment_Cover${isWatermarked ? '_Watermarked' : ''}.pdf`,
     image: { type: "jpeg", quality: 1 },
-    html2canvas: { 
-      scale: 3, 
-      useCORS: true, 
+    html2canvas: {
+      scale: 3,
+      useCORS: true,
       logging: false,
       letterRendering: true,
-      scrollX: 0, 
-      scrollY: 0 
+      scrollX: 0,
+      scrollY: 0
     },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
@@ -195,16 +194,16 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
 
   try {
     addLog("📥 Preparing your cover...");
-    
+
     // 1. Save all existing styles to restore later
     const originalStyles = {
-        transform: coverPage.style.transform,
-        transformOrigin: coverPage.style.transformOrigin,
-        marginLeft: coverPage.style.marginLeft,
-        marginBottom: coverPage.style.marginBottom,
-        position: coverPage.style.position,
-        left: coverPage.style.left,
-        opacity: coverPage.style.opacity
+      transform: coverPage.style.transform,
+      transformOrigin: coverPage.style.transformOrigin,
+      marginLeft: coverPage.style.marginLeft,
+      marginBottom: coverPage.style.marginBottom,
+      position: coverPage.style.position,
+      left: coverPage.style.left,
+      opacity: coverPage.style.opacity
     };
 
     // 2. FORCE pure A4 state for high-quality capture
@@ -214,7 +213,7 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     coverPage.style.marginBottom = "0";
     coverPage.style.position = "static";
     coverPage.style.opacity = "1";
-    
+
     await delay(800);
     addLog("🔄 Rendering high-quality PDF...");
     await delay(1200);
@@ -241,9 +240,9 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     downloadBtn.style.pointerEvents = "";
 
     if (watermark) {
-        watermark.classList.remove("hidden-capture");
+      watermark.classList.remove("hidden-capture");
     }
-    
+
     // Ensure scaling is correct after generation
     scaleCoverToFit();
   }
@@ -860,7 +859,7 @@ universitySelect.addEventListener("change", () => {
 
   // Apply theme colors
   applyTheme(uni);
-  
+
   // Trigger scaling after a short delay for layout to settle
   setTimeout(scaleCoverToFit, 50);
 });
@@ -871,38 +870,38 @@ universitySelect.addEventListener("change", () => {
 function scaleCoverToFit() {
   const container = document.getElementById("previewSection");
   const cover = getActiveCover();
-  
+
   if (!container || !cover || window.getComputedStyle(container).display === 'none') {
     return;
   }
 
   // A4 dimensions at 96 DPI
-  const a4Width = 794; 
-  const a4Height = 1123; 
+  const a4Width = 794;
+  const a4Height = 1123;
 
   // Get available width
   const containerWidth = container.offsetWidth;
-  
+
   // Only scale if the container is smaller than A4
   if (containerWidth < a4Width && containerWidth > 0) {
     const scale = containerWidth / a4Width;
-    
+
     // Use top-left origin for easier offset calculation
     cover.style.transformOrigin = "top left";
     cover.style.transform = `scale(${scale})`;
-    
+
     // Calculate how much space is left after scaling to center the cover
     const scaledWidth = a4Width * scale;
     const leftOffset = (containerWidth - scaledWidth) / 2;
     cover.style.marginLeft = `${leftOffset}px`;
-    
+
     // Calculate total height needed including the note
     const note = container.querySelector(".preview-note");
     const noteHeight = note ? note.offsetHeight + 15 : 0; // 15 is the margin-bottom
-    
+
     // Update container height to match scaled content + note
     container.style.height = `${(a4Height * scale) + noteHeight + 20}px`;
-    
+
     // Compensate for the layout space still taken by the unscaled element
     cover.style.marginBottom = `-${a4Height * (1 - scale)}px`;
   } else {
