@@ -76,6 +76,11 @@ applySettingsUI();
 
 let isGenerating = false;
 
+// CHECK DB SAVE PERMISSIONS FOR COVER DATA
+const isLocalEnv = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname === "::1" || location.hostname === "" || location.protocol === "file:";
+const SHOULD_SAVE_COVER = SETTINGS.SAVE_TO_DB && (!isLocalEnv || SETTINGS.SAVE_TO_DB_FROM_LOCALHOST !== false);
+
+
 // DOWNLOAD LIMIT LOGIC
 function getOrCreateUserId() {
   let userId = localStorage.getItem("unicover_user_id");
@@ -264,7 +269,7 @@ function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
       addLog("✅ Payment Successful!");
       addLog("Payment ID: " + response.razorpay_payment_id);
 
-      if (SETTINGS.SAVE_TO_DB && window.saveCoverData) {
+      if (SHOULD_SAVE_COVER && window.saveCoverData) {
         await window.saveCoverData(response);
       }
       await onSuccessCallback();
@@ -397,7 +402,7 @@ downloadBtn.addEventListener("click", async () => {
       console.log("✅ Limit Check Passed. Checking save settings...");
 
       // Still under limit -> free clean download
-      if (SETTINGS.SAVE_TO_DB) {
+      if (SHOULD_SAVE_COVER) {
         if (window.saveCoverData) {
           console.log("💾 Calling saveCoverData...");
           await window.saveCoverData({ razorpay_payment_id: "FREE_MODE" });
