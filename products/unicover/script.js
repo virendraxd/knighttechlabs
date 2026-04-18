@@ -137,6 +137,26 @@ window.updateFreeDownloadsBar = async function () {
 // Load the bar once Firebase has had time to initialise
 setTimeout(window.updateFreeDownloadsBar, 1200);
 
+// Toggle button loading state
+function setBtnLoading(isLoading) {
+  const spinner = document.getElementById("btnSpinner");
+  const content = document.getElementById("btnContent");
+  
+  if (isLoading) {
+    spinner?.classList.remove("hidden");
+    content?.classList.add("hidden");
+    downloadBtn.disabled = true;
+    downloadBtn.style.transform = "none";
+    downloadBtn.style.pointerEvents = "none";
+  } else {
+    spinner?.classList.add("hidden");
+    content?.classList.remove("hidden");
+    downloadBtn.disabled = false;
+    downloadBtn.style.transform = "";
+    downloadBtn.style.pointerEvents = "";
+  }
+}
+
 
 // CENTRAL PDF GENERATION ENGINE
 async function executePDFGeneration(isWatermarked = false, shouldIncrement = false) {
@@ -144,15 +164,8 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   const studentName = coverStudent?.innerText || "Student";
   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
 
-  // In-button spinner elements
-  const btnSpinner = document.getElementById("btnSpinner");
-  const btnContent = document.getElementById("btnContent");
-
-  // Show spinner, hide normal button content
-  btnContent?.classList.add("hidden");
-  btnSpinner?.classList.remove("hidden");
-  downloadBtn.style.transform = "none"; // disable the hover lift while loading
-  downloadBtn.style.pointerEvents = "none";
+  // Show spinner
+  setBtnLoading(true);
 
   // Handle Watermark for download
   const watermark = coverPage.querySelector(".watermark-overlay");
@@ -231,10 +244,7 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     addLog("✅ Download completed successfully!");
   } finally {
     // Always restore button — even if an error occurs mid-generation
-    btnSpinner?.classList.add("hidden");
-    btnContent?.classList.remove("hidden");
-    downloadBtn.style.transform = "";
-    downloadBtn.style.pointerEvents = "";
+    setBtnLoading(false);
 
     if (watermark) {
       watermark.classList.remove("hidden-capture");
@@ -385,28 +395,27 @@ downloadBtn.addEventListener("click", async () => {
   // ⭐ PREMIUM CHECK (Instant clean execution)
   if (window.isPremiumUser) {
     isGenerating = true;
-    downloadBtn.disabled = true;
+    setBtnLoading(true); // Show spinner
+    
     showGlobalToast("Generating Premium Clean PDF...", "success", 2000);
     saveFormData();
     if (window.saveCoverData) {
       await window.saveCoverData({ razorpay_payment_id: "PREMIUM_USER" });
     }
     await executePDFGeneration(false, false);
+    
     isGenerating = false;
-    downloadBtn.disabled = false;
+    setBtnLoading(false); // Hide spinner
     return;
   }
 
   // ⭐ FREE LIMIT WAIT CHECK
   isGenerating = true;
-  downloadBtn.disabled = true;
+  setBtnLoading(true); // Show spinner
 
   if (window.checkDownloadLimit) {
-    downloadBtn.querySelector(".pay-title").textContent = "Checking Limit...";
     const userId = getOrCreateUserId();
     const canDownload = await window.checkDownloadLimit(userId);
-
-    downloadBtn.querySelector(".pay-title").textContent = "Pay & Download Cover";
 
     if (canDownload) {
       console.log("✅ Limit Check Passed. Checking save settings...");
@@ -420,14 +429,17 @@ downloadBtn.addEventListener("click", async () => {
       }
       saveFormData();
       await executePDFGeneration(false, true); // clean, increment
+      
       isGenerating = false;
-      downloadBtn.disabled = false;
+      setBtnLoading(false); // Hide spinner
+      
       // Refresh the downloads remaining counter
       window.updateFreeDownloadsBar();
       return;
     } else {
       // FREEMIUM MODAL LAUNCH
       isGenerating = false;
+      setBtnLoading(false); // Hide spinner
       window.updateFreeDownloadsBar(); // refresh bar to show 0 remaining
       freemiumModal.classList.toggle("hidden");
       return;
@@ -438,7 +450,7 @@ downloadBtn.addEventListener("click", async () => {
   saveFormData();
   await executePDFGeneration(false, false);
   isGenerating = false;
-  downloadBtn.disabled = false;
+  setBtnLoading(false); // Hide spinner
 });
 
 async function generatePDFDirectly() {
