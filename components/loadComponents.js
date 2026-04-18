@@ -1,12 +1,13 @@
 function getBasePath() {
   const path = location.pathname;
+  const isLocalFile = location.protocol === 'file:';
 
-  // If inside /knighttechlabs/
-  if (path.startsWith("/knighttechlabs/")) {
-    return "/knighttechlabs/"; // repo name
+  // If inside /knighttechlabs/ (GitHub Pages or local repo folder name)
+  if (path.includes("/knighttechlabs/")) {
+    return isLocalFile ? "" : "/knighttechlabs/";
   }
 
-  return "/"; // localhost
+  return isLocalFile ? "" : "/";
 }
 
 
