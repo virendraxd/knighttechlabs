@@ -249,39 +249,50 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
   }
 }
 
-function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
+async function triggerRazorpayPayment(amountInPaise, description, onSuccessCallback) {
   saveFormData();
   const studentName = coverStudent?.innerText || "Student";
-  const rzpOptions = {
-    key: "rzp_live_SFfynYVohQVMSU", // Sandbox/Live Key 
-    amount: amountInPaise,
-    currency: "INR",
-    name: "UniCover by Virendraxd",
-    description: description,
-    prefill: {
-      name: studentName,
-      email: "student@example.com",
-      contact: "9999999999"
-    },
-    theme: { color: "#3399cc" },
-    handler: async function (response) {
-      logBox.style.display = "block";
-      addLog("✅ Payment Successful!");
-      addLog("Payment ID: " + response.razorpay_payment_id);
+  const userId = getOrCreateUserId();
 
-      if (SHOULD_SAVE_COVER && window.saveCoverData) {
-        await window.saveCoverData(response);
+  try {
+    addLog("⏳ Initiating secure payment...");
+
+    // Open Razorpay Checkout
+    const rzpOptions = {
+      key: "rzp_live_SFfynYVohQVMSU", // Sandbox/Live Key 
+      amount: amountInPaise,
+      currency: "INR",
+      name: "UniCover by Virendraxd",
+      description: description,
+      prefill: {
+        name: studentName,
+        email: "student@example.com",
+        contact: "9999999999"
+      },
+      theme: { color: "#3399cc" },
+      handler: async function (response) {
+        logBox.style.display = "block";
+        addLog("✅ Payment Successful!");
+        addLog("Payment ID: " + response.razorpay_payment_id);
+
+        if (SHOULD_SAVE_COVER && window.saveCoverData) {
+          await window.saveCoverData(response);
+        }
+        await onSuccessCallback();
       }
-      await onSuccessCallback();
-    }
-  };
+    };
 
-  const rzp = new Razorpay(rzpOptions);
-  rzp.on('payment.failed', function (res) {
-    console.error("Payment failed", res.error);
-    showGlobalToast("Payment failed! Please try again.", "error");
-  });
-  rzp.open();
+    const rzp = new Razorpay(rzpOptions);
+    rzp.on('payment.failed', function (res) {
+      console.error("Payment failed", res.error);
+      showGlobalToast("Payment failed! Please try again.", "error");
+    });
+    rzp.open();
+
+  } catch (err) {
+    console.error("Payment Initiation Error:", err);
+    showGlobalToast("Could not open payment gateway. Please try again.", "error");
+  }
 }
 
 // ==========================================
