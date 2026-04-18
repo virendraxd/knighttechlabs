@@ -76,11 +76,7 @@ onAuthStateChanged(auth, async (user) => {
         });
 
         // increment global users
-        if (shouldSaveToDB()) {
-          await updateDoc(doc(db, "stats", "main"), {
-            users: increment(1)
-          });
-        }
+        // (Now handled in incrementDownloadCount to include guests and avoid duplicates)
       }
 
       const data = snap.exists() ? snap.data() : {};
@@ -192,6 +188,13 @@ window.saveCoverData = async function (payment, fileUrl = "") {
 
     await addDoc(collection(db, "unicoverOrders"), data);
 
+    // ✅ Increment global savedCovers stat
+    if (shouldSaveToDB()) {
+      await updateDoc(doc(db, "stats", "main"), {
+        savedCovers: increment(1)
+      });
+    }
+
     console.log("Order saved");
 
   } catch (error) {
@@ -222,7 +225,7 @@ window.incrementDownloadCount = async function (userId) {
       });
     }
 
-    // ✅ Always track in guestUser (works for both guests and auth users)
+    // ✅ Always track in guestUsers (works for both guests and auth users)
     if (userId) {
       const ref = doc(db, "guestUsers", userId);
       const snap = await getDoc(ref);
@@ -236,6 +239,7 @@ window.incrementDownloadCount = async function (userId) {
           isGuest: isGuest
         });
       } else {
+        // 🆕 NEW USER DETECTED (First time downloading)
         await setDoc(ref, {
           count: 1,
           createdAt: new Date(),
@@ -243,6 +247,13 @@ window.incrementDownloadCount = async function (userId) {
           isGuest: isGuest,
           email: window.currentUser?.email || "Guest"
         });
+
+        // ✅ Increment global users stat for new IDs
+        if (shouldSaveToDB()) {
+          await updateDoc(doc(db, "stats", "main"), {
+            users: increment(1)
+          });
+        }
       }
     }
 
@@ -262,31 +273,19 @@ window.incrementDownloadCount = async function (userId) {
 // 📊 STATS
 //
 async function getStats() {
-  let totalUsers = 0;
-  let downloads = 0;
-
   try {
-    // 1. Get ONLY true Guest Count (isGuest == true)
-    const guestQuery = query(collection(db, "guestUsers"), where("isGuest", "==", true));
-    const guestSnap = await getCountFromServer(guestQuery);
-    const trueGuestCount = guestSnap.data().count || 0;
-
-    // 2. Get Registered User Count from 'main' (already being incremented on signup)
-    // Also get total downloads
     const statsSnap = await getDoc(doc(db, "stats", "main"));
     const statsData = statsSnap.exists() ? statsSnap.data() : {};
     
-    const registeredUsers = statsData.users || 0;
-    downloads = statsData.downloads || 0;
-
-    // 3. Sum them up (Registered + True Guests)
-    totalUsers = registeredUsers + trueGuestCount;
-
+    return { 
+      users: statsData.users || 0, 
+      downloads: statsData.downloads || 0,
+      savedCovers: statsData.savedCovers || 0
+    };
   } catch (e) {
-    console.warn("Could not calculate stats:", e);
+    console.warn("Could not read stats:", e);
+    return { users: 0, downloads: 0, savedCovers: 0 };
   }
-
-  return { users: totalUsers, downloads };
 }
 
 function format(num) {
