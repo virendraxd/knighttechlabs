@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc,
-  increment, getDocs, deleteField, getCountFromServer
+  increment, getDocs, deleteField, getCountFromServer, query, where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
@@ -34,13 +34,28 @@ function shouldSaveToDB() {
   return window.SETTINGS.SAVE_TO_DB && (!isLocal || window.SETTINGS.SAVE_TO_DB_FROM_LOCALHOST === true);
 }
 
+// 🆔 CUSTOM USER ID FOR GUESTS
+window.getDeviceUserId = function () {
+  let userId = localStorage.getItem("unicover_user_id");
+  if (!userId) {
+    userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    localStorage.setItem("unicover_user_id", userId);
+    console.log("Generated new guest ID:", userId);
+  }
+  return userId;
+};
+
+// Initialize device ID immediately
+window.getDeviceUserId();
+
 //
 // 🔐 AUTH HANDLING
 //
 onAuthStateChanged(auth, async (user) => {
   window.authResolved = true;
 
-  if (user) {
+  // 🛡️ Only handle as authenticated if they are NOT anonymous
+  if (user && !user.isAnonymous) {
     window.currentUser = user;
 
     localStorage.setItem("ktl_user_email", user.email);
@@ -90,6 +105,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   if (window.updateAuthUI) window.updateAuthUI();
+  if (window.updateFreeDownloadsBar) window.updateFreeDownloadsBar();
 });
 
 //
@@ -140,6 +156,10 @@ window.markPremiumInDB = async function () {
 // 🧾 SAVE COVER → unicoverOrders
 //
 window.saveCoverData = async function (payment, fileUrl = "") {
+  if (!shouldSaveToDB()) {
+    console.warn("⚠️ Database saving is disabled by settings (Localhost or SAVE_TO_DB=false)");
+    return;
+  }
   try {
     const getValue = (id) => document.getElementById(id)?.value || "";
 
@@ -156,8 +176,8 @@ window.saveCoverData = async function (payment, fileUrl = "") {
       year: getValue("year"),
 
       // user
-      userId: window.currentUser?.uid || null,
-      userEmail: window.currentUser?.email || null,
+      userId: window.currentUser?.uid || window.getDeviceUserId(),
+      userEmail: window.currentUser?.email || "Guest",
       isGuest: !window.currentUser,
 
       // payment
@@ -183,7 +203,7 @@ window.saveCoverData = async function (payment, fileUrl = "") {
 // 📥 DOWNLOAD LIMIT + TRACKING
 //
 window.getDownloadUsage = async function (userId) {
-  const ref = doc(db, "downloadLimits", userId);
+  const ref = doc(db, "guestUsers", userId);
   const snap = await getDoc(ref);
   return snap.exists() ? snap.data().count || 0 : 0;
 };
@@ -196,23 +216,33 @@ window.checkDownloadLimit = async function (userId) {
 window.incrementDownloadCount = async function (userId) {
   try {
     // ✅ Only update the 'users' doc if the user is actually authenticated
-    // Guest userIds are localStorage-based (not Firebase Auth UIDs), so we
-    // must NOT try to updateDoc on users/{guestId} — that doc doesn't exist.
     if (userId && window.currentUser && window.currentUser.uid === userId) {
       await updateDoc(doc(db, "users", userId), {
         downloadsCount: increment(1)
       });
     }
 
-    // ✅ Always track in downloadLimits (works for both guests and auth users)
+    // ✅ Always track in guestUser (works for both guests and auth users)
     if (userId) {
-      const ref = doc(db, "downloadLimits", userId);
+      const ref = doc(db, "guestUsers", userId);
       const snap = await getDoc(ref);
 
+      const isGuest = !window.currentUser || window.currentUser.uid !== userId;
+
       if (snap.exists()) {
-        await updateDoc(ref, { count: increment(1) });
+        await updateDoc(ref, {
+          count: increment(1),
+          lastUsed: new Date(),
+          isGuest: isGuest
+        });
       } else {
-        await setDoc(ref, { count: 1 });
+        await setDoc(ref, {
+          count: 1,
+          createdAt: new Date(),
+          lastUsed: new Date(),
+          isGuest: isGuest,
+          email: window.currentUser?.email || "Guest"
+        });
       }
     }
 
@@ -232,26 +262,31 @@ window.incrementDownloadCount = async function (userId) {
 // 📊 STATS
 //
 async function getStats() {
-  // Count unique devices/users from downloadLimits collection
-  // Each document = one unique device ID, so this is the true unique-user count
-  let deviceUsers = 0;
-  try {
-    const countSnap = await getCountFromServer(collection(db, "downloadLimits"));
-    deviceUsers = countSnap.data().count;
-  } catch (e) {
-    console.warn("Could not count downloadLimits:", e);
-  }
-
-  // Still read downloads from stats/main
+  let totalUsers = 0;
   let downloads = 0;
+
   try {
-    const snap = await getDoc(doc(db, "stats", "main"));
-    if (snap.exists()) downloads = snap.data().downloads || 0;
+    // 1. Get ONLY true Guest Count (isGuest == true)
+    const guestQuery = query(collection(db, "guestUsers"), where("isGuest", "==", true));
+    const guestSnap = await getCountFromServer(guestQuery);
+    const trueGuestCount = guestSnap.data().count || 0;
+
+    // 2. Get Registered User Count from 'main' (already being incremented on signup)
+    // Also get total downloads
+    const statsSnap = await getDoc(doc(db, "stats", "main"));
+    const statsData = statsSnap.exists() ? statsSnap.data() : {};
+    
+    const registeredUsers = statsData.users || 0;
+    downloads = statsData.downloads || 0;
+
+    // 3. Sum them up (Registered + True Guests)
+    totalUsers = registeredUsers + trueGuestCount;
+
   } catch (e) {
-    console.warn("Could not read stats/main:", e);
+    console.warn("Could not calculate stats:", e);
   }
 
-  return { users: deviceUsers, downloads };
+  return { users: totalUsers, downloads };
 }
 
 function format(num) {
@@ -279,6 +314,28 @@ async function loadStats() {
 };
 loadStats();
 
+
+//
+// 🛠️ MIGRATION: downloadLimits → guestUsers
+//
+// window.migrateDownloadLimitsToGuestUsers = async function () {
+//   console.log("🚀 Starting migration: downloadLimits → guestUsers...");
+//   const snapshot = await getDocs(collection(db, "downloadLimits"));
+//   let movedCount = 0;
+
+//   for (const docSnap of snapshot.docs) {
+//     const data = docSnap.data();
+//     const newRef = doc(db, "guestUsers", docSnap.id);
+
+//     // Copy data to new collection
+//     await setDoc(newRef, data);
+//     movedCount++;
+//     console.log(`✅ Moved ${docSnap.id} (${movedCount}/${snapshot.size})`);
+//   }
+
+//   console.log(`🎉 Migration complete! Moved ${movedCount} documents.`);
+//   console.log("⚠️ You can now safely delete the 'downloadLimits' collection in Firebase Console.");
+// };
 
 //
 // 🛠️ OPTIONAL: MIGRATION (RUN ONCE)
