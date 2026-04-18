@@ -121,7 +121,7 @@ window.updateFreeDownloadsBar = async function () {
   ).join('');
 
   if (remaining === 0) {
-    text.innerHTML = `🔒 Free downloads exhausted &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    text.innerHTML = `🔒 Premium downloads exhausted &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
     bar.className = 'free-downloads-bar exhausted';
   } else if (remaining === 1) {
     text.innerHTML = `⚠️ ${remaining} free download left &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;

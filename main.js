@@ -83,9 +83,13 @@ window.updateAuthUI = async function () {
         if (uId && window.getDownloadUsage) {
           const count = await window.getDownloadUsage(uId);
           const left = Math.max(0, 3 - count);
-          usageText.textContent = `${left} free download${left !== 1 ? 's' : ''} left`;
+          if (left === 0) {
+            usageText.textContent = "Premium downloads exhausted 🔒";
+          } else {
+            usageText.textContent = `${left} premium download${left !== 1 ? 's' : ''} left`;
+          }
         } else {
-          usageText.textContent = "3 free downloads left";
+          usageText.textContent = "3 premium downloads left";
         }
       }
     } else {
