@@ -79,7 +79,7 @@ window.updateAuthUI = async function () {
       if (isPremium) {
         usageText.textContent = "Unlimited Clean Downloads ✨";
       } else {
-        let uId = localStorage.getItem("unicover_user_id");
+        let uId = window.currentUser ? window.currentUser.uid : window.getDeviceUserId();
         if (uId && window.getDownloadUsage) {
           const count = await window.getDownloadUsage(uId);
           const left = Math.max(0, 3 - count);

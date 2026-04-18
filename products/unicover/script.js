@@ -77,33 +77,29 @@ applySettingsUI();
 let isGenerating = false;
 
 // CHECK DB SAVE PERMISSIONS FOR COVER DATA
-const isLocalEnv = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname === "::1" || location.hostname === "" || location.protocol === "file:";
-const SHOULD_SAVE_COVER = SETTINGS.SAVE_TO_DB && (!isLocalEnv || SETTINGS.SAVE_TO_DB_FROM_LOCALHOST === true);
+// (Handled internally by firebase.js window.saveCoverData)
 
 
 // DOWNLOAD LIMIT LOGIC
 function getOrCreateUserId() {
-  let userId = localStorage.getItem("unicover_user_id");
-  if (!userId) {
-    // Generate simple UUID
-    userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-    localStorage.setItem("unicover_user_id", userId);
-  }
-  return userId;
+  if (window.currentUser) return window.currentUser.uid;
+  return window.getDeviceUserId();
 }
-
 // ==========================================
 // FREE DOWNLOADS REMAINING INDICATOR
 // ==========================================
 const FREE_LIMIT = 3;
 
-async function updateFreeDownloadsBar() {
-  // Don't show the bar for premium users
-  if (window.isPremiumUser) return;
-
+window.updateFreeDownloadsBar = async function () {
   const bar = document.getElementById("freeDownloadsBar");
   const text = document.getElementById("freeDownloadsText");
   if (!bar || !text) return;
+
+  // Don't show the bar for premium users
+  if (window.isPremiumUser) {
+    bar.style.display = 'none';
+    return;
+  }
 
   const userId = getOrCreateUserId();
   let used = 0;
@@ -139,7 +135,7 @@ async function updateFreeDownloadsBar() {
 }
 
 // Load the bar once Firebase has had time to initialise
-setTimeout(updateFreeDownloadsBar, 1200);
+setTimeout(window.updateFreeDownloadsBar, 1200);
 
 
 // CENTRAL PDF GENERATION ENGINE
@@ -392,6 +388,9 @@ downloadBtn.addEventListener("click", async () => {
     downloadBtn.disabled = true;
     showGlobalToast("Generating Premium Clean PDF...", "success", 2000);
     saveFormData();
+    if (window.saveCoverData) {
+      await window.saveCoverData({ razorpay_payment_id: "PREMIUM_USER" });
+    }
     await executePDFGeneration(false, false);
     isGenerating = false;
     downloadBtn.disabled = false;
@@ -413,28 +412,23 @@ downloadBtn.addEventListener("click", async () => {
       console.log("✅ Limit Check Passed. Checking save settings...");
 
       // Still under limit -> free clean download
-      if (SHOULD_SAVE_COVER) {
-        if (window.saveCoverData) {
-          console.log("💾 Calling saveCoverData...");
-          await window.saveCoverData({ razorpay_payment_id: "FREE_MODE" });
-        } else {
-          console.error("❌ Critical: window.saveCoverData is NOT defined!");
-          console.log("Status: firebaseLoaded=" + window.firebaseLoaded);
-        }
+      if (window.saveCoverData) {
+        console.log("💾 Calling saveCoverData...");
+        await window.saveCoverData({ razorpay_payment_id: "FREE_MODE" });
       } else {
-        console.warn("⚠️ Data saving is DISABLED in config.js");
+        console.error("❌ Critical: window.saveCoverData is NOT defined!");
       }
       saveFormData();
       await executePDFGeneration(false, true); // clean, increment
       isGenerating = false;
       downloadBtn.disabled = false;
       // Refresh the downloads remaining counter
-      updateFreeDownloadsBar();
+      window.updateFreeDownloadsBar();
       return;
     } else {
       // FREEMIUM MODAL LAUNCH
       isGenerating = false;
-      updateFreeDownloadsBar(); // refresh bar to show 0 remaining
+      window.updateFreeDownloadsBar(); // refresh bar to show 0 remaining
       freemiumModal.classList.toggle("hidden");
       return;
     }

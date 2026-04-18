@@ -45,7 +45,7 @@ app.post("/check-download", async (req, res) => {
       return res.status(400).json({ allowed: false, error: "No userId" });
     }
 
-    const ref = db.collection("downloadLimits").doc(userId);
+    const ref = db.collection("guestUsers").doc(userId);
     const snap = await ref.get();
 
     let count = 0;
@@ -78,7 +78,7 @@ app.post("/reset-downloads", async (req, res) => {
   try {
     const { userId } = req.body;
     if (!userId) return res.status(400).json({ error: "No userId" });
-    await db.collection("downloadLimits").doc(userId).set({ count: 0 });
+    await db.collection("guestUsers").doc(userId).set({ count: 0 });
     res.json({ success: true, message: "Reset to 0 for " + userId });
   } catch (err) {
     res.status(500).json({ error: err.message });
