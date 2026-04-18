@@ -55,7 +55,7 @@ app.post("/check-download", async (req, res) => {
     }
 
     // limit reached
-    if (count >= 3) {
+    if (count >= 5) {
       return res.json({ allowed: false, count });
     }
 
