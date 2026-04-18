@@ -15,7 +15,7 @@ window.SETTINGS = {
     },
 
     SAVE_TO_DB: true, // Set to false to disable saving cover generation data to Database
-    SAVE_TO_DB_FROM_LOCALHOST: false // Set to false to block database saves when running on localhost
+    SAVE_TO_DB_FROM_LOCALHOST: true // Set to false to block database saves when running on localhost
 };
 
 if (SETTINGS.REQUIRE_ACCESS_CODE) {
