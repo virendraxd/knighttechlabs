@@ -169,7 +169,6 @@ nav {
 .nav-auth-container {
   display: flex;
   align-items: center;
-  margin-right: 8px;
 }
 
 /* LOGIN BUTTON (glass + glow) */
