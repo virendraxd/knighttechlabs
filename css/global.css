@@ -201,20 +201,19 @@ nav {
 
 .nav-user-icon {
   font-size: 16px;
-  border: 2px solid var(--cyan);
   color: white;
-  border-radius: 50%;
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .nav-user-icon:hover {
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
@@ -243,14 +242,6 @@ nav {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-}
-
-.odd {
-  background-color: #C4B5FD;
-}
-
-.even {
-  background-color: #FDBA74;
 }
 
 .dropdown-header {

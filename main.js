@@ -97,17 +97,6 @@ window.updateAuthUI = async function () {
       if (usageContainer) usageContainer.style.display = "none";
     }
   }
-
-  // Avatar Color
-  const navAvatar = document.getElementById("navAvatar");
-  let nameLenght = nameObj.innerHTML.trim();
-
-  if (nameLenght.length % 2 == 0) {
-    navAvatar.classList.add("even")
-  }
-  else {
-    navAvatar.classList.add("odd")
-  }
 };
 
 // GLOBAL TOAST NOTIFICATION
