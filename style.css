@@ -161,8 +161,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
-  margin-top: 4rem;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .card {
@@ -279,7 +279,7 @@
 
 @media (max-width: 376px) {
   .hero {
-    padding: 7rem 3% 4rem;
+    padding: 9rem 3% 5rem;
   }
 
   .badge {
