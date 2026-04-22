@@ -252,6 +252,25 @@
   opacity: 0.6;
 }
 
+/* TAGS */
+.ribbon-popular {
+  position: absolute;
+  top: 24px;
+  right: -52px;
+
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+  color: white;
+
+  padding: 6px 50px;
+  font-size: 12px;
+  font-weight: 600;
+
+  transform: rotate(45deg);
+  text-align: center;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
 @media (max-width: 768px) {
   .hero {
     padding: 10rem 8% 6rem;
