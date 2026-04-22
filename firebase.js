@@ -24,6 +24,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+window.db = db;
 window.currentUser = null;
 window.isPremiumUser = false;
 window.authResolved = false;
@@ -362,4 +363,11 @@ window.migrateOrders = async function () {
   }
 
   console.log("Migration done 🚀");
+};
+
+window.saveHelpRequest = async function (data) {
+  await addDoc(collection(db, "supportRequests"), {
+    ...data,
+    status: "open" // 👈 important
+  });
 };

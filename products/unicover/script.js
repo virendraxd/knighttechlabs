@@ -533,8 +533,8 @@ function addLog(message) {
 // Copy log to clipboard
 copyLogBtn.addEventListener("click", () => {
   navigator.clipboard.writeText(logContent.textContent)
-    .then(() => alert("Log copied to clipboard ✅"))
-    .catch(() => alert("Failed to copy log ❌"));
+    .then(() => showGlobalToast("Log copied to clipboard ✅"))
+    .catch(() => showGlobalToast("Failed to copy log ❌"));
 });
 
 function calculateFinalPrice(basePrice, code) {
