@@ -201,24 +201,34 @@ textarea:focus {
   box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
 }
 
+
 /* ================= TOP SECTION ================= */
 .top-section {
   width: 100%;
-  margin: 0;
-  padding: 0;
+  flex: 1;                   /* Take all vertical space above the details */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;   /* Vertically center the logo inside the space */
+  padding: 12mm 18mm 6mm;    /* Inner breathing room (matches inner border) */
+  box-sizing: border-box;
+  overflow: hidden;          /* Never let the logo escape */
 }
 
 .uni-logo {
-  margin-top: 4rem;
-  width: 100%;
+  max-width: 60%;            /* Constrained to 60% of the top-section width */
+  max-height: 50mm;          /* Hard A4-proportional height cap */
   height: auto;
+  width: auto;
   display: block;
+  object-fit: contain;
+  margin: 11rem auto;           /* Horizontal centering fallback */
 }
 
 /* ================= DETAILS SECTION ================= */
 .details-section {
   width: 100%;
-  margin-top: auto;
+  margin-top: 0;
   margin-bottom: 48mm;
 
   display: flex;
@@ -566,6 +576,8 @@ textarea:focus {
 }
 
 /* IN-BUTTON SPINNER */
+
+
 .btn-spinner {
   display: flex;
   align-items: center;

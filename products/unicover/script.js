@@ -88,7 +88,7 @@ function getOrCreateUserId() {
 // ==========================================
 // FREE DOWNLOADS REMAINING INDICATOR
 // ==========================================
-const FREE_LIMIT = 3;
+const FREE_LIMIT = 10;
 
 window.updateFreeDownloadsBar = async function () {
   const bar = document.getElementById("freeDownloadsBar");
@@ -115,19 +115,14 @@ window.updateFreeDownloadsBar = async function () {
 
   const remaining = Math.max(0, FREE_LIMIT - used);
 
-  // Build dots  ● ● ○
-  const dotsHtml = Array.from({ length: FREE_LIMIT }, (_, i) =>
-    `<span class="free-dot${i < used ? ' used' : ''}"></span>`
-  ).join('');
-
   if (remaining === 0) {
-    text.innerHTML = `🔒 Premium downloads exhausted &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    text.innerHTML = `🔒 0/${FREE_LIMIT} premium downloads remaining`;
     bar.className = 'free-downloads-bar exhausted';
   } else if (remaining === 1) {
-    text.innerHTML = `⚠️ ${remaining} free download left &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    text.innerHTML = `⚠️ ${remaining}/${FREE_LIMIT} free premium download left`;
     bar.className = 'free-downloads-bar warning';
   } else {
-    text.innerHTML = `🎁 ${remaining} free download${remaining !== 1 ? 's' : ''} remaining &nbsp;<span class="free-downloads-dots">${dotsHtml}</span>`;
+    text.innerHTML = `🎁 ${remaining}/${FREE_LIMIT} free premium downloads remaining`;
     bar.className = 'free-downloads-bar';
   }
 
