@@ -932,42 +932,7 @@ textarea:focus {
   }
 }
 
-@media (max-width: 768px) {
-  .form-area {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .page {
-    padding: 0;
-    width: 100%;
-    margin: 20px auto;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    overflow: hidden;
-    /* Use position: relative for precise child placement */
-    position: relative;
-    display: block; /* Change from flex to help with scaling offsets */
-    min-height: 200px;
-  }
-
-  .real-cover {
-    flex-shrink: 0;
-  }
-
-  /* Remove manual squishing hacks — we will use JS scaling instead */
-  .cover-page {
-     width: 210mm !important; 
-     height: 296.6mm !important;
-     /* Ensure no transition interferes with immediate scaling */
-     transition: none !important;
-  }
-}
-
-/* iPad - Pro , air , mini */
-@media (max-width: 1024px) and (min-width: 769px) {
+@media (max-width: 1024px) {
   .unicover-layout {
     display: flex;
     flex-direction: column;
@@ -976,36 +941,42 @@ textarea:focus {
   }
 
   .form-area {
-    max-width: 420px;
+    width: 100%;
+    max-width: 480px;
     margin: 0 auto;
   }
 
   .page {
     width: 100%;
-    max-width: 794px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+    position: relative;
+    display: block;
+    min-height: 200px;
   }
 
   .cover-page {
-    width: 100%;
-    margin: 0 auto;
+    width: 210mm !important;
+    height: 296.6mm !important;
+    transition: none !important;
+    /* Reset margins that might be set by JS incorrectly */
+    flex-shrink: 0;
   }
 }
 
-@media (max-width: 1400px) and (min-width: 1024px) {
+@media (max-width: 1400px) and (min-width: 1025px) {
   .form-area {
     max-width: 420px;
-    margin: 0 auto;
   }
 
   .page {
     width: 100%;
     max-width: 794px;
-    margin: 0 auto;
-  }
-
-  .cover-page {
-    width: 100%;
     margin: 0 auto;
   }
 }

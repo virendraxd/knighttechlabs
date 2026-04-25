@@ -883,47 +883,53 @@ universitySelect.addEventListener("change", () => {
 });
 
 /**
- * Precisely scales the A4 cover page to fit comfortably within its container
+ * Precisely scales the A4 cover page to fit comfortably within its container.
+ * This function handles both mobile scaling and desktop centering.
  */
 function scaleCoverToFit() {
   const container = document.getElementById("previewSection");
   const cover = getActiveCover();
 
+  // Don't scale if elements are missing or hidden
   if (!container || !cover || window.getComputedStyle(container).display === 'none') {
     return;
   }
 
-  // A4 dimensions at 96 DPI
+  // A4 dimensions at 96 DPI (standard for most browsers)
   const a4Width = 794;
   const a4Height = 1123;
 
-  // Get available width
-  const containerWidth = container.offsetWidth;
+  // Use clientWidth for the actual available content space (excluding borders/scrollbars)
+  const containerWidth = container.clientWidth;
 
-  // Only scale if the container is smaller than A4
-  if (containerWidth < a4Width && containerWidth > 0) {
+  // If container width is 0, it might be hidden or still rendering; skip for now
+  if (containerWidth <= 0) return;
+
+  if (containerWidth < a4Width) {
+    // MOBILE/TABLET VIEW: Scale down to fit the width
     const scale = containerWidth / a4Width;
 
-    // Use top-left origin for easier offset calculation
+    // Apply scale transformation
     cover.style.transformOrigin = "top left";
     cover.style.transform = `scale(${scale})`;
 
-    // Calculate how much space is left after scaling to center the cover
+    // Center the scaled cover if there's any remaining fractional space
     const scaledWidth = a4Width * scale;
-    const leftOffset = (containerWidth - scaledWidth) / 2;
+    const leftOffset = Math.max(0, (containerWidth - scaledWidth) / 2);
     cover.style.marginLeft = `${leftOffset}px`;
 
-    // Calculate total height needed including the note
+    // Calculate total height needed including the preview note
     const note = container.querySelector(".preview-note");
-    const noteHeight = note ? note.offsetHeight + 15 : 0; // 15 is the margin-bottom
+    const noteHeight = note ? note.offsetHeight + 15 : 0; // 15px is the margin-bottom from CSS
 
-    // Update container height to match scaled content + note
-    container.style.height = `${(a4Height * scale) + noteHeight + 20}px`;
+    // Update container height to match scaled content + note + some padding
+    container.style.height = `${(a4Height * scale) + noteHeight + 30}px`;
 
     // Compensate for the layout space still taken by the unscaled element
+    // This "pulls up" the bottom of the document flow
     cover.style.marginBottom = `-${a4Height * (1 - scale)}px`;
   } else {
-    // Desktop view - no scaling needed
+    // DESKTOP VIEW: No scaling needed, just center it
     cover.style.transform = "none";
     cover.style.transformOrigin = "top center";
     cover.style.marginLeft = "0";
@@ -932,9 +938,20 @@ function scaleCoverToFit() {
   }
 }
 
-// Global scaling events
+// Robust scaling using ResizeObserver to handle orientation changes, 
+// viewport resizing, and dynamic UI layout shifts.
+const previewSectionEl = document.getElementById("previewSection");
+if (previewSectionEl && window.ResizeObserver) {
+  const ro = new ResizeObserver(() => {
+    // Use requestAnimationFrame to ensure layout is settled
+    requestAnimationFrame(scaleCoverToFit);
+  });
+  ro.observe(previewSectionEl);
+}
+
+// Fallback and global events
 window.addEventListener("resize", scaleCoverToFit);
-// Add to any major UI changes
+window.addEventListener("load", () => setTimeout(scaleCoverToFit, 100));
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(scaleCoverToFit, 500);
 });
