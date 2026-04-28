@@ -214,7 +214,7 @@ window.getDownloadUsage = async function (userId) {
 
 window.checkDownloadLimit = async function (userId) {
   const count = await window.getDownloadUsage(userId);
-  return count < 3;
+  return count < 10;
 };
 
 window.incrementDownloadCount = async function (userId) {
