@@ -1,12 +1,11 @@
 require("dotenv").config();
+const config = require("./config");
 
 const express = require("express");
 const cors = require("cors");
 const admin = require("firebase-admin");
 
-// =============================
 // 🔐 FIREBASE ADMIN SETUP
-// =============================
 const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
 admin.initializeApp({
@@ -82,6 +81,60 @@ app.post("/reset-downloads", async (req, res) => {
     res.json({ success: true, message: "Reset to 0 for " + userId });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/show-stats", async (req, res) => {
+  try {
+    if (config.STATS_VISIBILITY === "none" || !config.STATS_VISIBILITY) {
+      return res.status(403).json({ allowed: false, error: "Stats viewing is disabled" });
+    }
+
+    if (config.STATS_VISIBILITY === "admin") {
+      const { adminId } = req.body;
+
+      if (!adminId) {
+        return res.status(400).json({ allowed: false, error: "No adminId provided" });
+      }
+
+      // Check if the provided adminId matches the one in env
+      if (adminId !== process.env.ADMIN_ID) {
+        return res.status(403).json({ allowed: false, error: "Unauthorized access" });
+      }
+    }
+
+    const statsRef = db.collection("stats").doc("main");
+    const snap = await statsRef.get();
+
+    if (!snap.exists) {
+      return res.json({ allowed: true, stats: { users: 0, downloads: 0, savedCovers: 0 } });
+    }
+
+    return res.json({ allowed: true, stats: snap.data() });
+  } 
+  catch (err) {
+    console.error("Error fetching stats:", err);
+    return res.status(500).json({ allowed: false, error: err.message });
+  }
+});
+
+// Start server
+app.post("/check-admin", (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ isAdmin: false, error: "No userId provided" });
+    }
+
+    if (userId === process.env.ADMIN_ID) {
+      return res.json({ isAdmin: true });
+    } else {
+      return res.json({ isAdmin: false });
+    }
+  } catch (err) {
+    console.error("Check admin error:", err);
+    res.status(500).json({ isAdmin: false, error: err.message });
   }
 });
 

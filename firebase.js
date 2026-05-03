@@ -27,6 +27,7 @@ const provider = new GoogleAuthProvider();
 window.db = db;
 window.currentUser = null;
 window.isPremiumUser = false;
+window.isAdminUser = false;
 window.authResolved = false;
 
 function shouldSaveToDB() {
@@ -89,16 +90,44 @@ onAuthStateChanged(auth, async (user) => {
         localStorage.removeItem("ktl_user_premium");
       }
 
+      // 🔐 Check Admin Status Securely via Backend
+      try {
+        const adminRes = await fetch("http://localhost:5000/check-admin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.uid })
+        });
+        if (adminRes.ok) {
+          const adminData = await adminRes.json();
+          window.isAdminUser = adminData.isAdmin || false;
+        }
+      } catch (adminErr) {
+        console.error("Failed to verify admin status:", adminErr);
+        window.isAdminUser = false;
+      }
+
     } catch (err) {
       console.error("Auth error:", err);
+    }
+
+    // Stats display logic is now driven by the backend
+    const statsEl = document.getElementById("statsContainer");
+    if (statsEl) {
+      loadStats();
     }
 
   } else {
     window.currentUser = null;
     window.isPremiumUser = false;
+    window.isAdminUser = false;
     localStorage.removeItem("ktl_user_email");
     localStorage.removeItem("ktl_user_name");
     localStorage.removeItem("ktl_user_premium");
+
+    const statsEl = document.getElementById("statsContainer");
+    if (statsEl) {
+      loadStats();
+    }
   }
 
   if (window.updateAuthUI) window.updateAuthUI();
@@ -275,17 +304,22 @@ window.incrementDownloadCount = async function (userId) {
 //
 async function getStats() {
   try {
-    const statsSnap = await getDoc(doc(db, "stats", "main"));
-    const statsData = statsSnap.exists() ? statsSnap.data() : {};
+    const adminId = window.currentUser ? window.currentUser.uid : null;
+    const res = await fetch("http://localhost:5000/show-stats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ adminId })
+    });
     
-    return { 
-      users: statsData.users || 0, 
-      downloads: statsData.downloads || 0,
-      savedCovers: statsData.savedCovers || 0
-    };
+    if (!res.ok) {
+      return { allowed: false };
+    }
+    
+    const data = await res.json();
+    return data; // { allowed: true/false, stats: { ... } }
   } catch (e) {
-    console.warn("Could not read stats:", e);
-    return { users: 0, downloads: 0, savedCovers: 0 };
+    console.warn("Could not read stats from backend:", e);
+    return { allowed: false };
   }
 }
 
@@ -296,23 +330,25 @@ function format(num) {
 
 async function loadStats() {
   try {
-    const stats = await getStats();
+    const data = await getStats();
+    const statsEl = document.getElementById("statsContainer");
 
-    const userEl = document.getElementById("userCount");
-    if (userEl) {
-      userEl.textContent = format(stats.users);
-    }
+    if (data.allowed && data.stats) {
+      if (statsEl) statsEl.style.display = "flex";
 
-    const downloadEl = document.getElementById("downloadCount");
-    if (downloadEl) {
-      downloadEl.textContent = format(stats.downloads);
+      const userEl = document.getElementById("userCount");
+      if (userEl) userEl.textContent = format(data.stats.users);
+
+      const downloadEl = document.getElementById("downloadCount");
+      if (downloadEl) downloadEl.textContent = format(data.stats.downloads);
+    } else {
+      if (statsEl) statsEl.style.display = "none";
     }
 
   } catch (err) {
-    console.error(err);
+    console.error("Error loading stats:", err);
   }
-};
-loadStats();
+}
 
 
 //
@@ -337,9 +373,7 @@ loadStats();
 //   console.log("⚠️ You can now safely delete the 'downloadLimits' collection in Firebase Console.");
 // };
 
-//
 // 🛠️ OPTIONAL: MIGRATION (RUN ONCE)
-//
 window.migrateOrders = async function () {
   const snapshot = await getDocs(collection(db, "unicoverOrders"));
 
