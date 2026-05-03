@@ -889,6 +889,8 @@ textarea:focus {
   gap: 20px;
   margin: 40px 0;
   flex-wrap: wrap;
+  background-color: var(--bg);
+  padding: 1rem;
 }
 
 .stat-card {
@@ -897,33 +899,23 @@ textarea:focus {
   text-align: center;
   min-width: 150px;
 
-  /* Clean dark card */
-  background: #18191a;
+  background: var(--white);
 
-  /* Subtle border */
-  border: 1px solid #2a2a2a;
-
-  /* Soft depth */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
 
   transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-3px);
-  border-color: #facc15; /* gold accent */
 }
 
 .stat-card h2 {
   font-size: 30px;
   font-weight: 600;
   margin: 0;
-  color: #facc15;
+  color: var(--navy);
 }
 
 .stat-card p {
   margin-top: 6px;
-  color: #d2c078;
+  color: var(--navy);
 }
 
 
