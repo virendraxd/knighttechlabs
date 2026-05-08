@@ -70,6 +70,31 @@
         <button id="copyLogBtn">Copy Details</button>
     </div>
 
+    <div class="template-header">
+        <div class="template-selector top-selector">
+            <label class="template-option">
+                <input type="radio" name="templateType" value="auto" checked>
+                <div class="template-card">
+                    <span class="template-icon">📄</span>
+                    <div class="template-info">
+                        <span class="template-name">Auto-Filled (Filled)</span>
+                        <span class="template-desc">Download ready to print</span>
+                    </div>
+                </div>
+            </label>
+            <label class="template-option">
+                <input type="radio" name="templateType" value="hand">
+                <div class="template-card">
+                    <span class="template-icon">✍️</span>
+                    <div class="template-info">
+                        <span class="template-name">Fill by Hand (Blank)</span>
+                        <span class="template-desc">Empty fields with writing lines</span>
+                    </div>
+                </div>
+            </label>
+        </div>
+    </div>
+
     <main class="unicover-layout">
         <!-- LEFT SIDE: FORM -->
         <div class="form-area">
@@ -249,13 +274,10 @@
                             <span class="btn-spinner-ring"></span>
                             <span class="btn-spinner-text">Generating...</span>
                         </div>
-                        <div id="btnContent">
+                        <div id="btnContent" class="btn-content">
                             <div class="pay-main" id="payMain">
                                 <span class="pay-title">Pay & Download Cover</span>
                                 <span class="price-badge">₹10</span>
-                            </div>
-                            <div class="pay-secondary" id="paySecondary">
-                                <div class="pay-title">Download Cover</div>
                             </div>
                             <div class="pay-sub">UniCover by Virendraxd</div>
                         </div>

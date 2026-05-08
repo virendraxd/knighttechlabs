@@ -96,7 +96,8 @@ window.updateFreeDownloadsBar = async function () {
   if (!bar || !text) return;
 
   // Don't show the bar for premium users
-  if (window.isPremiumUser) {
+  const type = getSelectedTemplateType();
+  if (window.isPremiumUser || type === 'hand') {
     bar.style.display = 'none';
     return;
   }
@@ -114,6 +115,7 @@ window.updateFreeDownloadsBar = async function () {
   }
 
   const remaining = Math.max(0, FREE_LIMIT - used);
+  window.canDownloadFree = remaining > 0;
 
   if (remaining === 0) {
     text.innerHTML = `🔒 0/${FREE_LIMIT} premium downloads remaining`;
@@ -127,6 +129,7 @@ window.updateFreeDownloadsBar = async function () {
   }
 
   bar.style.display = 'flex';
+  updatePriceBadge();
 }
 
 // Load the bar once Firebase has had time to initialise
@@ -152,12 +155,113 @@ function setBtnLoading(isLoading) {
   }
 }
 
+function getSelectedTemplateType() {
+  const selected = document.querySelector('input[name="templateType"]:checked');
+  return selected ? selected.value : "auto";
+}
+
+// Live preview for template switch
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[name="templateType"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const coverPage = getActiveCover();
+      const type = getSelectedTemplateType();
+      
+      // Fields that are blanked out in Hand Mode
+      const handBlankFields = ["subject", "faculty", "studentName"];
+      
+      if (type === 'hand') {
+        coverPage.classList.add('hand-mode');
+        // Hide unnecessary form fields
+        handBlankFields.forEach(id => {
+          const field = document.getElementById(id);
+          if (field) {
+            field.classList.add("field-hidden");
+            // Find and hide the associated label
+            const label = field.previousElementSibling;
+            if (label && label.tagName === "LABEL") {
+              label.classList.add("field-hidden");
+            }
+          }
+        });
+        showGlobalToast("Fields hidden for blank template mode ✍️", "info", 2000);
+      } else {
+        coverPage.classList.remove('hand-mode');
+        // Show all fields
+        handBlankFields.forEach(id => {
+          const field = document.getElementById(id);
+          if (field) {
+            field.classList.remove("field-hidden");
+            // Find and show the associated label
+            const label = field.previousElementSibling;
+            if (label && label.tagName === "LABEL") {
+              label.classList.remove("field-hidden");
+            }
+          }
+        });
+      }
+      updatePriceBadge();
+    });
+  });
+});
+
+function updatePriceBadge() {
+  const type = getSelectedTemplateType();
+  const badge = document.querySelector(".price-badge");
+  const payMain = document.getElementById("payMain");
+  const payTitle = payMain?.querySelector(".pay-title");
+  const bar = document.getElementById("freeDownloadsBar");
+
+  if (!payMain) return;
+
+  // 1. Manage Sidebar visibility first
+  if (bar) {
+    if (window.isPremiumUser || type === 'hand') {
+      bar.style.display = 'none';
+    } else if (type === 'auto') {
+      bar.style.display = 'flex';
+    }
+  }
+
+  // 2. Ensure payMain is visible
+  payMain.classList.remove("hidden");
+  payMain.style.display = "flex";
+
+  // 3. Determine Title and Badge visibility
+  if (type === 'hand') {
+    // Fill by Hand Mode
+    if (payTitle) payTitle.textContent = "Download Cover";
+    if (badge) {
+      badge.textContent = "₹19";
+      badge.style.display = "inline-block";
+    }
+  } else {
+    // Auto-Filled Mode
+    const isFree = window.isPremiumUser || window.canDownloadFree === true;
+    
+    if (payTitle) {
+      payTitle.textContent = isFree ? "Download Cover" : "Pay & Download Cover";
+    }
+    
+    if (badge) {
+      badge.style.display = "none";
+    }
+  }
+}
 
 // CENTRAL PDF GENERATION ENGINE
 async function executePDFGeneration(isWatermarked = false, shouldIncrement = false) {
   const coverPage = getActiveCover();
+  const templateType = getSelectedTemplateType();
   const studentName = coverStudent?.innerText || "Student";
-  const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+  const safeName = templateType === 'hand' ? "Blank_Template" : studentName.replace(/[^a-z0-9]/gi, "_");
+
+  // Premium check for hand mode (Double check, although handled in main click)
+  if (templateType === 'hand' && !window.isPremiumUser) {
+    // If we reach here somehow without payment/premium for hand mode
+    // (e.g. calling executePDFGeneration directly)
+    return; 
+  }
 
   // Show spinner
   setBtnLoading(true);
@@ -219,6 +323,10 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     coverPage.style.position = "static";
     coverPage.style.opacity = "1";
 
+    if (templateType === 'hand') {
+      coverPage.classList.add('hand-mode');
+    }
+
     await delay(800);
     addLog("🔄 Rendering high-quality PDF...");
     await delay(1200);
@@ -244,6 +352,8 @@ async function executePDFGeneration(isWatermarked = false, shouldIncrement = fal
     if (watermark) {
       watermark.classList.remove("hidden-capture");
     }
+
+    coverPage.classList.remove('hand-mode');
 
     // Ensure scaling is correct after generation
     scaleCoverToFit();
@@ -361,8 +471,58 @@ document.getElementById("fmBtnUnlimited")?.addEventListener("click", async () =>
 downloadBtn.addEventListener("click", async () => {
   if (isGenerating) return;   // 🚫 Prevent spam
 
+  const type = getSelectedTemplateType();
   const coverPage = getActiveCover();
 
+  // 1. HAND MODE LOGIC (Always Paid ₹19 unless Premium)
+  if (type === 'hand') {
+    // Validation for hand mode (only specific fields required)
+    const handRequired = ["university", "session", "title", "position", "course", "stream", "year"];
+    let handValid = true;
+    let firstEmpty = null;
+
+    handRequired.forEach(id => {
+      const field = document.getElementById(id);
+      if (field && !field.value.trim()) {
+        handValid = false;
+        field.style.border = "2px solid red";
+        if (!firstEmpty) firstEmpty = field;
+      } else if (field) {
+        field.style.border = "";
+      }
+    });
+
+    if (!handValid) {
+      showGlobalToast("⚠️ Please select all required template details (Institution, Title, Designation, Branch, Year).");
+      if (firstEmpty) {
+        firstEmpty.focus();
+        firstEmpty.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+
+    if (window.isPremiumUser) {
+      isGenerating = true;
+      setBtnLoading(true);
+      showGlobalToast("Generating Premium Blank Template...", "success", 2000);
+      await executePDFGeneration(false, false);
+      isGenerating = false;
+      setBtnLoading(false);
+      return;
+    }
+
+    // Trigger payment for hand mode
+    triggerRazorpayPayment(1900, "Fill by Hand (Blank) Template", async () => {
+      isGenerating = true;
+      setBtnLoading(true);
+      await executePDFGeneration(false, false);
+      isGenerating = false;
+      setBtnLoading(false);
+    });
+    return;
+  }
+
+  // 2. AUTO-FILLED MODE LOGIC (Existing)
   // 📝 REQUIRED FIELDS
   const requiredFields = document.querySelectorAll(".required");
   let fieldsValid = true;
@@ -447,6 +607,8 @@ downloadBtn.addEventListener("click", async () => {
   isGenerating = false;
   setBtnLoading(false); // Hide spinner
 });
+
+
 
 async function generatePDFDirectly() {
 
@@ -946,9 +1108,13 @@ if (previewSectionEl && window.ResizeObserver) {
 
 // Fallback and global events
 window.addEventListener("resize", scaleCoverToFit);
-window.addEventListener("load", () => setTimeout(scaleCoverToFit, 100));
+window.addEventListener("load", () => {
+  setTimeout(scaleCoverToFit, 100);
+  setTimeout(updatePriceBadge, 200);
+});
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(scaleCoverToFit, 500);
+  updatePriceBadge();
 });
 
 function animateCount(el, target) {

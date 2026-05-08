@@ -52,6 +52,24 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: #f8fafc !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: #e2e8f0 !important;
+}
+
+.label-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field-hidden {
+  display: none !important;
+}
+
 input[type="text"] {
   width: 100%;
 }
@@ -430,6 +448,145 @@ textarea:focus {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.template-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ================= TEMPLATE SELECTOR ================= */
+.template-selector {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.top-selector {
+  background: var(--white);
+  padding: 12px;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.template-option {
+  flex: 1;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+.template-option input {
+  display: none;
+}
+
+.template-card {
+  padding: 14px 18px;
+  border: 2px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  background: #fdfdfd;
+}
+
+.template-icon {
+  font-size: 1.6rem;
+  background: #fff;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.template-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.template-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.template-desc {
+  font-size: 0.8rem;
+  color: var(--slate);
+  font-weight: 500;
+}
+
+.template-option input:checked+.template-card {
+  border-color: var(--cyan);
+  background: rgba(6, 182, 212, 0.04);
+  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.12);
+  transform: translateY(-2px);
+}
+
+.template-option input:checked+.template-card .template-icon {
+  background: var(--cyan);
+  color: white;
+}
+
+.premium-badge {
+  font-size: 0.75rem;
+  background: var(--navy);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+/* ================= HAND MODE OVERRIDES ================= */
+.cover-page.hand-mode .subject,
+.cover-page.hand-mode .name {
+  color: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15) !important;
+  /* Semi-transparent line */
+  position: relative;
+  display: inline-block;
+  min-height: 1.5em;
+  vertical-align: bottom;
+}
+
+.cover-page.hand-mode .upper {
+  /* background-color: #15803d; */
+  margin-bottom: 5rem;
+}
+
+.cover-page.hand-mode .subject::before {
+  content: "SUBJECT : ";
+}
+
+.cover-page.hand-mode .subject::before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  color: var(--vu-color) !important;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.cover-page.hand-mode .subject {
+  width: 80%;
+  margin: 15px auto 35px; /* Increased bottom margin for writing space */
+}
+
+.cover-page.hand-mode .name {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.cover-page.hand-mode .watermark-overlay {
+  opacity: 0.8 !important;
+}
+
 /* LABELS */
 .input-group {
   margin-bottom: 14px;
@@ -528,6 +685,16 @@ textarea:focus {
   overflow: hidden;
 }
 
+.btn-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+}
+
+
 .pay-btn::before {
   content: '';
   position: absolute;
@@ -551,28 +718,40 @@ textarea:focus {
   height: 300px;
 }
 
+.pay-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  position: relative;
+}
+
 .pay-title {
-  font-size: 16px;
+  font-size: 1.05rem;
   font-weight: 800;
   color: white;
+  text-align: center;
 }
 
 /* PRICE BADGE */
 .price-badge {
-  background: var(--white);
+  background: white;
   color: var(--navy);
-  padding: 6px 14px;
+  padding: 4px 10px;
   border-radius: 8px;
   font-weight: 900;
-  font-size: 24px;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 /* SUBTEXT */
 .pay-sub {
-  margin-top: 8px;
-  font-size: 12px;
+  font-size: 0.72rem;
   opacity: 0.85;
   color: rgba(255, 255, 255, 0.9);
+  text-align: center;
 }
 
 /* IN-BUTTON SPINNER */
@@ -604,7 +783,9 @@ textarea:focus {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .hidden {
@@ -917,7 +1098,6 @@ textarea:focus {
   margin-top: 6px;
   color: var(--navy);
 }
-
 
 @media print {
   body {
