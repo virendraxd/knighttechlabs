@@ -86,12 +86,15 @@ app.post("/reset-downloads", async (req, res) => {
 
 app.post("/show-stats", async (req, res) => {
   try {
+    console.log(`[Stats] Request received. Visibility mode: ${config.STATS_VISIBILITY}`);
+
     if (config.STATS_VISIBILITY === "none" || !config.STATS_VISIBILITY) {
       return res.status(403).json({ allowed: false, error: "Stats viewing is disabled" });
     }
 
     if (config.STATS_VISIBILITY === "admin") {
       const { adminId } = req.body;
+      console.log(`[Stats] Checking visibility for adminId: ${adminId} (Expected: ${process.env.ADMIN_ID})`);
 
       if (!adminId) {
         return res.status(400).json({ allowed: false, error: "No adminId provided" });
@@ -99,6 +102,7 @@ app.post("/show-stats", async (req, res) => {
 
       // Check if the provided adminId matches the one in env
       if (adminId !== process.env.ADMIN_ID) {
+        console.warn(`[Stats] Unauthorized access attempt with adminId: ${adminId}`);
         return res.status(403).json({ allowed: false, error: "Unauthorized access" });
       }
     }
@@ -122,14 +126,17 @@ app.post("/show-stats", async (req, res) => {
 app.post("/check-admin", (req, res) => {
   try {
     const { userId } = req.body;
+    console.log(`[AdminCheck] Verifying userId: ${userId} (Target: ${process.env.ADMIN_ID})`);
 
     if (!userId) {
       return res.status(400).json({ isAdmin: false, error: "No userId provided" });
     }
 
     if (userId === process.env.ADMIN_ID) {
+      console.log(`[AdminCheck] Success: ${userId} is an admin.`);
       return res.json({ isAdmin: true });
     } else {
+      console.log(`[AdminCheck] Fail: ${userId} is not an admin.`);
       return res.json({ isAdmin: false });
     }
   } catch (err) {
