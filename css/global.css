@@ -35,8 +35,8 @@
   --slate-light: #94A3B8;
   --bg: #020617;
   --white: #0F172A;
-  --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.8);
+  --card-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+  --card-shadow-hover: 0 30px 60px rgba(255, 255, 255, 0.12);
   --gradient-subtle: linear-gradient(180deg, rgba(34, 211, 238, 0.1) 0%, transparent 100%);
 
   --footer-start: #0b1220;
