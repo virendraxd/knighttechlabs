@@ -184,7 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           }
         });
-        showGlobalToast("Fields hidden for blank template mode ✍️", "info", 2000);
       } else {
         coverPage.classList.remove('hand-mode');
         // Show all fields
