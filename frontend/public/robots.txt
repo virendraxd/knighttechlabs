@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://knighttechlabs.com/sitemap.xml
