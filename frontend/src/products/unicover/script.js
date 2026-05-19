@@ -2,87 +2,14 @@ import { applySettingsUI } from "./utils/settings.js"
 import { SETTINGS } from "./config.js"
 import html2pdf from "html2pdf.js";
 
-// INPUTS 
-// const session = document.getElementById("session");
-// const title = document.getElementById("title");
-// const subject = document.getElementById("subject");
-// const faculty = document.getElementById("faculty");
-// const position = document.getElementById("position");
-// const student = document.getElementById("studentName");
-// const course = document.getElementById("course");
-// const stream = document.getElementById("stream");
-// const year = document.getElementById("year");
-
-// COVER ELEMENTS
-const coverSession = document.getElementById("coverSession");
-const coverTitle = document.getElementById("coverTitle");
-const coverSubject = document.getElementById("coverSubject");
-const coverFaculty = document.getElementById("coverFaculty");
-const coverPosition = document.getElementById("coverPosition");
 const coverStudent = document.getElementById("coverStudent");
-const coverCourse = document.getElementById("coverCourse");
-const coverStream = document.getElementById("coverStream");
-const coverYear = document.getElementById("coverYear");
-
-// HELPERS
-const upper = (el) => el.value.toUpperCase();
-
-// LIVE UPDATE
-// if (session) {
-//   session.onchange = () => coverSession.textContent = "SESSION : " + session.value;
-// }
-// if (title) {
-//   title.onchange = () => coverTitle.textContent = title.value;
-// }
-// if (subject) {
-//   subject.oninput = () => coverSubject.textContent = "SUBJECT : " + subject.value.toUpperCase();
-// }
-// if (faculty) {
-//   faculty.oninput = () => coverFaculty.textContent = faculty.value.toUpperCase();
-// }
-// if (position) {
-//   position.onchange = () => coverPosition.textContent = position.value;
-// }
-// if (student) {
-//   student.oninput = () => coverStudent.textContent = student.value.toUpperCase();
-// }
-// if (course) {
-//   course.onchange = () => coverCourse.textContent = course.value;
-// }
-// if (stream) {
-//   stream.onchange = () => coverStream.textContent = stream.value;
-// }
-// if (year && coverYear) {
-//   year.addEventListener("change", () => {
-
-//     const value = year.value; // 1st, 2nd, etc
-//     const number = value.slice(0, -2);
-//     const suffix = value.slice(-2);
-
-//     coverYear.innerHTML = `${number}<sup>${suffix}</sup> YEAR`;
-//   });
-// }
-
-const downloadBtn = document.getElementById("downloadPdf");
 
 // Return currently visible cover element
 export function getActiveCover() {
   return document.querySelector(".cover-page:not(.hidden)");
 }
-const accessInput = document.getElementById("accessKey");
-const accessGroup = document.querySelector(".input-group");
-
-// if (!SETTINGS.requireAccessCode && accessGroup) {
-//   accessGroup.classList.add("hidden");
-// }
 
 applySettingsUI();
-
-let isGenerating = false;
-
-// CHECK DB SAVE PERMISSIONS FOR COVER DATA
-// (Handled internally by firebase.js window.saveCoverData)
-
 
 // DOWNLOAD LIMIT LOGIC
 export function getOrCreateUserId() {
@@ -138,27 +65,6 @@ window.updateFreeDownloadsBar = async function () {
 
 // Load the bar once Firebase has had time to initialise
 setTimeout(window.updateFreeDownloadsBar, 1200);
-
-// downloadBtn = true
-// Toggle button loading state
-// export function setBtnLoading(isLoading) {
-//   const spinner = document.getElementById("btnSpinner");
-//   const content = document.getElementById("btnContent");
-
-//   if (isLoading) {
-//     spinner?.classList.remove("hidden");
-//     content?.classList.add("hidden");
-//     downloadBtn.disabled = true;
-//     downloadBtn.style.transform = "none";
-//     downloadBtn.style.pointerEvents = "none";
-//   } else {
-//     spinner?.classList.add("hidden");
-//     content?.classList.remove("hidden");
-//     downloadBtn.disabled = false;
-//     downloadBtn.style.transform = "";
-//     downloadBtn.style.pointerEvents = "";
-//   }
-// }
 
 export function getSelectedTemplateType() {
   const selected = document.querySelector('input[name="templateType"]:checked');
@@ -252,9 +158,6 @@ function updatePriceBadge() {
     }
   }
 }
-// import { setIsBtnSpinning } from "../../products/unicover/Unicover"
-// import setIsBtnSpinning from ""
-const logBox = document.getElementById("logBox");
 
 // CENTRAL PDF GENERATION ENGINE
 export async function executePDFGeneration({ setIsBtnSpinning, isWatermarked = false, shouldIncrement = false }) {
@@ -296,10 +199,6 @@ export async function executePDFGeneration({ setIsBtnSpinning, isWatermarked = f
     // (e.g. calling executePDFGeneration directly)
     return;
   }
-
-  // Show spinner
-  // setBtnLoading(true);
-  // setIsBtnSpinning(true);
 
   // Handle Watermark for download
   const watermark = coverPage.querySelector(".watermark-overlay");
@@ -382,8 +281,6 @@ export async function executePDFGeneration({ setIsBtnSpinning, isWatermarked = f
     addLog("✅ Download completed successfully!");
   } finally {
     // Always restore button — even if an error occurs mid-generation
-    // setBtnLoading(false);
-    // setIsBtnSpinning(false);
 
     if (watermark) {
       watermark.classList.remove("hidden-capture");
@@ -396,42 +293,39 @@ export async function executePDFGeneration({ setIsBtnSpinning, isWatermarked = f
   }
 }
 
+// async function generatePDFDirectly() {
 
+//   const coverPage = getActiveCover();
+//   if (!coverPage) {
+//     if (window.showGlobalToast) window.showGlobalToast("Error: Cover page element not found!");
+//     return;
+//   }
 
+//   const studentName = coverStudent?.innerText || "Student";
+//   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
 
-async function generatePDFDirectly() {
+//   const options = {
+//     margin: 0,
+//     filename: `${safeName}_Assignment_Cover.pdf`,
+//     image: { type: "jpeg", quality: 1 },
+//     html2canvas: { scale: 3, useCORS: true },
+//     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+//   };
 
-  const coverPage = getActiveCover();
-  if (!coverPage) {
-    if (window.showGlobalToast) window.showGlobalToast("Error: Cover page element not found!");
-    return;
-  }
+//   coverPage.style.position = "static";
+//   coverPage.style.left = "0";
+//   coverPage.style.opacity = "1";
+//   coverPage.style.pointerEvents = "auto";
 
-  const studentName = coverStudent?.innerText || "Student";
-  const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
+//   await new Promise(resolve => setTimeout(resolve, 100));
 
-  const options = {
-    margin: 0,
-    filename: `${safeName}_Assignment_Cover.pdf`,
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 3, useCORS: true },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  };
+//   await html2pdf().set(options).from(coverPage).save();
 
-  coverPage.style.position = "static";
-  coverPage.style.left = "0";
-  coverPage.style.opacity = "1";
-  coverPage.style.pointerEvents = "auto";
-
-  await new Promise(resolve => setTimeout(resolve, 100));
-
-  await html2pdf().set(options).from(coverPage).save();
-
-  coverPage.style.position = "fixed";
-  coverPage.style.left = "-9999px";
-  coverPage.style.opacity = "0";
-  coverPage.style.pointerEvents = "none";
-}
+//   coverPage.style.position = "fixed";
+//   coverPage.style.left = "-9999px";
+//   coverPage.style.opacity = "0";
+//   coverPage.style.pointerEvents = "none";
+// }
 
 document.querySelectorAll(".required").forEach(field => {
   field.addEventListener("input", () => {
@@ -439,19 +333,19 @@ document.querySelectorAll(".required").forEach(field => {
   });
 });
 
-function getBase() {
-  // GitHub Pages domain check
-  if (location.hostname.includes("github.io")) {
-    return "/knighttechlabs/"; // repo name
-  }
+// function getBase() {
+//   // GitHub Pages domain check
+//   if (location.hostname.includes("github.io")) {
+//     return "/knighttechlabs/"; // repo name
+//   }
 
-  // Localhost
-  return "/";
-}
+//   // Localhost
+//   return "/";
+// }
 
-function fixNavForUniCover() {
-  // handled by react router
-}
+// function fixNavForUniCover() {
+//   // handled by react router
+// }
 
 const logContent = document.getElementById("logContent");
 const copyLogBtn = document.getElementById("copyLogBtn");
@@ -461,7 +355,7 @@ export function addLog(message) {
   const timestamp = new Date().toLocaleTimeString();
 
   const logContent = document.getElementById("logContent");
-  const copyLogBtn = document.getElementById("copyLogBtn");
+  // const copyLogBtn = document.getElementById("copyLogBtn");
 
   logContent.textContent += `[${timestamp}] ${message}\n`;
   logContent.scrollTop = logContent.scrollHeight; // auto scroll to bottom
@@ -476,351 +370,142 @@ if (copyLogBtn) {
   });
 }
 
-function calculateFinalPrice(basePrice, code) {
-  if (!SETTINGS.ENABLE_DISCOUNT) return basePrice;
-  if (!code) return basePrice;
+// function calculateFinalPrice(basePrice, code) {
+//   if (!SETTINGS.ENABLE_DISCOUNT) return basePrice;
+//   if (!code) return basePrice;
 
-  const coupon = SETTINGS.DISCOUNT_CODES[code.toUpperCase()];
+//   const coupon = SETTINGS.DISCOUNT_CODES[code.toUpperCase()];
 
-  if (!coupon) return basePrice;
+//   if (!coupon) return basePrice;
 
-  let finalPrice = basePrice;
+//   let finalPrice = basePrice;
 
-  if (coupon.type === "percent") {
-    finalPrice = basePrice - (basePrice * coupon.value / 100);
-  }
-
-  if (coupon.type === "flat") {
-    finalPrice = basePrice - coupon.value;
-  }
-
-  // Prevent negative price
-  return Math.max(finalPrice, 0);
-}
-
-// export function saveFormData() {
-//   const uni = document.getElementById("university");
-//   const data = {
-//     university: uni?.value,
-//     session: session?.value,
-//     title: title?.value,
-//     subject: subject?.value,
-//     faculty: faculty?.value,
-//     position: position?.value,
-//     student: student?.value,
-//     course: course?.value,
-//     stream: stream?.value,
-//     year: year?.value
-//   };
-
-//   localStorage.setItem("unicover_last_data", JSON.stringify(data));
-// }
-
-// function autofillForm() {
-//   const saved = localStorage.getItem("unicover_last_data");
-//   if (!saved) {
-//     showGlobalToast("No saved details found");
-//     return;
+//   if (coupon.type === "percent") {
+//     finalPrice = basePrice - (basePrice * coupon.value / 100);
 //   }
 
-//   const data = JSON.parse(saved);
-
-//   if (data.university) {
-//     universitySelect.value = data.university;
-//     universitySelect.dispatchEvent(new Event("change"));
+//   if (coupon.type === "flat") {
+//     finalPrice = basePrice - coupon.value;
 //   }
 
-//   if (session) session.value = data.session || "";
-//   if (title) title.value = data.title || "";
-//   if (subject) subject.value = data.subject || "";
-//   if (faculty) faculty.value = data.faculty || "";
-//   if (position) position.value = data.position || "";
-//   if (student) student.value = data.student || "";
-//   if (course) course.value = data.course || "";
-//   if (stream) stream.value = data.stream || "";
-//   if (year) year.value = data.year || "";
-
-//   // 🔥 Trigger cover updates
-//   session?.onchange?.();
-//   title?.onchange?.();
-//   subject?.oninput?.();
-//   faculty?.oninput?.();
-//   position?.onchange?.();
-//   student?.oninput?.();
-//   course?.onchange?.();
-//   stream?.onchange?.();
-//   year?.dispatchEvent(new Event("change"));
-
-//   showGlobalToast("Details autofilled ✅", "success");
-// }
-
-// const autofillBtn = document.getElementById("autofillBtn");
-
-// autofillBtn?.addEventListener("click", autofillForm);
-
-// // =================-- discount here --=================
-// const discountInput = document.getElementById("discountCode");
-// const applyDiscountBtn = document.getElementById("applyDiscount");
-// const priceBadge = document.querySelector(".price-badge");
-
-// let appliedPrice = SETTINGS.PRICE; // default price
-// let appliedCode = null;
-
-// if (SETTINGS.ENABLE_DISCOUNT && applyDiscountBtn && discountInput) {
-
-//   applyDiscountBtn.addEventListener("click", () => {
-
-//     const code = discountInput.value.trim().toUpperCase();
-
-//     if (!code) {
-//       showGlobalToast("Enter a discount code.");
-//       return;
-//     }
-
-//     const coupon = SETTINGS.DISCOUNT_CODES[code];
-
-//     if (!coupon) {
-//       showGlobalToast("❌ Invalid discount code", "error");
-//       return;
-//     }
-
-//     let newPrice = SETTINGS.PRICE;
-
-//     if (coupon.type === "percent") {
-//       newPrice = SETTINGS.PRICE - (SETTINGS.PRICE * coupon.value / 100);
-//     }
-
-//     if (coupon.type === "flat") {
-//       newPrice = SETTINGS.PRICE - coupon.value;
-//     }
-
-//     newPrice = Math.max(newPrice, 0);
-
-//     appliedPrice = newPrice;
-//     appliedCode = code;
-
-//     const priceBadge = document.querySelector(".price-badge");
-//     if (priceBadge) {
-//       priceBadge.textContent = "₹" + (appliedPrice / 100);
-//     }
-
-//     showGlobalToast("✅ Discount applied!", "success");
-//   });
-// }
-
-// if (SETTINGS.ENABLE_DISCOUNT && discountInput && priceBadge) {
-
-//   discountInput.addEventListener("input", () => {
-//     if (!discountInput.value.trim()) {
-//       appliedPrice = SETTINGS.PRICE;
-//       appliedCode = null;
-//       priceBadge.textContent = `₹${SETTINGS.PRICE / 100}`;
-//     }
-//   });
+//   // Prevent negative price
+//   return Math.max(finalPrice, 0);
 // }
 
 // UNIVEERSITY SELECTOR AND THEME SWITCHER
-const UNIVERSITY_CONFIG = {
+// const UNIVERSITY_CONFIG = {
 
-  vu: {
-    coverId: "cover-vu",
-    preview: "assets/vu-cover-preview.png",
-    primaryColor: "#00406E",
-    borderColor: "#00406E",
-    textColor: "#00406E",
-    borderColor: "#00406E"
-  },
+//   vu: {
+//     coverId: "cover-vu",
+//     preview: "assets/vu-cover-preview.png",
+//     primaryColor: "#00406E",
+//     borderColor: "#00406E",
+//     textColor: "#00406E",
+//     borderColor: "#00406E"
+//   },
 
-  au: {
-    coverId: "cover-au",
-    preview: "assets/au-cover-preview.png",
-    primaryColor: "#002D5D",
-    borderColor: "#002D5D",
-    textColor: "#002D5D",
-    borderColor: "#002D5D"
-  }
-};
-
-function populateSelect(selectElement, items, placeholder) {
-
-  selectElement.innerHTML = "";
-
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.disabled = true;
-  defaultOption.selected = true;
-  defaultOption.textContent = placeholder;
-
-  selectElement.appendChild(defaultOption);
-
-  items.forEach(item => {
-    const opt = document.createElement("option");
-    opt.value = item;
-    opt.textContent = item;
-    selectElement.appendChild(opt);
-  });
-
-}
-
-const covers = document.querySelectorAll(".cover-page");
-const previewImg = document.getElementById("coverPreview");
-
-// const universitySelect = document.getElementById("university");
-// const previewSection = document.getElementById("previewSection");
-
-// const formInputs = [session, title, subject, faculty, position, student, course, stream, year];
-
-// Initially disable all form inputs until university is selected
-// function disableFormInputs() {
-//   formInputs.forEach(input => {
-//     if (input) {
-//       input.disabled = true;
-//       // Find and style the associated label
-//       const label = input.previousElementSibling;
-//       if (label && label.tagName === "LABEL") {
-//         label.style.opacity = "0.5";
-//         label.style.color = "#999";
-//       }
-//     }
-//   });
-// }
-
-// // Enable all form inputs
-// function enableFormInputs() {
-//   formInputs.forEach(input => {
-//     if (input) {
-//       input.disabled = false;
-//       // Find and restore the associated label
-//       const label = input.previousElementSibling;
-//       if (label && label.tagName === "LABEL") {
-//         label.style.opacity = "1";
-//         label.style.color = "";
-//       }
-//     }
-//   });
-// }
-
-// // Disable form inputs on page load
-// disableFormInputs();
-
-// AUTO-SAVE ON ANY INPUT CHANGE
-// formInputs.forEach(input => {
-//   if (input) {
-//     const eventType = (input.tagName === "SELECT") ? "change" : "input";
-//     input.addEventListener(eventType, saveFormData);
+//   au: {
+//     coverId: "cover-au",
+//     preview: "assets/au-cover-preview.png",
+//     primaryColor: "#002D5D",
+//     borderColor: "#002D5D",
+//     textColor: "#002D5D",
+//     borderColor: "#002D5D"
 //   }
-// });
-// universitySelect?.addEventListener("change", saveFormData);
+// };
 
-// Apply university theme colors
-function applyTheme(themeColors) {
-  // Apply to form labels
-  document.querySelectorAll("form label").forEach(label => {
-    label.style.color = themeColors.textColor;
-  });
+// function populateSelect(selectElement, items, placeholder) {
 
-  // Apply to form inputs and selects
-  document.querySelectorAll("input, select, textarea").forEach(input => {
-    input.style.borderColor = themeColors.borderColor;
-  });
+//   selectElement.innerHTML = "";
 
-  // Apply to buttons
-  document.querySelectorAll("button").forEach(btn => {
-    if (btn.id !== "copyLogBtn" && btn.id !== "applyDiscount") {
-      btn.style.borderColor = themeColors.borderColor;
-    }
-  });
+//   const defaultOption = document.createElement("option");
+//   defaultOption.value = "";
+//   defaultOption.disabled = true;
+//   defaultOption.selected = true;
+//   defaultOption.textContent = placeholder;
 
-  // Apply to cover page
-  const visibleCover = document.querySelector(".cover-page:not(.hidden)");
-  if (visibleCover) {
-    visibleCover.style.borderColor = themeColors.borderColor;
-    visibleCover.style.setProperty("--primary-color", themeColors.primaryColor);
-    visibleCover.style.setProperty("--cover-border-color", themeColors.borderColor);
+//   selectElement.appendChild(defaultOption);
 
-    // Apply colors to cover details elements
-    const detailsElements = visibleCover.querySelectorAll(
-      ".session, .title, .subject" //, .submitted, .name, .position, .course, .stream, .year"
-    );
-    detailsElements.forEach(el => {
-      el.style.color = themeColors.textColor;
-    });
-  }
-}
+//   items.forEach(item => {
+//     const opt = document.createElement("option");
+//     opt.value = item;
+//     opt.textContent = item;
+//     selectElement.appendChild(opt);
+//   });
+// }
+
+// const covers = document.querySelectorAll(".cover-page");
+// const previewImg = document.getElementById("coverPreview");
+
+// function applyTheme(themeColors) {
+//   // Apply to form labels
+//   document.querySelectorAll("form label").forEach(label => {
+//     label.style.color = themeColors.textColor;
+//   });
+
+//   // Apply to form inputs and selects
+//   document.querySelectorAll("input, select, textarea").forEach(input => {
+//     input.style.borderColor = themeColors.borderColor;
+//   });
+
+//   // Apply to buttons
+//   document.querySelectorAll("button").forEach(btn => {
+//     if (btn.id !== "copyLogBtn" && btn.id !== "applyDiscount") {
+//       btn.style.borderColor = themeColors.borderColor;
+//     }
+//   });
+
+//   // Apply to cover page
+//   const visibleCover = document.querySelector(".cover-page:not(.hidden)");
+//   if (visibleCover) {
+//     visibleCover.style.borderColor = themeColors.borderColor;
+//     visibleCover.style.setProperty("--primary-color", themeColors.primaryColor);
+//     visibleCover.style.setProperty("--cover-border-color", themeColors.borderColor);
+
+//     // Apply colors to cover details elements
+//     const detailsElements = visibleCover.querySelectorAll(
+//       ".session, .title, .subject" //, .submitted, .name, .position, .course, .stream, .year"
+//     );
+//     detailsElements.forEach(el => {
+//       el.style.color = themeColors.textColor;
+//     });
+//   }
+// }
 
 // Reset theme to default
-function resetTheme() {
-  // Reset labels
-  document.querySelectorAll("form label").forEach(label => {
-    label.style.color = "";
-  });
+// function resetTheme() {
+//   // Reset labels
+//   document.querySelectorAll("form label").forEach(label => {
+//     label.style.color = "";
+//   });
 
-  // Reset inputs
-  document.querySelectorAll("input, select, textarea").forEach(input => {
-    input.style.borderColor = "";
-  });
+//   // Reset inputs
+//   document.querySelectorAll("input, select, textarea").forEach(input => {
+//     input.style.borderColor = "";
+//   });
 
-  // Reset buttons
-  document.querySelectorAll("button").forEach(btn => {
-    btn.style.borderColor = "";
-  });
+//   // Reset buttons
+//   document.querySelectorAll("button").forEach(btn => {
+//     btn.style.borderColor = "";
+//   });
 
-  // Reset preview section
-  if (previewSection) {
-    previewSection.style.borderColor = "";
-  }
+//   // Reset preview section
+//   if (previewSection) {
+//     previewSection.style.borderColor = "";
+//   }
 
-  // Reset cover
-  document.querySelectorAll(".cover-page").forEach(cover => {
-    cover.style.borderColor = "";
-    cover.style.removeProperty("--primary-color");
+//   // Reset cover
+//   document.querySelectorAll(".cover-page").forEach(cover => {
+//     cover.style.borderColor = "";
+//     cover.style.removeProperty("--primary-color");
 
-    // Reset colors for cover details elements
-    const detailsElements = cover.querySelectorAll(
-      ".session, .title, .subject, .submitted"  // , .name, .position, .course, .stream, .year"
-    );
-    detailsElements.forEach(el => {
-      el.style.color = "";
-    });
-  });
-}
-
-
-// if (universitySelect) {
-//   universitySelect.addEventListener("change", () => {
-
-//     const selectedUni = universitySelect.value;
-
-//     // ⭐ If nothing selected → disable inputs and hide preview
-//     if (!selectedUni) {
-//       disableFormInputs();
-//       previewSection.style.display = "none";
-//       resetTheme();
-//       return;
-//     }
-
-//     // ⭐ Show preview and enable inputs when university selected
-//     enableFormInputs();
-//     previewSection.style.display = "block";
-
-//     const uni = UNIVERSITY_CONFIG[selectedUni];
-//     if (!uni) return;
-
-//     // Switch covers
-//     document.querySelectorAll(".cover-page")
-//       .forEach(c => c.classList.add("hidden"));
-
-//     const coverPage = document.getElementById(uni.coverId);
-//     coverPage.classList.remove("hidden");
-
-//     // Change preview image
-//     document.getElementById("coverPreview").src = uni.preview;
-
-//     // Apply theme colors
-//     applyTheme(uni);
-
-//     // Trigger scaling after a short delay for layout to settle
-//     setTimeout(scaleCoverToFit, 50);
+//     // Reset colors for cover details elements
+//     const detailsElements = cover.querySelectorAll(
+//       ".session, .title, .subject, .submitted"  // , .name, .position, .course, .stream, .year"
+//     );
+//     detailsElements.forEach(el => {
+//       el.style.color = "";
+//     });
 //   });
 // }
 
@@ -919,3 +604,5 @@ function animateCount(el, target) {
 
   update();
 }
+
+console.log("Unicover Script Loaded")
