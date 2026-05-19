@@ -10,7 +10,7 @@ export async function triggerRazorpayPayment(amountInPaise, description, onSucce
 
     // Open Razorpay Checkout
     const rzpOptions = {
-      key: "rzp_test_SFgEB7bF5j3Txj", // Sandbox/Live Key 
+      key: "rzp_live_SFfynYVohQVMSU", // Sandbox/Live Key 
       amount: amountInPaise,
       currency: "INR",
       name: "UniCover by Virendraxd",
