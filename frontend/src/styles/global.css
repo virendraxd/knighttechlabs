@@ -4,45 +4,63 @@
   box-sizing: border-box;
 }
 
-/* LIGHT THEME (default) */
 :root {
   --navy: #0F172A;
   --cyan: #06B6D4;
   --purple: #7C3AED;
+  --pink: #EC4899;
   --slate: #64748B;
   --slate-light: #94A3B8;
   --bg: #F8FAFC;
   --white: #FFFFFF;
-  --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
-  --gradient-primary: linear-gradient(135deg, #06B6D4, #7C3AED);
-  --gradient-subtle: linear-gradient(180deg, rgba(6, 182, 212, 0.08) 0%, transparent 100%);
+  --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.03);
+  --card-shadow-hover: 0 25px 50px -12px rgba(6, 182, 212, 0.15);
+  --gradient-primary: linear-gradient(135deg, #06B6D4 0%, #7C3AED 100%);
+  --gradient-secondary: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+  --gradient-subtle: linear-gradient(180deg, rgba(6, 182, 212, 0.05) 0%, transparent 100%);
 
   --footer-start: #0f1f36;
   --footer-end: #1a2d4a;
 
-  --very-light-stroke: 1.5px solid rgba(0, 0, 0, 0.1);
+  --very-light-stroke: 1px solid rgba(0, 0, 0, 0.05);
 
   --vu-color: #00406E;
 }
 
-/* DARK THEME btn-abou*/
+/* DARK THEME */
 [data-theme="dark"] {
-  --navy: #E2E8F0;
+  --navy: #F8FAFC;
   --cyan: #22D3EE;
   --purple: #A78BFA;
-  --slate: #CBD5F5;
-  --slate-light: #94A3B8;
+  --pink: #F472B6;
+  --slate: #94A3B8;
+  --slate-light: #475569;
   --bg: #020617;
   --white: #0F172A;
-  --card-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
-  --card-shadow-hover: 0 30px 60px rgba(255, 255, 255, 0.12);
-  --gradient-subtle: linear-gradient(180deg, rgba(34, 211, 238, 0.1) 0%, transparent 100%);
+  --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 25px 50px -12px rgba(34, 211, 238, 0.2);
+  --gradient-subtle: linear-gradient(180deg, rgba(34, 211, 238, 0.05) 0%, transparent 100%);
 
   --footer-start: #0b1220;
   --footer-end: #0f172a;
 
-  --very-light-stroke: 1.5px solid rgba(255, 255, 255, 0.12);
+  --very-light-stroke: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 html,
@@ -70,19 +88,72 @@ h4 {
 
 /* NAV */
 nav {
-  /* height: 80px; */
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 0.5rem 15%;
+  padding: 0.8rem 15%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--white);
-  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   z-index: 1000;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] nav {
+  background: rgba(15, 23, 42, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.product-main-section {
+  background: linear-gradient(135deg, var(--footer-start) 0%, var(--footer-end) 100%);
+  color: #ffffff;
+  padding: 100px 15% 80px;
+  margin-top: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-main-section::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatMain 10s infinite alternate ease-in-out;
+}
+
+@keyframes floatMain {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-20px, 30px); }
+}
+
+.product-main-section h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  animation: scaleUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.product-main-section p {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  line-height: 1.6;
+  animation: scaleUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s both;
 }
 
 .logo {

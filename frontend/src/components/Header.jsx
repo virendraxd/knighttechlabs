@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext"
 function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext)
     const { user, login, logout } = useAuth();
+    const [showSidebar, setShowSidebar] = useState(false)
     const [showDropdown, setShowDropdown] = useState(false);
     const profileBoxRef = useRef(null);
 
@@ -21,6 +22,10 @@ function Header() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    // function showSidebar() {
+    //     console.log("sidebar clicked")
+    // }
 
     return (
         <div>
@@ -39,16 +44,15 @@ function Header() {
                     <div className="nav-actions">
                         {/* Auth UI */}
                         <div id="navAuthStatus" className="nav-auth-container">
-                            {/* <button id="navLoginBtn" className="nav-link-btn" onClick={handleLogin}> */}
                             <button id="navLoginBtn" className={!isLogged ? "nav-link-btn" : "nav-link-btn hidden"} onClick={login}>
                                 Login
                             </button>
 
                             <div ref={profileBoxRef} id="navProfileBox" className={!isLogged ? "nav-profile-box hidden" : "nav-profile-box"}>
                                 {/* The clickable avatar */}
-                                <div 
-                                    id="navAvatar" 
-                                    className="nav-user-icon" 
+                                <div
+                                    id="navAvatar"
+                                    className="nav-user-icon"
                                     style={{ cursor: "pointer" }}
                                     onClick={() => setShowDropdown(!showDropdown)}
                                 >
@@ -65,8 +69,8 @@ function Header() {
                                         <div id="navUsageText" className="dropdown-usage">Loading limits...</div>
                                     </div>
                                     <div className="dropdown-footer">
-                                        <button 
-                                            id="navLogoutBtn" 
+                                        <button
+                                            id="navLogoutBtn"
                                             className="dropdown-logout-btn"
                                             onClick={() => {
                                                 logout();
@@ -92,20 +96,26 @@ function Header() {
                         </button>
 
                         {/* Mobile */}
-                        <button id="menu-btn">☰</button>
+                        <button id="menu-btn" onClick={() => setShowSidebar(true)}>☰</button>
                     </div>
                 </div>
             </nav>
 
-            <div id="sidebar-overlay"></div>
+            <div 
+                id="sidebar-overlay" 
+                className={showSidebar ? "active" : ""} 
+                onClick={() => setShowSidebar(false)}
+            ></div>
 
-            <div id="side-panel">
+            <div id="side-panel" className={showSidebar ? "active" : ""}>
                 <div className="side-panel-header">
                     <div className="logo">Knight<span>Tech</span>Labs</div>
                 </div>
-                <Link to="/">Home</Link>
-                <Link to="/products">Products</Link>
-                <Link to="/about">About</Link>
+                <Link to="/" onClick={() => setShowSidebar(false)}>Home</Link>
+                <Link to="/#products" onClick={() => setShowSidebar(false)}>Products</Link>
+                <Link to="/products/bulk_bg_remover" onClick={() => setShowSidebar(false)}>Bulk BG Remover</Link>
+                <Link to="/products/unicover" onClick={() => setShowSidebar(false)}>UniCover</Link>
+                <Link to="/about" onClick={() => setShowSidebar(false)}>About</Link>
             </div>
         </div>
     )

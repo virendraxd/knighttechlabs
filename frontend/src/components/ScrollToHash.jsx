@@ -21,6 +21,8 @@ function ScrollToHash() {
 
             }
 
+        } else {
+            window.scrollTo(0, 0);
         }
 
     }, [location])

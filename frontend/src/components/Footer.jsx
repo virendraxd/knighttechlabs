@@ -17,7 +17,16 @@ function Footer() {
                     <div className="footer-links">
                         <h4>Products</h4>
                         <Link to="/products/unicover">UniCover</Link>
-                        <Link to="#">Resume Builder</Link>
+                        <Link to="/products/bulk_bg_remover">Bulk Background Remover</Link>
+                        <a 
+                            href="#" 
+                            onClick={(e) => { 
+                                e.preventDefault(); 
+                                if (window.showGlobalToast) window.showGlobalToast("Resume Builder coming soon! 🚀", "info"); 
+                            }}
+                        >
+                            Resume Builder
+                        </a>
                     </div>
 
                     {/* COMPANY */}

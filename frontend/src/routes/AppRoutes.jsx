@@ -5,6 +5,7 @@ import About from '../pages/About'
 import Privacy from '../pages/Privacy'
 import Terms from '../pages/Terms'
 import Unicover from '../products/unicover/Unicover'
+import BulkBgRemover from '../products/bulk_bg_remover/BulkBgRemover'
 
 function AppRoutes() {
 
@@ -20,6 +21,11 @@ function AppRoutes() {
       <Route
         path="products/unicover"
         element={<Unicover />}
+      />
+
+      <Route
+        path="products/bulk_bg_remover"
+        element={<BulkBgRemover />}
       />
 
       <Route

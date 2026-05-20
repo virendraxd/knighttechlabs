@@ -62,12 +62,32 @@ function Home() {
 
                     <div className="card">
                         <span className="tag">Utility</span>
+                        {/* <span className="ribbon-popular">Most Popular</span> */}
+
+                        <h3>Bulk Bg Remover</h3>
+                        <p>
+                            AI-powered background removal for multiple images with batch resizing.
+                        </p>
+                        <Link to="products/bulk_bg_remover" className="view-link">Open Bulk Bg Remover</Link>
+                    </div>
+
+                    <div className="card">
+                        <span className="tag">Utility</span>
 
                         <h3>Resume Builder</h3>
                         <p>
                             Create simple, clean and professional resumes that stand out.
                         </p>
-                        <Link to="#" className="view-link muted no-drop">Coming Soon</Link>
+                        <a 
+                            href="#" 
+                            className="view-link muted no-drop"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (window.showGlobalToast) window.showGlobalToast("Resume Builder coming soon! 🚀", "info");
+                            }}
+                        >
+                            Coming Soon
+                        </a>
                     </div>
 
 

@@ -385,4 +385,15 @@ window.saveHelpRequest = async function (data) {
     ...data,
     status: "open" // 👈 important
   });
-}; 
+};
+
+window.incrementBulkImagesProcessed = async function (count) {
+  if (!shouldSaveToDB()) return;
+  try {
+    await updateDoc(doc(db, "stats", "main"), {
+      bulkImagesProcessed: increment(count)
+    });
+  } catch (err) {
+    console.error("Stats error:", err);
+  }
+};
