@@ -1,5 +1,5 @@
 import { autofillForm } from "../utils/autofill"
-import { FORM_FIELDS } from "../utils/formFields";
+import { FORM_FIELDS } from "../data/formFields";
 
 function Form({ formData, setFormData, handleChange, missingFields, templateType }) {
     const formatLable = (label) => {

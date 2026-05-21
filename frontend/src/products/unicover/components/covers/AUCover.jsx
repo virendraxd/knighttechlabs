@@ -1,22 +1,12 @@
-import aulogo from "../assets/aulogo.png";
+import aulogo from "../../assets/universities/aulogo.png"
+import { yearMap } from "../../data/yearMap";
+import { formatField } from "../../utils/formatField";
 
 function AUCover({ formData = {}, templateType }) {
 
     const assets = {
         au: aulogo,
     }
-
-    const yearMap = {
-        "1st": "1ˢᵗ",
-        "2nd": "2ⁿᵈ",
-        "3rd": "3ʳᵈ",
-        "4th": "4ᵗʰ"
-    };
-
-    const formatField = (field) => {
-        if (!field) return "";
-        return field.toUpperCase();
-    };
 
     return (
         <div id="cover-au" className={`cover-page real-cover ${templateType === "hand" ? "hand-mode" : ""}`}>

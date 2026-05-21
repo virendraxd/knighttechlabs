@@ -1,22 +1,11 @@
-import vulogo from "../assets/vulogo.png";
+import vulogo from "../../assets/universities/vulogo.png";
+import { yearMap } from "../../data/yearMap";
+import { formatField } from "../../utils/formatField";
 
 function VUCover({ formData, templateType }) {
 
     const assets = {
         vu: vulogo,
-    }
-
-    const yearMap = {
-        "1st": "1ˢᵗ",
-        "2nd": "2ⁿᵈ",
-        "3rd": "3ʳᵈ",
-        "4th": "4ᵗʰ"
-    };
-
-    const formatField = (field) => {
-        if (!field) return "";
-
-        return field.toUpperCase()
     }
 
     return (
