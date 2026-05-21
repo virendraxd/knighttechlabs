@@ -5,7 +5,7 @@ export const FORM_FIELDS = [
         type: "select",
         options: [
             { label: "Vikrant University", value: "vu" },
-            // { label: "Amity University", value: "au" },
+            { label: "Amity University", value: "au" },
         ],
     },
 

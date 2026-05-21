@@ -1,5 +1,11 @@
+import aulogo from "../assets/aulogo.png";
 
 function AUCover({ formData = {}, templateType }) {
+
+    const assets = {
+        au: aulogo,
+    }
+
     const yearMap = {
         "1st": "1ˢᵗ",
         "2nd": "2ⁿᵈ",
@@ -16,7 +22,7 @@ function AUCover({ formData = {}, templateType }) {
         <div id="cover-au" className={`cover-page real-cover ${templateType === "hand" ? "hand-mode" : ""}`}>
             <span className="watermark-overlay">Created with UniCover (Free)</span>
             <div className="top-section">
-                <img src="assets/aulogo.png" className="uni-logo" />
+                <img src={assets.au} className="uni-logo" />
             </div>
             <div className="details-section">
                 <span className="upper">
