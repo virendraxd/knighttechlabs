@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import VUCover from './covers/VUCover'
 import AUCover from "./covers/AUCover"
+import LPUCover from "./covers/LPUCover"
 
 import '../styles.css'
 
@@ -11,6 +12,7 @@ function CoverPage({ formData, templateType }) {
     const COVER_COMPONENTS = {
         vu: VUCover,
         au: AUCover,
+        lpu: LPUCover,
     };
 
     // Get selected cover component dynamically
