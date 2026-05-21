@@ -1,3 +1,5 @@
+import { SETTINGS } from "../products/unicover/config";
+
 // Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", function (e) {
@@ -12,7 +14,9 @@ const logoutBtn = document.getElementById("navLogoutBtn");
 
 // AUTHENTICATION UI (NAVBAR)
 window.updateAuthUI = async function () {
-  console.log("Update Auth UI");
+  if (SETTINGS.debugMode) {
+    console.log("Update Auth UI");
+  }
   const profileBox = document.getElementById("navProfileBox");
   const nameObj = document.getElementById("navAccountName");
   const emailObj = document.getElementById("navAccountEmail");
@@ -24,11 +28,14 @@ window.updateAuthUI = async function () {
   const cachedName = localStorage.getItem("ktl_user_name") || "User";
   const cachedPremium = localStorage.getItem("ktl_user_premium") === "true";
   const isLogged = window.currentUser || cachedEmail;
-  console.log("window.currentUser", window.currentUser);
-  console.log("cachedEmail", cachedEmail);
-  console.log("isLogged", isLogged);
-  console.log("profileBox", profileBox);
-  console.log("loginBtn", loginBtn);
+
+  if (SETTINGS.debugMode) {
+    console.log("window.currentUser", window.currentUser);
+    console.log("cachedEmail", cachedEmail);
+    console.log("isLogged", isLogged);
+    console.log("profileBox", profileBox);
+    console.log("loginBtn", loginBtn);
+  }
 
   if (!isLogged) {
     profileBox?.classList.add("hidden");
@@ -52,7 +59,9 @@ window.updateAuthUI = async function () {
 
   // Populating Usage Details (ONLY on UniCover page)
   const isUniCoverPage = window.location.pathname.includes("/products/unicover/");
-  console.log("UniCover Page", isUniCoverPage);
+  if (SETTINGS.debugMode) {
+    console.log("UniCover Page", isUniCoverPage);
+  }
 
   const usageContainer = usageText?.closest(".dropdown-body");
 
@@ -162,4 +171,6 @@ export async function handleLogout() {
   console.log("Logout");
 }
 
-console.log("Global JS Loaded");
+if (SETTINGS.debugMode) {
+  console.log("Global JS Loaded");
+}

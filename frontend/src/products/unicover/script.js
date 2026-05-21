@@ -605,4 +605,6 @@ function animateCount(el, target) {
   update();
 }
 
-console.log("Unicover Script Loaded")
+if (SETTINGS.debugMode) {
+  console.log("Unicover Script Loaded")
+}

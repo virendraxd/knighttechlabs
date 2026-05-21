@@ -15,7 +15,9 @@ export const SETTINGS = {
     },
 
     saveToDB: true,
-    saveToDBFromLocalhost: false
+    saveToDBFromLocalhost: false,
+
+    debugMode: false
 };
 
 if (SETTINGS.requireAccessCode) {
@@ -25,6 +27,6 @@ if (SETTINGS.requireAccessCode) {
 window.SETTINGS = SETTINGS;
 
 // NEW FEATURE
-console.log("Configuration Loaded"
-    , SETTINGS
-);
+if (SETTINGS.debugMode) {
+    console.log("Configuration Loaded", SETTINGS)
+}
