@@ -566,7 +566,7 @@ function scaleCoverToFit() {
 }
 
 // Robust scaling using ResizeObserver to handle orientation changes, 
-// viewport resizing, and dynamic UI layout shifts.
+// viewport resizing and dynamic UI layout shifts.
 const previewSectionEl = document.getElementById("previewSection");
 if (previewSectionEl && window.ResizeObserver) {
   const ro = new ResizeObserver(() => {

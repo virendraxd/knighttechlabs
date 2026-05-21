@@ -38,7 +38,7 @@ function Unicover({ }) {
         document.title = "UniCover | Free Professional Cover Page Generator";
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute("content", "Generate clean, premium, and print-ready assignment, practical, and project report cover pages in seconds. Instant free PDF downloads.");
+            metaDesc.setAttribute("content", "Generate clean, premium and print-ready assignment, practical and project report cover pages in seconds. Instant free PDF downloads.");
         }
         updateLimits();
         initHelpWidget();

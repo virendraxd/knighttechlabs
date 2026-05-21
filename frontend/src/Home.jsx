@@ -12,7 +12,7 @@ function Home() {
         document.title = "Knight Tech Labs | Student Utilities & Tools";
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute("content", "Knight Tech Labs builds premium, clean, and professional utilities for students. Use UniCover to generate print-ready cover pages.");
+            metaDesc.setAttribute("content", "Knight Tech Labs builds premium, clean and professional utilities for students. Use UniCover to generate print-ready cover pages.");
         }
     }, []);
 

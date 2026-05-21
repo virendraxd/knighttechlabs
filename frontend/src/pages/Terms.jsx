@@ -8,7 +8,7 @@ function Terms() {
         document.title = "Terms of Service | Knight Tech Labs";
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute("content", "Terms of service for Knight Tech Labs, detailing usage guidelines, disclaimers, and guidelines.");
+            metaDesc.setAttribute("content", "Terms of service for Knight Tech Labs, detailing usage guidelines, disclaimers and guidelines.");
         }
     }, []);
 

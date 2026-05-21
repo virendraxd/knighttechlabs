@@ -159,11 +159,11 @@ function BulkBgRemover() {
 
             <section className="product-main-section page-offset">
                 <div className="unicover-content">
-                    <span className="product-badge" style={{ pointerEvents: 'none' }}>Batch Tool</span>
+                    {/* <span className="product-badge" style={{ pointerEvents: 'none' }}>Batch Tool</span> */}
                     <h1>Bulk Background Remover</h1>
                     <p>
                         AI-powered background removal with batch resizing. 
-                        Support for ZIP uploads, WEBP format, and High-Quality output.
+                        Support for ZIP uploads, WEBP format and High-Quality output.
                     </p>
                 </div>
             </section>

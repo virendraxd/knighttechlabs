@@ -9,7 +9,7 @@ function About() {
         document.title = "About | Knight Tech Labs";
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute("content", "Learn about Knight Tech Labs, our mission, values, and student productivity utilities.");
+            metaDesc.setAttribute("content", "Learn about Knight Tech Labs, our mission, values and student productivity utilities.");
         }
     }, []);
 
