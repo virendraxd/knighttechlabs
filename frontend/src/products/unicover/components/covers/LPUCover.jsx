@@ -1,4 +1,4 @@
-import lpulogo from "../../assets/universities/LPUlogo.svg";
+import lpulogo from "../../assets/universities/LPUlogo.png";
 import { yearMap } from "../../data/yearMap";
 import { formatField } from "../../utils/formatField";
 
