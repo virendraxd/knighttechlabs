@@ -4,6 +4,7 @@ import { saveAs } from "file-saver";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import BulkBgRemoverSEOContent from "./components/BulkBgRemoverSEOContent";
 
 import { removeBg, resizeImage, convertToFinalFormat } from "./utils/imageProcess";
 import { extractZipFiles } from "./utils/fileHandlers";
@@ -26,11 +27,56 @@ function BulkBgRemover() {
     const sliderRef = useRef(null);
 
     useEffect(() => {
-        document.title = "Bulk Bg Remover | AI Background Remover & Batch Resize";
+        // --- SEO & META OPTIMIZATION ---
+        document.title = "Bulk Background Remover | AI Batch Image Background Removal";
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute("content", "Free Bulk Background Remover with Batch Resizing and Quality Control.");
+            metaDesc.setAttribute("content", "Remove backgrounds from multiple images at once for free. AI-powered batch background removal with resizing for Amazon, Instagram and more.");
         }
+
+        // --- FAQ SCHEMA INJECTION ---
+        const schemaId = 'bulk-bg-faq-schema';
+        if (!document.getElementById(schemaId)) {
+            const script = document.createElement('script');
+            script.id = schemaId;
+            script.type = 'application/ld+json';
+            script.innerHTML = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How do I remove the background from multiple images at once?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "You can use Knight Tech Labs' Bulk Background Remover tool. Upload up to 100 images or a ZIP file, choose your settings and our AI will process them all in a single batch for instant download."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I resize images while removing the background?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, our tool includes batch resizing presets for YouTube, Instagram, Amazon and custom square formats, allowing you to optimize your images while removing their backgrounds."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is the best format for transparent backgrounds?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "PNG is the standard format for transparency. We also support WEBP, which offers similar transparency with much smaller file sizes, ideal for web performance."
+                        }
+                    }
+                ]
+            });
+            document.head.appendChild(script);
+        }
+
+        return () => {
+            const existingSchema = document.getElementById(schemaId);
+            if (existingSchema) existingSchema.remove();
+        };
     }, []);
 
     const showToast = (msg, type = "info", duration = 3000) => {
@@ -154,21 +200,34 @@ function BulkBgRemover() {
     };
 
     return (
-        <div className="bg-white dark:bg-slate-900 min-h-screen">
+        <div className="bg-remover-page">
             <Header />
 
             <section className="product-main-section page-offset">
                 <div className="unicover-content">
-                    {/* <span className="product-badge" style={{ pointerEvents: 'none' }}>Batch Tool</span> */}
                     <h1>Bulk Background Remover</h1>
                     <p>
                         AI-powered background removal with batch resizing. 
                         Support for ZIP uploads, WEBP format and High-Quality output.
                     </p>
+                    <div className="cta-group" style={{marginTop: '2rem'}}>
+                         <a href="#tool-main" className="btn-primary">Get Started Now ↓</a>
+                    </div>
                 </div>
             </section>
 
-            <main className="bg-remover-container">
+            {/* HIGH-VALUE CONTENT BEFORE TOOL */}
+            <section className="content-section">
+                <div className="section-title">
+                    <h2>Streamline Your Workflow</h2>
+                    <p>
+                        Processing large volumes of images for your online store or social media shouldn't take all day. 
+                        Our AI batch tool allows you to remove backgrounds and resize up to 100 images simultaneously.
+                    </p>
+                </div>
+            </section>
+
+            <main className="bg-remover-container" id="tool-main">
                 <div className="upload-zone">
                     <span className="upload-icon">📤</span>
                     <h3>Click or Drag Images/ZIP here</h3>
@@ -274,6 +333,9 @@ function BulkBgRemover() {
                     </>
                 )}
             </main>
+
+            {/* COMPREHENSIVE SEO CONTENT SECTION */}
+            <BulkBgRemoverSEOContent />
 
             <Footer />
         </div>
