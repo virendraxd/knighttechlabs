@@ -155,7 +155,7 @@
 /* SECTIONS */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 }
@@ -273,7 +273,7 @@
 
 /* SEO CONTENT SECTIONS */
 .content-section {
-  padding: 8rem 15%;
+  padding: 8rem 5%;
   background: var(--white);
 }
 
@@ -294,12 +294,11 @@
   color: var(--slate);
   max-width: 800px;
   margin: 0 auto 2rem;
-  text-align: center;
 }
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
   gap: 2.5rem;
   margin-top: 4rem;
 }
@@ -337,22 +336,21 @@
 }
 
 .mission-box {
-  background: var(--navy);
+  background: var(--bg);
   color: white;
   padding: 5rem;
   border-radius: 40px;
   margin-top: 4rem;
   position: relative;
   overflow: hidden;
+  border: var(--very-light-stroke);
 }
 
 .mission-box h2 {
-  color: white;
   text-align: left;
 }
 
 .mission-box p {
-  color: rgba(255, 255, 255, 0.8);
   text-align: left;
   margin: 0;
 }
@@ -454,6 +452,9 @@
 
   .card {
     padding: 1rem;
-    width: 90vw;
+  }
+
+  .feature-item {
+    padding: 1.5rem;
   }
 }

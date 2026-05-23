@@ -64,7 +64,7 @@ function Terms() {
                     responsible for the content or practices of those external sites.
                 </p>
 
-                <div className="info-card" style={{borderColor: 'var(--cyan)'}}>
+                <div className="info-card">
                     <h4>Modifications</h4>
                     <p>We reserve the right to update these terms at any time. Continued use of the platform after changes constitutes your acceptance of the updated terms.</p>
                 </div>

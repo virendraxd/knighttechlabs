@@ -298,10 +298,9 @@ nav {
 }
 
 .nav-user-icon:hover {
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--cyan);
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 /* DROPDOWN MENU */
@@ -414,7 +413,7 @@ nav {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 1px;
+  gap: 2px;
 }
 
 /* ===== THEME BUTTON UPGRADE ===== */
@@ -663,7 +662,7 @@ p {
 .page-content hr {
   border: none;
   height: 1px;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--slate-light);
   margin: 4rem 0 2rem;
 }
 
@@ -747,7 +746,7 @@ p {
 .light-bg {
   background: var(--bg);
 }
-
+ 
 .section-title h2 {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
@@ -762,6 +761,7 @@ p {
   font-size: 1.05rem;
   line-height: 1.6;
   max-width: 600px;
+  text-align: center;
 }
 
 .section-padding {
@@ -830,7 +830,7 @@ p {
   padding-top: 2rem;
   text-align: center;
   font-size: 0.85rem;
-  color: var(--slate);
+  color: var(--slate-light);
   line-height: 1.6;
 }
 

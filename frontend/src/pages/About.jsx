@@ -68,9 +68,9 @@ function About() {
                     <li><strong>Practical Impact</strong> — Tools built for real needs, not trends.</li>
                 </ul>
 
-                <div className="info-card" style={{background: 'var(--navy)', color: 'white'}}>
-                    <h4 style={{color: 'var(--cyan)'}}>Our Philosophy</h4>
-                    <p style={{color: 'rgba(255,255,255,0.8)', fontStyle: 'italic'}}>"Simplicity is the ultimate sophistication." — Leonardo da Vinci</p>
+                <div className="info-card" >
+                    <h4>Our Philosophy</h4>
+                    <p style={{fontStyle: "italic"}}>"Simplicity is the ultimate sophistication." — Leonardo da Vinci</p>
                 </div>
 
                 <h2>Founder</h2>
