@@ -6,7 +6,7 @@ export function initHelpWidget() {
   if (document.getElementById("helpBtn")) return;
 
   container.innerHTML = `
-    <button id="helpBtn">💬 Help</button>
+    <button id="helpBtn">Help <i class="fa-solid fa-question" style="color: var(--white);"></i></button>
 
     <div id="helpModal" class="help-hidden">
       <div class="help-box">
@@ -28,7 +28,7 @@ export function initHelpWidget() {
         bottom: 20px;
         right: 20px;
         background: var(--cyan);
-        color: white;
+        color: var(--white);
         border: none;
         padding: 12px 16px;
         border-radius: 50px;
@@ -66,7 +66,7 @@ export function initHelpWidget() {
       .help-box button {
         width: 100%;
         background: var(--cyan);
-        color: white;
+        color: var(--white);
         border: none;
         padding: 10px;
         border-radius: 8px;

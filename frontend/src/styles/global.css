@@ -125,6 +125,7 @@ nav {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-bottom: 2px solid var(--cyan);
 }
 
 .product-main-section::before {
@@ -937,7 +938,7 @@ p {
   }
 
   .product-main-section {
-    padding: 32px 6% 32px;
+    padding: 72px 6% ;
   }
 
   .product-main-section h1 {

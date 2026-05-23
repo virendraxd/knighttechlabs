@@ -5,7 +5,7 @@ const UnicoverSEOContent = () => {
       {/* 1. Hero Description Section */}
       <section className="content-section">
         <div className="section-title">
-          <h2 className="gradient-text" style={{fontSize: '3.2rem', marginBottom: '1.5rem'}}>Professional Cover Pages in Seconds</h2>
+          <h2>Professional Cover Pages in Seconds</h2>
           <p>
             Stop wasting time struggling with Word templates or manual formatting. UniCover is the ultimate tool for students to generate clean, official and print-ready cover pages for assignments, practical files and project reports.
           </p>
@@ -46,21 +46,21 @@ const UnicoverSEOContent = () => {
         <div className="mission-box" style={{padding: '4rem 10%'}}>
           <h2 style={{textAlign: 'center', marginBottom: '3rem'}}>How It Works</h2>
           <div className="feature-grid" style={{marginTop: '0'}}>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>01. Select</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Choose your university template or the general academic format.</p>
+              <p>Choose your university template or the general academic format.</p>
             </div>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>02. Input</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Fill in your name, subject and roll number in our simple form.</p>
+              <p>Fill in your name, subject and roll number in our simple form.</p>
             </div>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>03. Preview</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>See a live preview of your cover page exactly as it will print.</p>
+              <p>See a live preview of your cover page exactly as it will print.</p>
             </div>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>04. Done</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Click download and get your print-ready PDF file instantly.</p>
+              <p>Click download and get your print-ready PDF file instantly.</p>
             </div>
           </div>
         </div>

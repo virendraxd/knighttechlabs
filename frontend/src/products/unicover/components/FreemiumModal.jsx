@@ -1,5 +1,6 @@
 import { executePDFGeneration } from "../script.js";
 import { triggerRazorpayPayment } from "../utils/payment.js";
+import { AiOutlineStop } from "react-icons/ai";
 
 function FreemiumModal({ formData }) {
   const handleClose = () => {
@@ -102,7 +103,7 @@ function FreemiumModal({ formData }) {
     <div id="freemiumModal" className="freemium-modal-overlay hidden">
       <div className="freemium-modal">
 
-        <div className="fm-icon-header">🚫</div>
+        <div className="fm-icon-header"><AiOutlineStop /></div>
         <h2>Free Limit Reached</h2>
         <p>You've used all <strong>10 free premium downloads</strong>. Choose how you'd like to continue:</p>
 

@@ -874,7 +874,7 @@ textarea:focus {
 }
 
 .freemium-modal {
-  background: white;
+  background: var(--white);
   padding: 36px 28px 28px;
   border-radius: 20px;
   max-width: 460px;
@@ -901,6 +901,7 @@ textarea:focus {
   justify-content: center;
   font-size: 1.6rem;
   margin: 0 auto 16px;
+  color: crimson;
 }
 
 .freemium-modal h2 {

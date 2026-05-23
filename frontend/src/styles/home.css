@@ -338,9 +338,8 @@
 .mission-box {
   background: var(--bg);
   color: white;
-  padding: 5rem;
+  padding: 4rem 3.5rem;
   border-radius: 40px;
-  margin-top: 4rem;
   position: relative;
   overflow: hidden;
   border: var(--very-light-stroke);
@@ -451,10 +450,18 @@
   }
 
   .card {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   .feature-item {
     padding: 1.5rem;
+  }
+
+  .mission-box {
+    padding: 2rem 1.5rem;
+  }
+
+  .content-section h2 {
+    font-size: 2.2rem;
   }
 }

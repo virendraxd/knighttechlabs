@@ -6,7 +6,7 @@ const BulkBgRemoverSEOContent = () => {
       {/* 1. Hero Description Section */}
       <section className="content-section">
         <div className="section-title">
-          <h2 className="gradient-text" style={{fontSize: '3.2rem', marginBottom: '1.5rem'}}>Bulk Background Removal Made Simple</h2>
+          <h2 >Bulk Background Removal Made Simple</h2>
           <p>
             Why process images one by one? Our AI-powered tool handles hundreds of images in seconds. Perfect for creators, photographers and e-commerce sellers who need precision cutouts at scale.
           </p>
@@ -47,21 +47,21 @@ const BulkBgRemoverSEOContent = () => {
         <div className="mission-box" style={{padding: '4rem 10%'}}>
           <h2 style={{textAlign: 'center', marginBottom: '3rem'}}>How It Works</h2>
           <div className="feature-grid" style={{marginTop: '0'}}>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>01. Upload</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Drag and drop your images or upload a ZIP file of your assets.</p>
+              <p>Drag and drop your images or upload a ZIP file of your assets.</p>
             </div>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>02. Configure</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Select your output format, quality level and resizing requirements.</p>
+              <p>Select your output format, quality level and resizing requirements.</p>
             </div>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>03. Process</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Our browser-based AI identifies and removes backgrounds in parallel.</p>
+              <p>Our browser-based AI identifies and removes backgrounds in parallel.</p>
             </div>
-            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)'}}>
+            <div className="feature-item" style={{background: 'rgba(255,255,255,0.05)'}}>
               <h4 style={{color: 'var(--cyan)', fontSize: '1.5rem', marginBottom: '1rem'}}>04. Download</h4>
-              <p style={{color: 'rgba(255,255,255,0.7)'}}>Get all your processed images neatly packaged in a single ZIP file.</p>
+              <p>Get all your processed images neatly packaged in a single ZIP file.</p>
             </div>
           </div>
         </div>
