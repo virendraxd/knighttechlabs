@@ -26,10 +26,10 @@ function FreemiumModal({ formData }) {
       });
     }
 
-    await executePDFGeneration({ 
-      setIsBtnSpinning: () => {}, 
-      isWatermarked: true, 
-      shouldIncrement: false 
+    await executePDFGeneration({
+      setIsBtnSpinning: () => { },
+      isWatermarked: true,
+      shouldIncrement: false
     });
   };
 
@@ -43,17 +43,17 @@ function FreemiumModal({ formData }) {
       if (window.showGlobalToast) {
         window.showGlobalToast("✅ Payment successful! Generating Clean PDF...", "success");
       }
-      
+
       if (window.saveCoverData) {
         await window.saveCoverData(formData, response);
       }
 
-      await executePDFGeneration({ 
-        setIsBtnSpinning: () => {}, 
-        isWatermarked: false, 
-        shouldIncrement: false 
+      await executePDFGeneration({
+        setIsBtnSpinning: () => { },
+        isWatermarked: false,
+        shouldIncrement: false
       });
-      
+
       if (downloadBtn) downloadBtn.disabled = false;
     });
   };
@@ -88,20 +88,23 @@ function FreemiumModal({ formData }) {
       if (window.saveCoverData) {
         await window.saveCoverData(formData, response);
       }
-      
-      await executePDFGeneration({ 
-        setIsBtnSpinning: () => {}, 
-        isWatermarked: false, 
-        shouldIncrement: false 
+
+      await executePDFGeneration({
+        setIsBtnSpinning: () => { },
+        isWatermarked: false,
+        shouldIncrement: false
       });
-      
+
       if (downloadBtn) downloadBtn.disabled = false;
     });
   };
 
   return (
     <div id="freemiumModal" className="freemium-modal-overlay hidden">
-      <div className="freemium-modal">
+      <div
+        className="freemium-modal"
+        role="dialog"
+        aria-modal="true">
 
         <div className="fm-icon-header"><AiOutlineStop /></div>
         <h2>Free Limit Reached</h2>
@@ -124,7 +127,7 @@ function FreemiumModal({ formData }) {
 
           <button id="fmBtnUnlimited" className="fm-btn fm-btn-unlimited" onClick={handleUnlimited}>
             <span className="fm-btn-badge" style={{ background: 'rgba(255,255,255,0.25)', color: 'white' }}>BEST ⭐</span>
-            🚀 Unlock Unlimited Clean — ₹29
+            🚀 Unlimited Clean Downloads — ₹29
             <span className="fm-subtext">No watermark forever · Requires Google Sign-In</span>
           </button>
         </div>

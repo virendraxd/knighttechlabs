@@ -44,7 +44,7 @@ function Header() {
                     <div className="nav-actions">
                         {/* Auth UI */}
                         <div id="navAuthStatus" className="nav-auth-container">
-                            <button id="navLoginBtn" className={!isLogged ? "nav-link-btn" : "nav-link-btn hidden"} onClick={login}>
+                            <button d="navLoginBtn" className={!isLogged ? "nav-link-btn" : "nav-link-btn hidden"} onClick={login}>
                                 Login
                             </button>
 
@@ -88,7 +88,7 @@ function Header() {
                         </div>
 
                         {/* Theme */}
-                        <button onClick={toggleTheme} id="themeToggle" className="theme-toggle" type="button">
+                        <button aria-label="Toggle Theme" onClick={toggleTheme} id="themeToggle" className="theme-toggle" type="button">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="gray">
                                 <path d="M21 12.79A9 9 0 0111.21 3
              7 7 0 0012 21a9 9 0 009-8.21z" />
@@ -96,14 +96,14 @@ function Header() {
                         </button>
 
                         {/* Mobile */}
-                        <button id="menu-btn" onClick={() => setShowSidebar(true)}>☰</button>
+                        <button aria-label="Toggle Sidebar" id="menu-btn" onClick={() => setShowSidebar(true)}>☰</button>
                     </div>
                 </div>
             </nav>
 
-            <div 
-                id="sidebar-overlay" 
-                className={showSidebar ? "active" : ""} 
+            <div
+                id="sidebar-overlay"
+                className={showSidebar ? "active" : ""}
                 onClick={() => setShowSidebar(false)}
             ></div>
 
