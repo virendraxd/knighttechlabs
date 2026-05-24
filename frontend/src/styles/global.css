@@ -676,12 +676,6 @@ p {
   margin: 2rem 0;
 }
 
-.info-card h4 {
-  color: var(--cyan);
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-}
-
 .info-card p {
   margin-bottom: 0;
   font-size: 1rem;

@@ -23,7 +23,7 @@ function BulkBgRemover() {
     const [results, setResults] = useState([]); // [{ originalUrl, resultUrl, name }]
     const [activeIndex, setActiveIndex] = useState(null);
     const [sliderPos, setSliderPos] = useState(50);
-    
+
     const sliderRef = useRef(null);
 
     useEffect(() => {
@@ -32,7 +32,7 @@ function BulkBgRemover() {
 
         const metaDesc = document.querySelector('meta[name="description"]');
         const metaKeyword = document.querySelector('meta[name="keywords"]');
-        
+
         if (metaDesc) {
             metaDesc.setAttribute("content", "Remove backgrounds from multiple images at once for free. AI-powered batch background removal with resizing for Amazon, Instagram and more.");
         }
@@ -134,7 +134,7 @@ function BulkBgRemover() {
         setResults([]);
 
         const zip = new JSZip();
-        
+
         if (quality === "ultra") {
             showToast("Ultra Quality uses advanced models. Initial loading might take a moment.", "info", 5000);
         }
@@ -147,7 +147,7 @@ function BulkBgRemover() {
 
             try {
                 let blob = await removeBg(file, quality);
-                
+
                 blob = await resizeImage(blob, size, extension);
                 if (extension !== "png" && size === "original") {
                     blob = await convertToFinalFormat(blob, extension, size);
@@ -161,12 +161,12 @@ function BulkBgRemover() {
                     resultUrl: URL.createObjectURL(blob),
                     name: file.name
                 };
-                
+
                 processedResults.push(resultObj);
-                
+
                 setResults([...processedResults]);
                 if (i === 0) setActiveIndex(0);
-                
+
                 setProgress(Math.round(((i + 1) / files.length) * 100));
             } catch (err) {
                 console.error(`Error processing ${file.name}:`, err);
@@ -209,140 +209,142 @@ function BulkBgRemover() {
         <div className="bg-remover-page">
             <Header />
 
-            <section className="product-main-section page-offset">
-                <div className="unicover-content">
-                    <h1>Bulk Background Remover</h1>
-                    <p>
-                        AI-powered background removal with batch resizing. 
-                        Support for ZIP uploads, WEBP format and High-Quality output.
-                    </p>
-                    <div className="cta-group" style={{marginTop: '2rem'}}>
-                         <a href="#tool-main" className="btn-primary">Get Started Now ↓</a>
+            <main>
+                <section className="product-main-section page-offset">
+                    <div className="unicover-content">
+                        <h1>Bulk Background Remover</h1>
+                        <p>
+                            AI-powered background removal with batch resizing.
+                            Support for ZIP uploads, WEBP format and High-Quality output.
+                        </p>
+                        <div className="cta-group" style={{ marginTop: '2rem' }}>
+                            <a href="#tool-main" className="btn-primary">Get Started Now ↓</a>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* HIGH-VALUE CONTENT BEFORE TOOL */}
-            <section className="content-section">
-                <div className="section-title">
-                    <h2>Streamline Your Workflow</h2>
-                    <p>
-                        Processing large volumes of images for your online store or social media shouldn't take all day. 
-                        Our AI batch tool allows you to remove backgrounds and resize up to 100 images simultaneously.
-                    </p>
-                </div>
-            </section>
+                {/* HIGH-VALUE CONTENT BEFORE TOOL */}
+                <section className="content-section">
+                    <div className="section-title">
+                        <h2>Streamline Your Workflow</h2>
+                        <p>
+                            Processing large volumes of images for your online store or social media shouldn't take all day.
+                            Our AI batch tool allows you to remove backgrounds and resize up to 100 images simultaneously.
+                        </p>
+                    </div>
+                </section>
 
-            <main className="bg-remover-container" id="tool-main">
-                <div className="upload-zone">
-                    <span className="upload-icon">📤</span>
-                    <h3>Click or Drag Images/ZIP here</h3>
-                    <p>Max 100 images per batch. Supports PNG, JPG, WEBP, ZIP.</p>
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*,.zip"
-                        onChange={handleFiles}
-                        disabled={loading}
-                    />
-                </div>
+                <main className="bg-remover-container" id="tool-main">
+                    <div className="upload-zone">
+                        <span className="upload-icon">📤</span>
+                        <h3>Click or Drag Images/ZIP here</h3>
+                        <p>Max 100 images per batch. Supports PNG, JPG, WEBP, ZIP.</p>
+                        <input
+                            type="file"
+                            multiple
+                            accept="image/*,.zip"
+                            onChange={handleFiles}
+                            disabled={loading}
+                        />
+                    </div>
 
-                {files.length > 0 && (
-                    <>
-                        <div className="controls-grid">
-                            <div className="control-item">
-                                <label>Output Format</label>
-                                <select value={extension} onChange={(e) => setExtension(e.target.value)} disabled={loading}>
-                                    <option value="png">PNG (Transparent)</option>
-                                    <option value="jpg">JPG (White Background)</option>
-                                    <option value="webp">WEBP (Optimized)</option>
-                                </select>
+                    {files.length > 0 && (
+                        <>
+                            <div className="controls-grid">
+                                <div className="control-item">
+                                    <label>Output Format</label>
+                                    <select value={extension} onChange={(e) => setExtension(e.target.value)} disabled={loading}>
+                                        <option value="png">PNG (Transparent)</option>
+                                        <option value="jpg">JPG (White Background)</option>
+                                        <option value="webp">WEBP (Optimized)</option>
+                                    </select>
+                                </div>
+                                <div className="control-item">
+                                    <label>Quality</label>
+                                    <select value={quality} onChange={(e) => setQuality(e.target.value)} disabled={loading}>
+                                        <option value="standard">Standard (Fast)</option>
+                                        <option value="hd">HD (Balanced)</option>
+                                        <option value="ultra">Ultra (Best Quality)</option>
+                                    </select>
+                                </div>
+                                <div className="control-item">
+                                    <label>Batch Resize</label>
+                                    <select value={size} onChange={(e) => setSize(e.target.value)} disabled={loading}>
+                                        <option value="original">Keep Original Size</option>
+                                        <option value="512">Square (512x512)</option>
+                                        <option value="youtube">YouTube Thumbnail (1280x720)</option>
+                                        <option value="instagram">Instagram Post (1080x1080)</option>
+                                        <option value="amazon">Amazon Product (1500x1500)</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div className="control-item">
-                                <label>Quality</label>
-                                <select value={quality} onChange={(e) => setQuality(e.target.value)} disabled={loading}>
-                                    <option value="standard">Standard (Fast)</option>
-                                    <option value="hd">HD (Balanced)</option>
-                                    <option value="ultra">Ultra (Best Quality)</option>
-                                </select>
-                            </div>
-                            <div className="control-item">
-                                <label>Batch Resize</label>
-                                <select value={size} onChange={(e) => setSize(e.target.value)} disabled={loading}>
-                                    <option value="original">Keep Original Size</option>
-                                    <option value="512">Square (512x512)</option>
-                                    <option value="youtube">YouTube Thumbnail (1280x720)</option>
-                                    <option value="instagram">Instagram Post (1080x1080)</option>
-                                    <option value="amazon">Amazon Product (1500x1500)</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div className="actions-row">
-                            <button onClick={processImages} disabled={loading} className="process-btn">
-                                {loading ? "Processing..." : `Process ${files.length} Images`}
-                            </button>
-                            
-                            {zipBlob && !loading && (
-                                <button onClick={handleDownload} className="download-btn">
-                                    <span>📥</span> Download ZIP
+                            <div className="actions-row">
+                                <button onClick={processImages} disabled={loading} className="process-btn">
+                                    {loading ? "Processing..." : `Process ${files.length} Images`}
                                 </button>
-                            )}
-                        </div>
 
-                        {loading && (
-                            <div className="progress-container">
-                                <div className="progress-header">
-                                    <span>{currentStep}</span>
-                                    <span>{progress}%</span>
-                                </div>
-                                <div className="progress-bar-bg">
-                                    <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
-                                </div>
+                                {zipBlob && !loading && (
+                                    <button onClick={handleDownload} className="download-btn">
+                                        <span>📥</span> Download ZIP
+                                    </button>
+                                )}
                             </div>
-                        )}
 
-                        {activeIndex !== null && results[activeIndex] && (
-                            <div className="preview-section">
-                                <h3>Preview & Compare</h3>
-                                <div 
-                                    className="slider-container" 
-                                    ref={sliderRef}
-                                    onMouseMove={handleSliderMove}
-                                    onTouchMove={handleSliderMove}
-                                    onMouseDown={(e) => { e.preventDefault(); }}
-                                    style={{ "--slider-pos": `${sliderPos}%` }}
-                                >
-                                    <div className="watermark">KnightTechLabs</div>
-                                    <img src={results[activeIndex].resultUrl} className="slider-image slider-before" alt="Result" />
-                                    <img src={results[activeIndex].originalUrl} className="slider-image slider-after" alt="Original" />
-                                    <div className="slider-handle"></div>
-                                </div>
-                                <p className="text-sm text-slate-500">Slide to compare Original and Processed</p>
-                            </div>
-                        )}
-
-                        {results.length > 0 && (
-                            <div className="results-grid">
-                                {results.map((res, index) => (
-                                    <div 
-                                        key={index} 
-                                        className={`result-card ${index === activeIndex ? 'active' : ''}`}
-                                        onClick={() => setActiveIndex(index)}
-                                    >
-                                        <img src={res.resultUrl} alt={res.name} />
-                                        <div className="card-overlay">{res.name}</div>
+                            {loading && (
+                                <div className="progress-container">
+                                    <div className="progress-header">
+                                        <span>{currentStep}</span>
+                                        <span>{progress}%</span>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </>
-                )}
+                                    <div className="progress-bar-bg">
+                                        <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeIndex !== null && results[activeIndex] && (
+                                <div className="preview-section">
+                                    <h3>Preview & Compare</h3>
+                                    <div
+                                        className="slider-container"
+                                        ref={sliderRef}
+                                        onMouseMove={handleSliderMove}
+                                        onTouchMove={handleSliderMove}
+                                        onMouseDown={(e) => { e.preventDefault(); }}
+                                        style={{ "--slider-pos": `${sliderPos}%` }}
+                                    >
+                                        <div className="watermark">KnightTechLabs</div>
+                                        <img src={results[activeIndex].resultUrl} className="slider-image slider-before" alt="Result" />
+                                        <img src={results[activeIndex].originalUrl} className="slider-image slider-after" alt="Original" />
+                                        <div className="slider-handle"></div>
+                                    </div>
+                                    <p className="text-sm text-slate-500">Slide to compare Original and Processed</p>
+                                </div>
+                            )}
+
+                            {results.length > 0 && (
+                                <div className="results-grid">
+                                    {results.map((res, index) => (
+                                        <div
+                                            key={index}
+                                            className={`result-card ${index === activeIndex ? 'active' : ''}`}
+                                            onClick={() => setActiveIndex(index)}
+                                        >
+                                            <img src={res.resultUrl} alt={res.name} />
+                                            <div className="card-overlay">{res.name}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </main>
+
+                {/* COMPREHENSIVE SEO CONTENT SECTION */}
+                <BulkBgRemoverSEOContent />
             </main>
-
-            {/* COMPREHENSIVE SEO CONTENT SECTION */}
-            <BulkBgRemoverSEOContent />
-
+            
             <Footer />
         </div>
     );
