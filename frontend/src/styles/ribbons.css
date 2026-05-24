@@ -1,0 +1,24 @@
+.ribbon {
+    position: absolute;
+    top: 28px;
+    right: -52px;
+    
+    color: white;
+
+    padding: 4px 46px;
+    font-size: 14px;
+    font-weight: 600;
+
+    transform: rotate(45deg);
+    text-align: center;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.ribbon-popular {
+    background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+}
+
+.ribbon-new {
+    background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+}

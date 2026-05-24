@@ -2,8 +2,10 @@ import React, { useEffect } from "react"
 import { Link } from "react-router-dom"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import Ribbons from "./components/Ribbons"
 import "../src/styles/global.css"
 import "../src/styles/home.css"
+import "../src/styles/ribbons.css"
 
 function Home() {
     useEffect(() => {
@@ -98,7 +100,7 @@ function Home() {
                 <div className="grid">
                     <div className="card">
                         <span className="tag">Academic</span>
-                        <span className="ribbon-popular">Most Popular</span>
+                        <Ribbons title="Most Popular" type="popular" />
                         <h3>UniCover</h3>
                         <p>
                             Generate clean, professional university assignment 
@@ -109,6 +111,7 @@ function Home() {
 
                     <div className="card">
                         <span className="tag">Utility</span>
+                        <Ribbons title="New Release" type="new" />
                         <h3>Bulk Bg Remover</h3>
                         <p>
                             AI-powered background removal for multiple images with batch resizing. 
