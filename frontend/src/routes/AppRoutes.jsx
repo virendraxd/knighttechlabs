@@ -4,8 +4,10 @@ import Home from '../Home'
 import About from '../pages/About'
 import Privacy from '../pages/Privacy'
 import Terms from '../pages/Terms'
-import Unicover from '../products/unicover/Unicover'
-import BulkBgRemover from '../products/bulk_bg_remover/BulkBgRemover'
+import { lazy, Suspense } from 'react'
+
+const Unicover = lazy(() => import('../products/unicover/Unicover'))
+const BulkBgRemover = lazy(() => import('../products/bulk_bg_remover/BulkBgRemover'))
 
 function AppRoutes() {
 
@@ -20,12 +22,20 @@ function AppRoutes() {
 
       <Route
         path="products/unicover"
-        element={<Unicover />}
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Unicover />
+          </Suspense>
+        }
       />
 
       <Route
         path="products/bulk_bg_remover"
-        element={<BulkBgRemover />}
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <BulkBgRemover />
+          </Suspense>
+        }
       />
 
       <Route

@@ -798,7 +798,7 @@ p {
 }
 
 .footer-brand p {
-  color: var(--slate-light);
+  color: var(--slate);
   max-width: 260px;
   line-height: 1.7;
 }
@@ -814,7 +814,7 @@ p {
 .footer-contact a {
   display: block;
   margin-bottom: 0.75rem;
-  color: var(--slate-light);
+  color: var(--slate);
   transition: all 0.3s ease;
   word-break: break-word;
 }

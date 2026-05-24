@@ -1,4 +1,4 @@
-import { removeBackground } from "@imgly/background-removal";
+const { removeBackground } = await import("@imgly/background-removal");
 
 export const resizeImage = async (blob, targetSize, extension) => {
     if (targetSize === "original") return blob;

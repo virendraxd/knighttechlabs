@@ -1,6 +1,7 @@
 import { applySettingsUI } from "./utils/settings.js"
 import { SETTINGS } from "./config.js"
-import html2pdf from "html2pdf.js";
+
+const html2pdf = (await import("html2pdf.js")).default;
 
 const coverStudent = document.getElementById("coverStudent");
 
