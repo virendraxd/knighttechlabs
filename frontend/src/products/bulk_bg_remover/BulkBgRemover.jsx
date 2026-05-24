@@ -29,9 +29,15 @@ function BulkBgRemover() {
     useEffect(() => {
         // --- SEO & META OPTIMIZATION ---
         document.title = "Bulk Background Remover | AI Batch Image Background Removal";
+
         const metaDesc = document.querySelector('meta[name="description"]');
+        const metaKeyword = document.querySelector('meta[name="keywords"]');
+        
         if (metaDesc) {
             metaDesc.setAttribute("content", "Remove backgrounds from multiple images at once for free. AI-powered batch background removal with resizing for Amazon, Instagram and more.");
+        }
+        if (metaKeyword) {
+            metaKeyword.setAttribute("content", "bulk background remover, AI background remover, batch image background removal, remove background online, product image editor, Amazon product images, Instagram image tools")
         }
 
         // --- FAQ SCHEMA INJECTION ---

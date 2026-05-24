@@ -11,9 +11,15 @@ function Home() {
     useEffect(() => {
         // --- SEO & META OPTIMIZATION ---
         document.title = "Knight Tech Labs | Premium Student Utilities & Productivity Tools";
+        
         const metaDesc = document.querySelector('meta[name="description"]');
+        const metaKeywords = document.querySelector('meta[name="keywords"]');
+
         if (metaDesc) {
             metaDesc.setAttribute("content", "Knight Tech Labs builds clean, professional utilities for students and creators. From UniCover to Bulk Bg Remover, we simplify your academic workflow.");
+        }
+        if (metaKeywords) {
+            metaKeywords.setAttribute("content", "Knight Tech Labs, student tools, productivity tools, online utilities, UniCover, bulk background remover, academic tools, creator tools");
         }
 
         // --- BRAND SCHEMA INJECTION ---
@@ -54,7 +60,7 @@ function Home() {
                     <span className="gradient-text">student productivity</span>
                 </h1>
                 <p>
-                    We build focused tools that make academic work faster and easier. 
+                    We build focused tools that make academic work faster and easier.
                     Simplified formatting, AI-powered batching and high-performance utilities.
                 </p>
                 <div className="cta-group">
@@ -67,7 +73,7 @@ function Home() {
                 <div className="section-title">
                     <h2>Designed for Real Students</h2>
                     <p>
-                        At Knight Tech Labs, we don't just build scripts; we build experiences. 
+                        At Knight Tech Labs, we don't just build scripts; we build experiences.
                         Every tool is tested to ensure it solves actual academic pain points.
                     </p>
                 </div>
@@ -103,7 +109,7 @@ function Home() {
                         <Ribbons title="Most Popular" type="popular" />
                         <h3>UniCover</h3>
                         <p>
-                            Generate clean, professional university assignment 
+                            Generate clean, professional university assignment
                             cover pages in seconds. Instant print-ready PDFs.
                         </p>
                         <Link to="products/unicover" className="view-link">Open UniCover</Link>
@@ -114,7 +120,7 @@ function Home() {
                         <Ribbons title="New Release" type="new" />
                         <h3>Bulk Bg Remover</h3>
                         <p>
-                            AI-powered background removal for multiple images with batch resizing. 
+                            AI-powered background removal for multiple images with batch resizing.
                             Process up to 100 images at once.
                         </p>
                         <Link to="products/bulk_bg_remover" className="view-link">Open Bulk Bg Remover</Link>
@@ -124,11 +130,11 @@ function Home() {
                         <span className="tag">Career</span>
                         <h3>Resume Builder</h3>
                         <p>
-                            Create simple, clean and professional resumes that stand out. 
+                            Create simple, clean and professional resumes that stand out.
                             Industry-standard formats.
                         </p>
-                        <a 
-                            href="#" 
+                        <a
+                            href="#"
                             className="view-link muted no-drop"
                             onClick={(e) => {
                                 e.preventDefault();
@@ -146,10 +152,10 @@ function Home() {
                 <div className="mission-box">
                     <h2>Our Mission</h2>
                     <p>
-                        "To empower every student with high-performance tools that bridge the gap between effort and excellence. 
+                        "To empower every student with high-performance tools that bridge the gap between effort and excellence.
                         We believe academic success should be accessible, professional and entirely free of clutter."
                     </p>
-                    <Link to="/about" className="btn-primary" style={{marginTop: '2rem'}}>Learn More About Us →</Link>
+                    <Link to="/about" className="btn-primary" style={{ marginTop: '2rem' }}>Learn More About Us →</Link>
                 </div>
             </section>
 
@@ -160,16 +166,16 @@ function Home() {
                     <p>Practical guides to help you make the most of your student life.</p>
                 </div>
                 <div className="feature-grid">
-                    <div className="feature-item" style={{background: 'var(--white)'}}>
-                        <h4 style={{color: 'var(--cyan)', marginBottom: '1rem', fontWeight: '800'}}>Grade Boosters</h4>
+                    <div className="feature-item" style={{ background: 'var(--white)' }}>
+                        <h4 style={{ color: 'var(--cyan)', marginBottom: '1rem', fontWeight: '800' }}>Grade Boosters</h4>
                         <p>Learn how professional formatting in UniCover can improve your presentation score by up to 10%.</p>
                     </div>
-                    <div className="feature-item" style={{background: 'var(--white)'}}>
-                        <h4 style={{color: 'var(--purple)', marginBottom: '1rem', fontWeight: '800'}}>Time Savers</h4>
+                    <div className="feature-item" style={{ background: 'var(--white)' }}>
+                        <h4 style={{ color: 'var(--purple)', marginBottom: '1rem', fontWeight: '800' }}>Time Savers</h4>
                         <p>Discover how batch processing in our Bulk Background Remover saves hours of manual work for portfolio building.</p>
                     </div>
-                    <div className="feature-item" style={{background: 'var(--white)'}}>
-                        <h4 style={{color: 'var(--pink)', marginBottom: '1rem', fontWeight: '800'}}>Digital Kit</h4>
+                    <div className="feature-item" style={{ background: 'var(--white)' }}>
+                        <h4 style={{ color: 'var(--pink)', marginBottom: '1rem', fontWeight: '800' }}>Digital Kit</h4>
                         <p>Essential utilities for students who want to build a high-performance digital workspace for free.</p>
                     </div>
                 </div>

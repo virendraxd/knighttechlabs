@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
 import { downloadPdf } from "./utils/download"
 import { SETTINGS } from "./config"
 import { initHelpWidget } from "../../js/help-widget.js"
@@ -36,9 +35,15 @@ function Unicover({ }) {
     useEffect(() => {
         // --- SEO & META OPTIMIZATION ---
         document.title = "UniCover | Free Professional University Assignment Cover Page Generator";
+        
         const metaDesc = document.querySelector('meta[name="description"]');
+        const metaKeyword = document.querySelector('meta[name="keywords"]');
+        
         if (metaDesc) {
-            metaDesc.setAttribute("content", "Generate clean, premium and print-ready assignment, practical and project report cover pages in seconds. Instant free PDF downloads for students of all universities.");
+            metaDesc.setAttribute("content", "Generate clean, premium and print-ready assignment, practical and project report cover pages in seconds. Instant free PDF downloads for university students.");
+        }
+        if (metaKeyword) {
+            metaKeyword.setAttribute("content", "UniCover, assignment cover page generator, project report cover page, practical file cover page, university cover page, free PDF cover page, student assignment tools")
         }
 
         // --- FAQ SCHEMA INJECTION ---
@@ -238,19 +243,6 @@ function Unicover({ }) {
 
             {/* COMPREHENSIVE SEO CONTENT SECTION */}
             <UnicoverSEOContent />
-
-            {/* ADDITIONAL INTERNAL LINKS SECTION */}
-            {/* <section className="py-12 px-6 lg:px-24 bg-slate-50 border-t border-slate-200">
-                <div className="max-w-6xl mx-auto">
-                    <h3 className="text-xl font-bold mb-6 text-slate-800">Quick Links</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <Link to="/about" className="text-cyan-600 hover:underline">About Knight Tech Labs</Link>
-                        <Link to="/privacy" className="text-cyan-600 hover:underline">Privacy Policy</Link>
-                        <Link to="/terms" className="text-cyan-600 hover:underline">Terms of Service</Link>
-                        <Link to="/" className="text-cyan-600 hover:underline">Explore More Tools</Link>
-                    </div>
-                </div>
-            </section> */}
 
             {/* DOWNLOAD LOADER */}
             <div id="downloadLoader" className="loader hidden">
