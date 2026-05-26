@@ -34,8 +34,13 @@
 }
 
 @keyframes floatHero {
-  from { transform: translate(0, 0) rotate(0deg); }
-  to { transform: translate(-30px, 40px) rotate(5deg); }
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-30px, 40px) rotate(5deg);
+  }
 }
 
 .badge {
@@ -254,7 +259,7 @@
 
 /* SEO CONTENT SECTIONS */
 .content-section {
-  padding: 8rem 5%;
+  padding: 8rem 10%;
   background: var(--white);
 }
 
@@ -422,7 +427,7 @@
 
 @media (max-width: 376px) {
   .hero {
-    padding: 9rem 3% 5rem;
+    padding: 8rem 8% 4rem;
   }
 
   .badge {
@@ -440,6 +445,10 @@
 
   .mission-box {
     padding: 2rem 1.5rem;
+  }
+  
+  .content-section {
+    padding: 4rem 6%;
   }
 
   .content-section h2 {

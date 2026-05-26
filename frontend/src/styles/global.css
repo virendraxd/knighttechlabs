@@ -685,6 +685,7 @@ p {
   .page-content h1 {
     font-size: 2.2rem;
   }
+
   .page-content h2 {
     font-size: 1.6rem;
   }
@@ -741,7 +742,7 @@ p {
 .light-bg {
   background: var(--bg);
 }
- 
+
 .section-title h2 {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
@@ -932,7 +933,7 @@ p {
   }
 
   .product-main-section {
-    padding: 72px 6% ;
+    padding: 72px 6%;
   }
 
   .product-main-section h1 {
