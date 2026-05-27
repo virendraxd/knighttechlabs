@@ -10,7 +10,7 @@ function Form({ formData, setFormData, handleChange, missingFields, templateType
             .replace(/^./, (c) => c.toUpperCase())
             .trim();
     }
-
+ 
     return (
         <div>
             <form id="coverForm">

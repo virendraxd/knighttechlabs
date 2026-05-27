@@ -1,6 +1,6 @@
 /* HERO */
 .hero {
-  padding: 14rem 10% 10rem;
+  padding: 13rem 10% 9rem;
   text-align: center;
   background: var(--bg);
   position: relative;
@@ -162,12 +162,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 }
 
 .card {
   background: var(--white);
-  padding: 3rem 2.5rem;
+  padding: 2.5rem 2rem;
   border-radius: 24px;
   border: 1px solid rgba(0, 0, 0, 0.04);
   transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -177,6 +177,7 @@
   position: relative;
   overflow: hidden;
   animation: scaleUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  cursor: pointer;
 }
 
 .card::before {
@@ -218,6 +219,7 @@
 .card h3 {
   margin: 1.2rem 0 0.8rem;
   font-size: 1.4rem;
+  color: var(--navy);
 }
 
 .card p {
@@ -243,12 +245,12 @@
   transition: transform 0.3s ease;
 }
 
-.view-link:hover {
+.card:hover .view-link {
   color: var(--purple);
   gap: 0.7rem;
 }
 
-.view-link:hover::after {
+.card:hover .view-link::after {
   transform: translateX(4px);
 }
 
@@ -269,7 +271,7 @@
 
 .content-section h2 {
   font-size: 2.8rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   color: var(--navy);
   text-align: center;
 }
@@ -279,7 +281,7 @@
   line-height: 1.6;
   color: var(--slate);
   max-width: 800px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 1rem;
 }
 
 .feature-grid {

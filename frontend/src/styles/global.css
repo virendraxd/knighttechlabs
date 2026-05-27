@@ -97,7 +97,7 @@ nav {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 0.8rem 15%;
+  padding: 0.4rem 1%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -793,7 +793,7 @@ p {
 }
 
 .footer-brand p {
-  color: var(--slate);
+  color: var(--slate-light);
   max-width: 260px;
   line-height: 1.7;
 }
@@ -809,7 +809,7 @@ p {
 .footer-contact a {
   display: block;
   margin-bottom: 0.75rem;
-  color: var(--slate);
+  color: var(--slate-light);
   transition: all 0.3s ease;
   word-break: break-word;
 }

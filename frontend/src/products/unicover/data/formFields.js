@@ -4,16 +4,16 @@ export const FORM_FIELDS = [
         label: "Institution",
         type: "select",
         options: [
-            { label: "Vikrant University", value: "vu" },
             { label: "Amity University", value: "au" },
             { label: "Lovely Professional University", value: "lpu" },
+            { label: "Vikrant University", value: "vu" },
         ],
     },
 
     {
         name: "session",
         label: "Session",
-        type: "select",
+        type: "select", 
         options: [
             { label: "2025–2026", value: "2025-2026" },
             { label: "2026–2027", value: "2026-2027" },

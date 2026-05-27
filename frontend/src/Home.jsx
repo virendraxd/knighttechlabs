@@ -58,11 +58,10 @@ function Home() {
                     <span className="badge">KnightTechLabs</span>
                     <h1>
                         Simple tools for<br />
-                        <span className="gradient-text">student productivity</span>
+                        <span className="gradient-text">work & productivity</span>
                     </h1>
                     <p>
-                        We build focused tools that make academic work faster and easier.
-                        Simplified formatting, AI-powered batching and high-performance utilities.
+                        Fast utilities for students, creators and professionals.
                     </p>
                     <div className="cta-group">
                         <a href="#products" className="btn-primary">Explore Products</a>
@@ -105,7 +104,7 @@ function Home() {
                     </div>
 
                     <div className="grid">
-                        <div className="card">
+                        <Link to="products/unicover" className="card">
                             <span className="tag">Academic</span>
                             <Ribbons title="Most Popular" type="popular" />
                             <h3>UniCover</h3>
@@ -113,10 +112,10 @@ function Home() {
                                 Generate clean, professional university assignment
                                 cover pages in seconds. Instant print-ready PDFs.
                             </p>
-                            <Link to="products/unicover" className="view-link">Open UniCover</Link>
-                        </div>
+                            <span className="view-link">Open UniCover</span>
+                        </Link>
 
-                        <div className="card">
+                        <Link to="products/bulk_bg_remover" className="card">
                             <span className="tag">Utility</span>
                             <Ribbons title="New Release" type="new" />
                             <h3>Bulk Bg Remover</h3>
@@ -124,26 +123,22 @@ function Home() {
                                 AI-powered background removal for multiple images with batch resizing.
                                 Process up to 100 images at once.
                             </p>
-                            <Link to="products/bulk_bg_remover" className="view-link">Open Bulk Bg Remover</Link>
-                        </div>
+                            <span className="view-link">Open Bulk Bg Remover</span>
+                        </Link>
 
-                        <div className="card">
+                        <div
+                            className="card"
+                            onClick={(e) => {
+                                if (window.showGlobalToast) window.showGlobalToast("Resume Builder coming soon! 🚀", "info");
+                            }}
+                        >
                             <span className="tag">Career</span>
                             <h3>Resume Builder</h3>
                             <p>
                                 Create simple, clean and professional resumes that stand out.
                                 Industry-standard formats.
                             </p>
-                            <a
-                                href="#"
-                                className="view-link muted no-drop"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (window.showGlobalToast) window.showGlobalToast("Resume Builder coming soon! 🚀", "info");
-                                }}
-                            >
-                                Coming Soon
-                            </a>
+                            <span className="view-link muted no-drop">Coming Soon</span>
                         </div>
                     </div>
                 </section>

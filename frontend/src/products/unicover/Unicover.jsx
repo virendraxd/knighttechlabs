@@ -168,7 +168,16 @@ function Unicover({ }) {
                     <main className="unicover-layout">
                         {/* LEFT SIDE: FORM */}
                         <div className="form-area">
-                            <Form formData={formData} setFormData={setFormData} handleChange={handleChange} missingFields={missingFields} setIsBtnSpinning={setIsBtnSpinning} templateType={templateType} />
+
+                            <Form
+                                formData={formData}
+                                setFormData={setFormData}
+                                handleChange={handleChange}
+                                missingFields={missingFields}
+                                setIsBtnSpinning={setIsBtnSpinning}
+                                templateType={templateType}
+                            />
+
                             <form id="coverForm">
                                 <div className="payment-box" id="paymentBox">
                                     {/* ACCESS CODE */}
