@@ -264,7 +264,7 @@ textarea:focus {
 .upper .session,
 .upper .title,
 .upper .subject {
-  font-size: 18pt;
+  font-size: 20pt;
   font-weight: 700;
   color: var(--vu-color);
   margin: 8px 0;
@@ -285,14 +285,14 @@ textarea:focus {
 }
 
 .bottom .submitted {
-  font-size: 17pt;
+  font-size: 19pt;
   font-weight: 700;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   color: var(--vu-color);
 }
 
 .bottom .name {
-  font-size: 16.5pt;
+  font-size: 18.5pt;
   font-weight: 800;
   margin-bottom: 4px;
   color: var(--vu-color);
@@ -300,12 +300,12 @@ textarea:focus {
 }
 
 .bottom .position {
-  font-size: 16pt;
+  font-size: 18pt;
   color: var(--vu-color);
 }
 
 .std-info {
-  font-size: 16pt;
+  font-size: 18pt;
   margin-top: 4px;
   color: var(--vu-color);
 }
@@ -576,12 +576,12 @@ textarea:focus {
 
 .cover-page.hand-mode .subject {
   width: 80%;
-  margin: 15px auto 35px; /* Increased bottom margin for writing space */
+  margin: 0px auto 35px; /* Increased bottom margin for writing space */
 }
 
 .cover-page.hand-mode .name {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .cover-page.hand-mode .watermark-overlay {
