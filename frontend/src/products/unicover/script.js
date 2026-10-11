@@ -201,17 +201,6 @@ export async function executePDFGeneration({ setIsBtnSpinning, isWatermarked = f
     return;
   }
 
-  // Handle Watermark for download
-  const watermark = coverPage.querySelector(".watermark-overlay");
-  if (watermark) {
-    // If it's a clean download, we hide the watermark during capture
-    if (!isWatermarked) {
-      watermark.classList.add("hidden-capture");
-    } else {
-      watermark.classList.remove("hidden-capture");
-    }
-  }
-
   logBox.style.display = "block";
   const delay = ms => new Promise(r => setTimeout(r, ms));
 
@@ -231,122 +220,93 @@ export async function executePDFGeneration({ setIsBtnSpinning, isWatermarked = f
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
 
-  coverPage.style.position = "static";
-  coverPage.style.left = "0";
-  coverPage.style.opacity = "1";
-  coverPage.style.pointerEvents = "auto";
+  // =====================================================================
+  // 🖨️ USE A CLONE FOR PDF CAPTURE — never touch the live webpage cover
+  // =====================================================================
+  // Deep-clone the cover so the webpage preview is completely unchanged
+  // throughout PDF generation (no style mutations, no class toggling).
+  const coverClone = coverPage.cloneNode(true);
+
+  // Reset all scaling/positioning on the CLONE so it renders at true A4 size
+  coverClone.style.transform = "none";
+  coverClone.style.transformOrigin = "top left";
+  coverClone.style.marginLeft = "0";
+  coverClone.style.marginBottom = "0";
+  coverClone.style.position = "static";
+  coverClone.style.opacity = "1";
+  coverClone.style.pointerEvents = "none";
+  // 🛡️ Clamp height to 1mm below A4 to prevent a blank second PDF page
+  coverClone.style.height = "295.6mm";
+  coverClone.style.overflow = "hidden";
+
+  // Apply hand-mode to clone only if needed (PDF output)
+  if (templateType === 'hand') {
+    coverClone.classList.add('hand-mode');
+  } else {
+    coverClone.classList.remove('hand-mode');
+  }
+
+  // Handle watermark on the CLONE only
+  const cloneWatermark = coverClone.querySelector(".watermark-overlay");
+  if (cloneWatermark) {
+    if (!isWatermarked) {
+      cloneWatermark.classList.add("hidden-capture");
+    } else {
+      cloneWatermark.classList.remove("hidden-capture");
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // Mount the clone inside an off-screen wrapper using position:absolute.
+  // html2canvas cannot reliably capture position:fixed elements that are
+  // outside the viewport, but it can capture position:static children
+  // inside an absolutely-positioned off-screen container.
+  // -----------------------------------------------------------------------
+  const offScreenWrapper = document.createElement("div");
+  offScreenWrapper.style.cssText = [
+    "position: absolute",
+    "top: -99999px",
+    "left: 0",
+    "width: 210mm",
+    "height: 295.6mm",
+    "overflow: hidden",
+    "z-index: -1",
+    "pointer-events: none",
+    "visibility: visible",   // must be visible for html2canvas
+  ].join("; ");
+  offScreenWrapper.appendChild(coverClone);
+  document.body.appendChild(offScreenWrapper);
 
   try {
     addLog("📥 Preparing your cover...");
-
-    // 1. Save all existing styles to restore later
-    const originalStyles = {
-      transform: coverPage.style.transform,
-      transformOrigin: coverPage.style.transformOrigin,
-      marginLeft: coverPage.style.marginLeft,
-      marginBottom: coverPage.style.marginBottom,
-      position: coverPage.style.position,
-      left: coverPage.style.left,
-      opacity: coverPage.style.opacity
-    };
-
-    // 2. FORCE pure A4 state for high-quality capture
-    coverPage.style.transform = "none";
-    coverPage.style.transformOrigin = "top left";
-    coverPage.style.marginLeft = "0";
-    coverPage.style.marginBottom = "0";
-    coverPage.style.position = "static";
-    coverPage.style.opacity = "1";
-
-    if (templateType === 'hand') {
-      coverPage.classList.add('hand-mode');
-    }
-
     await delay(800);
     addLog("🔄 Rendering high-quality PDF...");
     await delay(1200);
     addLog("⬇️ Download starting...");
     await delay(700);
 
-    await html2pdf().set(options).from(coverPage).save();
+    await html2pdf().set(options).from(coverClone).save();
 
     if (shouldIncrement && window.incrementDownloadCount) {
       const userId = getOrCreateUserId();
       await window.incrementDownloadCount(userId);
     }
 
-    // 3. Restore original preview styles
-    Object.assign(coverPage.style, originalStyles);
-
     await delay(400);
     addLog("✅ Download completed successfully!");
   } finally {
-    // Always restore button — even if an error occurs mid-generation
-
-    if (watermark) {
-      watermark.classList.remove("hidden-capture");
+    // Remove the wrapper (and clone inside it) — the live cover was never touched
+    if (offScreenWrapper.parentNode) {
+      offScreenWrapper.parentNode.removeChild(offScreenWrapper);
     }
-
-    coverPage.classList.remove('hand-mode');
-
-    // Ensure scaling is correct after generation
-    scaleCoverToFit();
   }
 }
-
-// async function generatePDFDirectly() {
-
-//   const coverPage = getActiveCover();
-//   if (!coverPage) {
-//     if (window.showGlobalToast) window.showGlobalToast("Error: Cover page element not found!");
-//     return;
-//   }
-
-//   const studentName = coverStudent?.innerText || "Student";
-//   const safeName = studentName.replace(/[^a-z0-9]/gi, "_");
-
-//   const options = {
-//     margin: 0,
-//     filename: `${safeName}_Assignment_Cover.pdf`,
-//     image: { type: "jpeg", quality: 1 },
-//     html2canvas: { scale: 3, useCORS: true },
-//     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-//   };
-
-//   coverPage.style.position = "static";
-//   coverPage.style.left = "0";
-//   coverPage.style.opacity = "1";
-//   coverPage.style.pointerEvents = "auto";
-
-//   await new Promise(resolve => setTimeout(resolve, 100));
-
-//   await html2pdf().set(options).from(coverPage).save();
-
-//   coverPage.style.position = "fixed";
-//   coverPage.style.left = "-9999px";
-//   coverPage.style.opacity = "0";
-//   coverPage.style.pointerEvents = "none";
-// }
 
 document.querySelectorAll(".required").forEach(field => {
   field.addEventListener("input", () => {
     if (field.value.trim()) field.style.border = "";
   });
 });
-
-// function getBase() {
-//   // GitHub Pages domain check
-//   if (location.hostname.includes("github.io")) {
-//     return "/knighttechlabs/"; // repo name
-//   }
-
-//   // Localhost
-//   return "/";
-// }
-
-// function fixNavForUniCover() {
-//   // handled by react router
-// }
 
 const logContent = document.getElementById("logContent");
 const copyLogBtn = document.getElementById("copyLogBtn");
@@ -370,145 +330,6 @@ if (copyLogBtn) {
       .catch(() => { if (window.showGlobalToast) window.showGlobalToast("Failed to copy log ❌"); });
   });
 }
-
-// function calculateFinalPrice(basePrice, code) {
-//   if (!SETTINGS.ENABLE_DISCOUNT) return basePrice;
-//   if (!code) return basePrice;
-
-//   const coupon = SETTINGS.DISCOUNT_CODES[code.toUpperCase()];
-
-//   if (!coupon) return basePrice;
-
-//   let finalPrice = basePrice;
-
-//   if (coupon.type === "percent") {
-//     finalPrice = basePrice - (basePrice * coupon.value / 100);
-//   }
-
-//   if (coupon.type === "flat") {
-//     finalPrice = basePrice - coupon.value;
-//   }
-
-//   // Prevent negative price
-//   return Math.max(finalPrice, 0);
-// }
-
-// UNIVEERSITY SELECTOR AND THEME SWITCHER
-// const UNIVERSITY_CONFIG = {
-
-//   vu: {
-//     coverId: "cover-vu",
-//     preview: "assets/vu-cover-preview.png",
-//     primaryColor: "#00406E",
-//     borderColor: "#00406E",
-//     textColor: "#00406E",
-//     borderColor: "#00406E"
-//   },
-
-//   au: {
-//     coverId: "cover-au",
-//     preview: "assets/au-cover-preview.png",
-//     primaryColor: "#002D5D",
-//     borderColor: "#002D5D",
-//     textColor: "#002D5D",
-//     borderColor: "#002D5D"
-//   }
-// };
-
-// function populateSelect(selectElement, items, placeholder) {
-
-//   selectElement.innerHTML = "";
-
-//   const defaultOption = document.createElement("option");
-//   defaultOption.value = "";
-//   defaultOption.disabled = true;
-//   defaultOption.selected = true;
-//   defaultOption.textContent = placeholder;
-
-//   selectElement.appendChild(defaultOption);
-
-//   items.forEach(item => {
-//     const opt = document.createElement("option");
-//     opt.value = item;
-//     opt.textContent = item;
-//     selectElement.appendChild(opt);
-//   });
-// }
-
-// const covers = document.querySelectorAll(".cover-page");
-// const previewImg = document.getElementById("coverPreview");
-
-// function applyTheme(themeColors) {
-//   // Apply to form labels
-//   document.querySelectorAll("form label").forEach(label => {
-//     label.style.color = themeColors.textColor;
-//   });
-
-//   // Apply to form inputs and selects
-//   document.querySelectorAll("input, select, textarea").forEach(input => {
-//     input.style.borderColor = themeColors.borderColor;
-//   });
-
-//   // Apply to buttons
-//   document.querySelectorAll("button").forEach(btn => {
-//     if (btn.id !== "copyLogBtn" && btn.id !== "applyDiscount") {
-//       btn.style.borderColor = themeColors.borderColor;
-//     }
-//   });
-
-//   // Apply to cover page
-//   const visibleCover = document.querySelector(".cover-page:not(.hidden)");
-//   if (visibleCover) {
-//     visibleCover.style.borderColor = themeColors.borderColor;
-//     visibleCover.style.setProperty("--primary-color", themeColors.primaryColor);
-//     visibleCover.style.setProperty("--cover-border-color", themeColors.borderColor);
-
-//     // Apply colors to cover details elements
-//     const detailsElements = visibleCover.querySelectorAll(
-//       ".session, .title, .subject" //, .submitted, .name, .position, .course, .stream, .year"
-//     );
-//     detailsElements.forEach(el => {
-//       el.style.color = themeColors.textColor;
-//     });
-//   }
-// }
-
-// Reset theme to default
-// function resetTheme() {
-//   // Reset labels
-//   document.querySelectorAll("form label").forEach(label => {
-//     label.style.color = "";
-//   });
-
-//   // Reset inputs
-//   document.querySelectorAll("input, select, textarea").forEach(input => {
-//     input.style.borderColor = "";
-//   });
-
-//   // Reset buttons
-//   document.querySelectorAll("button").forEach(btn => {
-//     btn.style.borderColor = "";
-//   });
-
-//   // Reset preview section
-//   if (previewSection) {
-//     previewSection.style.borderColor = "";
-//   }
-
-//   // Reset cover
-//   document.querySelectorAll(".cover-page").forEach(cover => {
-//     cover.style.borderColor = "";
-//     cover.style.removeProperty("--primary-color");
-
-//     // Reset colors for cover details elements
-//     const detailsElements = cover.querySelectorAll(
-//       ".session, .title, .subject, .submitted"  // , .name, .position, .course, .stream, .year"
-//     );
-//     detailsElements.forEach(el => {
-//       el.style.color = "";
-//     });
-//   });
-// }
 
 /**
  * Precisely scales the A4 cover page to fit comfortably within its container.

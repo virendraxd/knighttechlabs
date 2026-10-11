@@ -92,7 +92,7 @@ function Header() {
 
 
                     {/* Mobile */}
-                    <button aria-label="Toggle Sidebar" id="menu-btn" onClick={() => setShowSidebar(true)}>☰</button>
+                    <button aria-label="Toggle Sidebar" id="menu-btn" onClick={() => setShowSidebar(true)} style={{ color: "rgb(128 128 128)" }}>☰</button>
                 </div>
             </nav>
 

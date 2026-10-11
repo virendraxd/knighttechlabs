@@ -424,8 +424,21 @@
     width: 100%;
     max-width: 300px;
   }
-}
 
+  .content-section {
+    padding: 3rem 4.5%;
+  }
+
+  .content-section h2 {
+    font-size: 2.2rem;
+    line-height: 1.2;
+  }
+
+  .content-section p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+}
 
 @media (max-width: 376px) {
   .hero {
@@ -448,12 +461,18 @@
   .mission-box {
     padding: 2rem 1.5rem;
   }
-  
+
   .content-section {
-    padding: 4rem 6%;
+    padding: 2rem 3%;
   }
 
   .content-section h2 {
-    font-size: 2.2rem;
+    font-size: 1.7rem;
+    line-height: 1.2;
+  }
+
+  .content-section p {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 }

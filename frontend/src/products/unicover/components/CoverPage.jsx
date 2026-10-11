@@ -6,7 +6,10 @@ import LPUCover from "./covers/LPUCover"
 
 import '../styles.css'
 
-function CoverPage({ formData, templateType }) {
+function CoverPage({
+    formData,
+    templateType,
+}) {
 
     // All covers registry in one place
     const COVER_COMPONENTS = {
@@ -117,7 +120,6 @@ function CoverPage({ formData, templateType }) {
             id="previewSection"
             style={{ display: "block" }}
         >
-
             <p className="preview-note">
                 ✨ Watermark removed on download • Actual cover may vary
             </p>
@@ -133,7 +135,6 @@ function CoverPage({ formData, templateType }) {
                     Cover template not available
                 </div>
             )}
-
         </div>
     )
 }
