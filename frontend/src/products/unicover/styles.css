@@ -2,6 +2,10 @@
   max-width: 900px;
 }
 
+#tool-main {
+  padding: 8rem 10%;
+}
+
 /* ================= FORM CONTAINER select ================= */
 .container {
   max-width: 480px;
@@ -20,7 +24,6 @@
 
   max-width: 1200px;
   margin: 2rem auto;
-  padding: 20px;
 }
 
 /* Download button section — sits directly below the two-column layout,
@@ -162,6 +165,7 @@ textarea:focus {
 
   padding: 20px;
 }
+
 .form-area,
 .page {
   height: fit-content;
@@ -238,24 +242,24 @@ textarea:focus {
 /* ================= TOP SECTION ================= */
 .top-section {
   width: 100%;
-  flex: 1;                   /* Take all vertical space above the details */
+  flex: 1; /* Take all vertical space above the details */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;   /* Vertically center the logo inside the space */
-  padding: 12mm 18mm 6mm;    /* Inner breathing room (matches inner border) */
+  justify-content: center; /* Vertically center the logo inside the space */
+  padding: 12mm 18mm 6mm; /* Inner breathing room (matches inner border) */
   box-sizing: border-box;
-  overflow: hidden;          /* Never let the logo escape */
+  overflow: hidden; /* Never let the logo escape */
 }
 
 .uni-logo {
-  max-width: 60%;            /* Constrained to 60% of the top-section width */
-  max-height: 50mm;          /* Hard A4-proportional height cap */
+  max-width: 60%; /* Constrained to 60% of the top-section width */
+  max-height: 50mm; /* Hard A4-proportional height cap */
   height: auto;
   width: auto;
   display: block;
   object-fit: contain;
-  margin: 9rem auto;           /* Horizontal centering fallback */
+  margin: 9rem auto; /* Horizontal centering fallback */
 }
 
 /* ================= DETAILS SECTION ================= */
@@ -331,21 +335,6 @@ textarea:focus {
 .about {
   background: var(--white);
 }
-
-/* .section-title h2 {
-  font-size: 2.5rem;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.5rem;
-}
-
-.section-title p {
-  color: var(--slate);
-  font-size: 1.05rem;
-  max-width: 600px;
-} */
 
 #messageBox {
   position: fixed;
@@ -457,23 +446,10 @@ textarea:focus {
   border-color: var(--cyan);
 }
 
-/* .payment-box { */
-  /* margin-top: 24px; */
-  /* padding-top: 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-} */
-
-.template-header {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
 /* ================= TEMPLATE SELECTOR ================= */
 .template-selector {
   display: flex;
   gap: 16px;
-  margin: 2rem auto;
 }
 
 .top-selector {
@@ -571,7 +547,6 @@ textarea:focus {
 }
 
 .cover-page.hand-mode .upper {
-  /* background-color: #15803d; */
   margin-bottom: 5rem;
 }
 
@@ -1115,11 +1090,13 @@ textarea:focus {
   background: var(--slate);
 }
 
-.stat-card p, .stat-card h2 {
-    -webkit-background-clip: text;
+.stat-card p,
+.stat-card h2 {
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
 @media print {
   body {
     background: white;
@@ -1137,13 +1114,24 @@ textarea:focus {
   }
 }
 
-@media (max-width: 426px) {
-.top-selector {
-  flex-direction: column;
-  margin: 1rem auto;
+@media (max-width: 376px) {
+  #tool-main {
+    padding: 2rem 3%;
+  }
 }
 
+@media (max-width: 426px) {
+  .top-selector {
+    flex-direction: column;
+  }
 }
+
+@media (max-width: 768px) {
+  #tool-main {
+    padding: 3rem 4.5%;
+  }
+}
+
 @media (max-width: 1024px) {
   .unicover-layout {
     display: flex;
